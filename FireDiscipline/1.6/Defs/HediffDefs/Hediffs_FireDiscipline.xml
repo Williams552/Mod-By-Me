@@ -8,7 +8,9 @@
     with two stages saturated after four rounds: an LMG burst pinned a pawn to maximum before the
     burst finished, and every round after that did nothing. A wider scale buys a real ramp.
 
-    At the current 0.25 per round:
+    The baseline severity of 0.25 per round is calculated by SuppressionEngine
+    (Source/FireDiscipline/Suppression/SuppressionEngine.cs) and modified by shooter/victim stances
+    and cover. At the baseline 0.25 per round:
       2 rounds  -> 0.5  shaken     (not shown to the player)
       4 rounds  -> 1.0  wavering   (first visible stage)
       8 rounds  -> 2.0  ducking
@@ -23,8 +25,8 @@
     <description>Under enemy fire. Focus, aim and movement suffer while rounds keep landing nearby, and recover once the shooting stops.</description>
     <hediffClass>HediffWithComps</hediffClass>
     <defaultLabelColor>(0.9, 0.45, 0.2)</defaultLabelColor>
-    <initialSeverity>0.25</initialSeverity>
-    <minSeverity>0.001</minSeverity>
+    <!-- Must be 0 so HediffComp_SuppressionDecay.CompShouldRemove (Severity <= 0f) can trigger -->
+    <minSeverity>0</minSeverity>
     <maxSeverity>9.0</maxSeverity>
     <isBad>true</isBad>
     <makesAlert>false</makesAlert>

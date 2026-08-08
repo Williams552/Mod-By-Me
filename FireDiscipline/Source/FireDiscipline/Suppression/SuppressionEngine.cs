@@ -90,13 +90,13 @@ namespace FireDiscipline.Suppression
             Hediff hediff = victim.health.hediffSet?.GetFirstHediffOfDef(def);
             if (hediff != null)
             {
-                hediff.Severity = Mathf.Clamp(hediff.Severity + amount, MinSeverity, MaxSeverity(def));
+                hediff.Severity = Mathf.Clamp(hediff.Severity + amount, MinSeverity(def), MaxSeverity(def));
                 NotifyApplied(hediff);
                 return hediff.Severity;
             }
 
             hediff = HediffMaker.MakeHediff(def, victim);
-            hediff.Severity = Mathf.Clamp(amount, MinSeverity, MaxSeverity(def));
+            hediff.Severity = Mathf.Clamp(amount, MinSeverity(def), MaxSeverity(def));
             victim.health.AddHediff(hediff);
             NotifyApplied(hediff);
             return hediff.Severity;
@@ -183,7 +183,13 @@ namespace FireDiscipline.Suppression
             return hediff?.Severity ?? 0f;
         }
 
-        public const float MinSeverity = 0.01f;
+        /// <summary>
+        /// Read from the Def rather than hardcoded, matching XML <minSeverity>0</minSeverity>.
+        /// </summary>
+        public static float MinSeverity(HediffDef def)
+        {
+            return def?.minSeverity ?? 0f;
+        }
 
         /// <summary>
         /// Read from the Def rather than hardcoded, so the severity scale can be retuned in XML

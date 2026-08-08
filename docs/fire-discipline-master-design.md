@@ -734,6 +734,61 @@ Dùng **Dubs Performance Analyzer**. Đo trước và sau mỗi module.
 | 13 | Cổng gate suppression theo mod ngoài | ✅ **Bỏ cổng.** Engine luôn có mặt, người chơi tự bật/tắt; dò mod ngoài chỉ đặt mặc định lần đầu + cảnh báo |
 | 14 | Giảm phương sai sát thương (hạn ngạch trúng) | ⏸ **Hoãn sau v1.0.** Đã đo: `pity` không bảo toàn kỳ vọng, `quota` phải chặn vòng roll của vanilla |
 
+### 8.1 Bảng hằng số cân bằng XML Defs (Task A9)
+
+Danh sách 44 hằng số cân bằng trong `1.6/Defs/HediffDefs/Hediffs_FireDiscipline.xml`, ý nghĩa và cơ chế nạp trong code:
+
+| DefName | Element / Parameter | Giá trị XML | Ý nghĩa / Tác dụng | Code / Vanilla đọc |
+|---|---|---|---|---|
+| `FD_Suppressed` | `defaultLabelColor.r` | 0.9 | Mã màu R hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
+| `FD_Suppressed` | `defaultLabelColor.g` | 0.45 | Mã màu G hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
+| `FD_Suppressed` | `defaultLabelColor.b` | 0.2 | Mã màu B hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
+| `FD_Suppressed` | `minSeverity` | 0 | Sàn severity tối thiểu (phải = 0 để HediffComp_SuppressionDecay xoá hediff khi hết áp chế) | `SuppressionEngine.MinSeverity(def)` |
+| `FD_Suppressed` | `maxSeverity` | 9.0 | Trần severity tối đa | `SuppressionEngine.MaxSeverity(def)` |
+| `FD_Suppressed` | `severityPerSecond` | 0.20 | Tốc độ suy giảm severity mỗi giây | `HediffComp_SuppressionDecay` |
+| `FD_Suppressed` | `delayTicks` | 60 | Ticks chờ trước khi bắt đầu suy giảm (1s) | `HediffComp_SuppressionDecay` |
+| `FD_Suppressed` | `severityIndices.min` | 3 | Stage min hiện Effecter icon (ducking) | Vanilla `HediffComp_Effecter` |
+| `FD_Suppressed` | `severityIndices.max` | 5 | Stage max hiện Effecter icon (cowering) | Vanilla `HediffComp_Effecter` |
+| `FD_Suppressed` | Stage 1 (shaken) `minSeverity` | 0.5 | Ngưỡng kích hoạt stage shaken (ẩn) | Vanilla `Hediff.CurStage` |
+| `FD_Suppressed` | Stage 1 `AimingDelayFactor` | +0.10 | Phạt thời gian ngắm (+10%) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 2 (wavering) `minSeverity` | 1.0 | Ngưỡng kích hoạt stage wavering | Vanilla `Hediff.CurStage` |
+| `FD_Suppressed` | Stage 2 `AimingDelayFactor` | +0.25 | Phạt thời gian ngắm (+25%) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 2 `MoveSpeed` | -0.15 | Phạt tốc độ di chuyển (-0.15 m/s) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 3 (ducking) `minSeverity` | 2.0 | Ngưỡng kích hoạt stage ducking | Vanilla `Hediff.CurStage` |
+| `FD_Suppressed` | Stage 3 `AimingDelayFactor` | +0.45 | Phạt thời gian ngắm (+45%) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 3 `MoveSpeed` | -0.35 | Phạt tốc độ di chuyển (-0.35 m/s) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 3 `ShootingAccuracyPawn` | -0.10 | Phạt độ chính xác bắn (-0.10) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 4 (cowering) `minSeverity` | 5.5 | Ngưỡng kích hoạt stage cowering | Vanilla `Hediff.CurStage` |
+| `FD_Suppressed` | Stage 4 `AimingDelayFactor` | +0.80 | Phạt thời gian ngắm (+80%) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 4 `MoveSpeed` | -0.55 | Phạt tốc độ di chuyển (-0.55 m/s) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 4 `ShootingAccuracyPawn` | -0.20 | Phạt độ chính xác bắn (-0.20) | Vanilla `StatWorker` |
+| `FD_CombatShock` | `defaultLabelColor.r` | 0.85 | Mã màu R hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
+| `FD_CombatShock` | `defaultLabelColor.g` | 0.35 | Mã màu G hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
+| `FD_CombatShock` | `defaultLabelColor.b` | 0.35 | Mã màu B hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
+| `FD_CombatShock` | `initialSeverity` | 0.35 | Severity ban đầu khi tạo Hediff | Vanilla `HediffMaker.MakeHediff` |
+| `FD_CombatShock` | `maxSeverity` | 1.0 | Ngưỡng severity tối đa | Vanilla `Hediff.Severity` clamp |
+| `FD_CombatShock` | `disappearsAfterTicks.min` | 240 | Thời gian tồn tại tối thiểu (4 giây) | Vanilla `HediffComp_Disappears` |
+| `FD_CombatShock` | `disappearsAfterTicks.max` | 420 | Thời gian tồn tại tối đa (7 giây) | Vanilla `HediffComp_Disappears` |
+| `FD_CombatShock` | Stage 0 (shaken) `minSeverity` | 0.1 | Ngưỡng kích hoạt stage shaken | Vanilla `Hediff.CurStage` |
+| `FD_CombatShock` | Stage 0 `AimingDelayFactor` | +0.30 | Phạt thời gian ngắm (+30%) | Vanilla `StatWorker` |
+| `FD_ShellShock` | `defaultLabelColor.r` | 0.95 | Mã màu R hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
+| `FD_ShellShock` | `defaultLabelColor.g` | 0.3 | Mã màu G hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
+| `FD_ShellShock` | `defaultLabelColor.b` | 0.1 | Mã màu B hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
+| `FD_ShellShock` | `initialSeverity` | 0.50 | Severity ban đầu khi tạo Hediff | Vanilla `HediffMaker.MakeHediff` |
+| `FD_ShellShock` | `maxSeverity` | 1.0 | Ngưỡng severity tối đa | Vanilla `Hediff.Severity` clamp |
+| `FD_ShellShock` | `disappearsAfterTicks.min` | 300 | Thời gian tồn tại tối thiểu (5 giây) | Vanilla `HediffComp_Disappears` |
+| `FD_ShellShock` | `disappearsAfterTicks.max` | 600 | Thời gian tồn tại tối đa (10 giây) | Vanilla `HediffComp_Disappears` |
+| `FD_ShellShock` | Stage 0 (concussed) `minSeverity` | 0.1 | Ngưỡng kích hoạt stage concussed | Vanilla `Hediff.CurStage` |
+| `FD_ShellShock` | Stage 0 `AimingDelayFactor` | +0.25 | Phạt thời gian ngắm (+25%) | Vanilla `StatWorker` |
+| `FD_ShellShock` | Stage 0 `MoveSpeed` | -0.20 | Phạt tốc độ di chuyển (-0.20 m/s) | Vanilla `StatWorker` |
+| `FD_ShellShock` | Stage 1 (shell-shocked) `minSeverity` | 0.5 | Ngưỡng kích hoạt stage shell-shocked | Vanilla `Hediff.CurStage` |
+| `FD_ShellShock` | Stage 1 `AimingDelayFactor` | +0.60 | Phạt thời gian ngắm (+60%) | Vanilla `StatWorker` |
+| `FD_ShellShock` | Stage 1 `MoveSpeed` | -0.45 | Phạt tốc độ di chuyển (-0.45 m/s) | Vanilla `StatWorker` |
+
+> **Ghi chú thay đổi hằng số cũ (Luật §8):**
+> - `SuppressionEngine.MinSeverity`: Giá trị CŨ là `0.01f` (hardcode trong C#, lệch 10x so với XML). Đã chuyển sang đọc từ XML def.
+> - `FD_Suppressed minSeverity`: Giá trị CŨ là `0.001` (làm severity không bao giờ <= 0f nên `HediffComp_SuppressionDecay.CompShouldRemove` không bao giờ kích hoạt, làm hediff bám vĩnh viễn trên pawn). Đã hạ về `0` để hediff tự xoá khi hết áp chế.
+
 ---
 
 ## 9. Backlog — tầng điều khiển RTS
