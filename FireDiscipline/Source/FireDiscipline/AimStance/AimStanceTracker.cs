@@ -125,6 +125,78 @@ namespace FireDiscipline.AimStance
             return AimStanceMode.SnapShot;
         }
 
+        public static void Notify_PawnRemoved(Pawn pawn)
+        {
+            if (pawn == null) return;
+            int id = pawn.thingIDNumber;
+            pawnStances.Remove(id);
+            passiveCache.Remove(id);
+            transitionEndTicks.Remove(id);
+        }
+
+        public static void CleanupStaleEntries()
+        {
+            int currentTick = Find.TickManager?.TicksGame ?? 0;
+
+            // 1. Purge expired passiveCache entries
+            List<int> expiredPassive = null;
+            foreach (var kvp in passiveCache)
+            {
+                if (currentTick >= kvp.Value.expireTick)
+                {
+                    if (expiredPassive == null) expiredPassive = new List<int>();
+                    expiredPassive.Add(kvp.Key);
+                }
+            }
+            if (expiredPassive != null)
+            {
+                for (int i = 0; i < expiredPassive.Count; i++)
+                {
+                    passiveCache.Remove(expiredPassive[i]);
+                }
+            }
+
+            // 2. Purge stale pawnStances / transitionEndTicks for pawns no longer on active maps
+            if (pawnStances.Count > 0 || transitionEndTicks.Count > 0)
+            {
+                HashSet<int> validPawnIDs = new HashSet<int>();
+                var maps = Find.Maps;
+                if (maps != null)
+                {
+                    for (int m = 0; m < maps.Count; m++)
+                    {
+                        var pawns = maps[m].mapPawns?.AllPawns;
+                        if (pawns == null) continue;
+                        for (int p = 0; p < pawns.Count; p++)
+                        {
+                            if (pawns[p] != null && !pawns[p].Dead)
+                            {
+                                validPawnIDs.Add(pawns[p].thingIDNumber);
+                            }
+                        }
+                    }
+                }
+
+                List<int> staleStances = null;
+                foreach (var id in pawnStances.Keys)
+                {
+                    if (!validPawnIDs.Contains(id))
+                    {
+                        if (staleStances == null) staleStances = new List<int>();
+                        staleStances.Add(id);
+                    }
+                }
+                if (staleStances != null)
+                {
+                    for (int i = 0; i < staleStances.Count; i++)
+                    {
+                        pawnStances.Remove(staleStances[i]);
+                        transitionEndTicks.Remove(staleStances[i]);
+                    }
+                }
+            }
+        }
+
         public static void ClearCache()
         {
             pawnStances.Clear();

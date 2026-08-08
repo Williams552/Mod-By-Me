@@ -14,6 +14,12 @@ namespace FireDiscipline.AimStance
     /// </summary>
     public class StatPart_AimingDelay : StatPart
     {
+        /// <summary>
+        /// Warmup multiplier applied while a pawn is actively in a stance transition window.
+        /// Retained at 3.0f to discourage snapshotting mid-transition.
+        /// </summary>
+        public const float TransitionWarmupMultiplier = 3.0f;
+
         public override void TransformValue(StatRequest req, ref float val)
         {
             if (!req.HasThing || !(req.Thing is Pawn pawn) || pawn.Dead)
@@ -26,7 +32,7 @@ namespace FireDiscipline.AimStance
 
             if (AimStanceTracker.IsInTransition(pawn))
             {
-                val *= 3.0f; // Stance transition delay
+                val *= TransitionWarmupMultiplier;
                 return;
             }
 
@@ -52,7 +58,7 @@ namespace FireDiscipline.AimStance
             {
                 if (AimStanceTracker.IsInTransition(pawn))
                 {
-                    return "Fire Discipline Stance Transition: x3.0";
+                    return $"Fire Discipline Stance Transition: x{TransitionWarmupMultiplier:F1}";
                 }
 
                 AimStanceMode stance = AimStanceTracker.GetStance(pawn);
