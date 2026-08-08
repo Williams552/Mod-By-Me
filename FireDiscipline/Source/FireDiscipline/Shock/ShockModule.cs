@@ -27,13 +27,21 @@ namespace FireDiscipline.Shock
 
         public void ApplyPatches(Harmony harmony)
         {
-            // 1. Ally Downed Combat Shock
+            // 1. Ally Downed/Killed Combat Shock
             var killMethod = AccessTools.Method(typeof(Pawn), nameof(Pawn.Kill));
             if (killMethod != null)
             {
                 var postfix = typeof(Patch_Pawn_Kill_Down).GetMethod(nameof(Patch_Pawn_Kill_Down.Postfix_Kill), BindingFlags.Static | BindingFlags.Public);
                 harmony.Patch(killMethod, postfix: new HarmonyMethod(postfix));
                 Log.Message("[Fire Discipline] Patched Pawn.Kill for Combat Shock.");
+            }
+
+            var downedMethod = AccessTools.Method(typeof(Pawn_HealthTracker), "MakeDowned");
+            if (downedMethod != null)
+            {
+                var postfix = typeof(Patch_Pawn_Kill_Down).GetMethod(nameof(Patch_Pawn_Kill_Down.Postfix_Downed), BindingFlags.Static | BindingFlags.Public);
+                harmony.Patch(downedMethod, postfix: new HarmonyMethod(postfix));
+                Log.Message("[Fire Discipline] Patched Pawn_HealthTracker.MakeDowned for Combat Shock.");
             }
 
             // 2. Proportional Explosive Shell Shock
