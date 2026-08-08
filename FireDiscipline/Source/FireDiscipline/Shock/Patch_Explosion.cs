@@ -14,6 +14,18 @@ namespace FireDiscipline.Shock
     /// </summary>
     public static class Patch_Explosion
     {
+        public static float CalculateShockRadius(float dmgRadius)
+        {
+            float cap = FireDisciplineMod.Settings?.shellShockRadiusCap ?? 20f;
+            float coefficient = FireDisciplineMod.Settings?.shellShockRadiusCoefficient ?? 2f;
+            return Mathf.Min(cap, dmgRadius + coefficient * Mathf.Sqrt(dmgRadius));
+        }
+
+        public static float CalculatePowerFactor(float damAmount)
+        {
+            return Mathf.Clamp(damAmount / 50f, 0.4f, 1.0f);
+        }
+
         public static void Postfix(Explosion __instance)
         {
             if (!Core.PatchRegistry.IsModuleEnabled(ShockModule.Id))
@@ -35,11 +47,8 @@ namespace FireDiscipline.Shock
 
             if (dmgRadius <= 0.5f) return;
 
-            // shockRadius = min(cap, r + coefficient * sqrt(r))
-            float cap = FireDisciplineMod.Settings?.shellShockRadiusCap ?? 20f;
-            float coefficient = FireDisciplineMod.Settings?.shellShockRadiusCoefficient ?? 2f;
-            float shockRadius = Mathf.Min(cap, dmgRadius + coefficient * Mathf.Sqrt(dmgRadius));
-            float powerFactor = Mathf.Clamp(__instance.damAmount / 50f, 0.4f, 1.0f);
+            float shockRadius = CalculateShockRadius(dmgRadius);
+            float powerFactor = CalculatePowerFactor(__instance.damAmount);
 
             HediffDef shellShockDef = DefDatabase<HediffDef>.GetNamedSilentFail("FD_ShellShock");
             if (shellShockDef == null) return;

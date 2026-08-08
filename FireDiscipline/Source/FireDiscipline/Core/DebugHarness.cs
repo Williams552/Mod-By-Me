@@ -1856,5 +1856,228 @@ namespace FireDiscipline.Core
                 }
             }
         }
+
+        // =========================================================================
+        // SECTION: ACTIONS C, D, F, H (TEST HARNESS §7.1 AUDIT PROBES)
+        // =========================================================================
+
+        [DebugAction("Fire Discipline", "Print Graze Distribution", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintGrazeDistribution()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine("[Fire Discipline Debug Harness] Action C: Print Graze Distribution");
+            bool enabled = PatchRegistry.IsModuleEnabled(GrazeModule.Id);
+            sb.AppendLine($"Module Graze Status: {(enabled ? "ENABLED" : "DISABLED (off by default or in settings)")}");
+            sb.AppendLine("=========================================================================================");
+
+            Pawn shooter = Find.Selector.SingleSelectedThing as Pawn;
+            if (shooter == null)
+            {
+                Messages.Message("Please select a Pawn with a ranged weapon equipped first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            Verb verb = shooter.equipment?.PrimaryEq?.PrimaryVerb;
+            if (verb == null)
+            {
+                Messages.Message("Selected pawn must have a ranged weapon equipped.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            sb.AppendLine($"Shooter: {shooter.LabelShort} (Shooting Skill: {shooter.skills?.GetSkill(SkillDefOf.Shooting)?.Level ?? 0})");
+            sb.AppendLine($"Weapon: {shooter.equipment.Primary.def.defName}");
+            sb.AppendLine();
+            sb.AppendLine($"{"Distance",-12}|{"Hit Chance (p)",-16}|{"Graze Chance",-16}|{"% Fatal Reduced",-18}|");
+            sb.AppendLine(new string('-', 68));
+
+            int[] testDistances = new int[] { 3, 5, 8, 12, 16, 20, 25, 32, 40 };
+            IntVec3 origin = shooter.Position;
+            Map map = shooter.Map;
+
+            foreach (int dist in testDistances)
+            {
+                IntVec3 targetCell = origin + new IntVec3(dist, 0, 0);
+                float p = 0.50f;
+                if (targetCell.InBounds(map))
+                {
+                    ShotReport report = ShotReport.HitReportFor(shooter, verb, targetCell);
+                    p = report.TotalEstimatedHitChance;
+                }
+
+                // Rule 8: Call production CalculateGrazeChance directly
+                float grazeChance = Patch_DamageWorker_AddInjury.CalculateGrazeChance(p);
+                float pctReduced = (1f - 0.35f) * 100f; // Graze reduces damage by 65%
+
+                sb.AppendLine($"{dist + " cells",-12}|{p,-16:P1}|{grazeChance,-16:P1}|{"-" + (int)pctReduced + "%",-18}|");
+            }
+
+            Log.Message(sb.ToString());
+        }
+
+        [DebugAction("Fire Discipline", "Simulate Explosion Table", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void SimulateExplosionTable()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine("[Fire Discipline Debug Harness] Action D: Simulate Explosion Table");
+            bool enabled = PatchRegistry.IsModuleEnabled(Shock.ShockModule.Id);
+            sb.AppendLine($"Module Shock Status: {(enabled ? "ENABLED" : "DISABLED (off by default or in settings)")}");
+            float cap = FireDisciplineMod.Settings?.shellShockRadiusCap ?? 20f;
+            float coef = FireDisciplineMod.Settings?.shellShockRadiusCoefficient ?? 2f;
+            sb.AppendLine($"Current Settings: shellShockRadiusCoefficient = {coef:F1}, shellShockRadiusCap = {cap:F1}c");
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"{"Source Radius (r)",-20}|{"Shell Shock Radius",-20}|{"Cells Affected",-18}|{"Power Factor (50dmg)",-22}|");
+            sb.AppendLine(new string('-', 82));
+
+            float[] testRadii = new float[] { 1.0f, 1.9f, 2.9f, 4.9f, 7.9f, 9.0f, 12.9f, 15.0f, 20.0f, 30.0f };
+
+            foreach (float r in testRadii)
+            {
+                // Rule 8: Call production helper methods directly
+                float shockRadius = Shock.Patch_Explosion.CalculateShockRadius(r);
+                float powerFactor = Shock.Patch_Explosion.CalculatePowerFactor(50);
+                int numCells = GenRadial.NumCellsInRadius(shockRadius);
+
+                sb.AppendLine($"{r + "c",-20}|{shockRadius,-20:F1}c|{numCells,-18}|{powerFactor,-22:P0}|");
+            }
+
+            Log.Message(sb.ToString());
+        }
+
+        [DebugAction("Fire Discipline", "Test Pinned Cycle", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void TestPinnedCycle()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine("[Fire Discipline Debug Harness] Action F: Test Pinned Cycle");
+            bool pinnedEnabled = FireDisciplineMod.Settings?.enableSuppressionPinned ?? false;
+            sb.AppendLine($"Pinned Feature Status: {(pinnedEnabled ? "ENABLED" : "DISABLED (OFF by default in settings)")}");
+            sb.AppendLine("=========================================================================================");
+
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first to test Pinned cycle.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            HediffDef def = SuppressionEngine.SuppressedDef;
+            if (def == null)
+            {
+                Messages.Message("FD_Suppressed hediff def not found.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            Hediff hediff = selectedPawn.health?.hediffSet?.GetFirstHediffOfDef(def);
+            float origSeverity = hediff?.Severity ?? 0f;
+
+            try
+            {
+                if (hediff == null)
+                {
+                    hediff = HediffMaker.MakeHediff(def, selectedPawn);
+                    hediff.Severity = 0f;
+                    selectedPawn.health.AddHediff(hediff);
+                }
+
+                Verb verb = selectedPawn.equipment?.PrimaryEq?.PrimaryVerb;
+                sb.AppendLine($"Pawn: {selectedPawn.LabelShort}");
+                sb.AppendLine($"Equipped Ranged Verb: {verb?.EquipmentSource?.def?.defName ?? "None"}");
+                sb.AppendLine();
+                sb.AppendLine($"{"Step Severity",-16}|{"Stage Name",-24}|{"Verb.Available()",-18}|");
+                sb.AppendLine(new string('-', 60));
+
+                float[] testSteps = new float[] { 0.0f, 0.25f, 0.50f, 0.75f, 0.85f, 0.95f, 1.00f };
+
+                foreach (float step in testSteps)
+                {
+                    hediff.Severity = step;
+                    string stageLabel = hediff.CurStage?.label ?? "None";
+                    bool available = verb != null && verb.Available();
+
+                    sb.AppendLine($"{step,-16:F2}|{stageLabel,-24}|{(available ? "True (Can Fire)" : "False (Blocked)"),-18}|");
+                }
+            }
+            finally
+            {
+                // Mandatory Rule: Restore original pawn severity state
+                if (hediff != null)
+                {
+                    if (origSeverity <= 0f)
+                    {
+                        selectedPawn.health.RemoveHediff(hediff);
+                    }
+                    else
+                    {
+                        hediff.Severity = origSeverity;
+                    }
+                }
+            }
+
+            Log.Message(sb.ToString());
+        }
+
+        [DebugAction("Fire Discipline", "Print Shotgun Spread Damage", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintShotgunSpreadDamage()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine("[Fire Discipline Debug Harness] Action H: Print Shotgun Spread Damage");
+            bool enabled = PatchRegistry.IsModuleEnabled(ShotgunAoE.ShotgunAoEModule.Id);
+            sb.AppendLine($"Module ShotgunAoE Status: {(enabled ? "ENABLED" : "DISABLED (experimental, off by default)")}");
+            sb.AppendLine("=========================================================================================");
+
+            Pawn shooter = Find.Selector.SingleSelectedThing as Pawn;
+            if (shooter == null)
+            {
+                Messages.Message("Please select a Pawn with a shotgun equipped first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            ThingDef weaponDef = shooter.equipment?.Primary?.def;
+            if (weaponDef == null)
+            {
+                Messages.Message("Selected pawn must have a weapon equipped.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            // Rule 8: Call production WeaponClassification.HasShotgunProfile
+            bool isShotgun = WeaponClassification.HasShotgunProfile(weaponDef);
+            sb.AppendLine($"Shooter: {shooter.LabelShort}");
+            sb.AppendLine($"Equipped Weapon: {weaponDef.defName}");
+            sb.AppendLine($"Shotgun Profile Classification: {(isShotgun ? "YES (Shotgun Profile)" : "NO (Standard Ranged Weapon)")}");
+
+            if (!isShotgun)
+            {
+                sb.AppendLine("Aborting: Equipped weapon does not fit Shotgun profile criteria (accuracy flatness / range).");
+                Log.Message(sb.ToString());
+                return;
+            }
+
+            Map map = shooter.Map;
+            IntVec3 origin = shooter.Position;
+            IntVec3 targetCell = origin + new IntVec3(10, 0, 0); // Simulated target cell at 10c
+
+            // Rule 8: Call production ShotgunSpreadGeometry.AffectedCells
+            List<IntVec3> cells = ShotgunAoE.ShotgunSpreadGeometry.AffectedCells(origin, targetCell, map);
+            sb.AppendLine($"Simulated Target Cell: {targetCell} (Distance: 10c)");
+            sb.AppendLine($"Total Affected AoE Cells: {cells.Count}");
+            sb.AppendLine();
+            sb.AppendLine($"{"Cell Position",-18}|{"Distance from Origin",-24}|{"Contains Ally?",-16}|");
+            sb.AppendLine(new string('-', 60));
+
+            foreach (IntVec3 cell in cells)
+            {
+                float d = (cell - origin).LengthHorizontal;
+                Pawn pawnInCell = cell.GetFirstPawn(map);
+                bool isAlly = pawnInCell != null && pawnInCell.Faction == shooter.Faction && pawnInCell != shooter;
+
+                string allyNote = isAlly ? $"YES ({pawnInCell.LabelShort})" : "No";
+                sb.AppendLine($"{cell,-18}|{d,-24:F1}c|{allyNote,-16}|");
+            }
+
+            Log.Message(sb.ToString());
+        }
     }
 }
