@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Fire Discipline</name>
+  <packageId>william.firediscipline</packageId>
+  <author>William</author>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>A tactical layer on top of vanilla combat. No new save required, no per-weapon patches: everything is derived from vanilla stats, so weapons from other mods work without support being added for them.
+
+WHAT IT ADDS
+- Four aim stances per drafted pawn: Snap Shot, Rapid, Sharpshot, Prone. Each trades accuracy, aim time and exposure differently.
+- Its own suppression engine. Incoming fire pins pawns down, and stances change how suppression works both ways: Rapid inflicts more, Sharpshot suffers more and loses its aim, Prone resists.
+- Gear encumbrance: heavy loadouts cost combat move speed.
+- Graze: unlikely long shots that would have hit a vital organ get downgraded instead of killing outright.
+- Combat shock and shell shock from nearby deaths and explosions.
+
+SUPPRESSION: A CHOICE YOU MAKE
+Fire Discipline has its own suppression engine rather than depending on another mod for one. If you already run a mod that adds suppression, both systems will apply suppression to the same pawn at the same time - severity builds roughly twice as fast, and each mod applies its own debuffs.
+
+So it is a toggle, not an automatic decision. On first install the engine defaults to OFF if another suppression mod or Combat Extended is detected, and ON otherwise. After that the setting is yours; the mod will not change it again.
+
+Turning the engine off keeps the four aim stances, encumbrance, graze and shell shock working normally. What you lose is the stance suppression matrix and the Pinned state. The mod settings window spells out exactly which mechanics are affected either way.
+
+COMPATIBILITY
+- Every module has its own toggle. Turning one off takes effect immediately; turning one on needs a restart, because Harmony patches are registered at startup.
+- No hard dependencies on any other mod.
+- Not compatible in spirit with Combat Extended, which replaces the combat model rather than layering on it. Nothing will crash, but the two will fight over the same mechanics.
+- Adding or removing this mod mid-save is safe. It adds no custom classes to saved data.
+
+EXPERIMENTAL FEATURES (off by default)
+Embrasure interaction, the Pinned state, and shotgun spread are shipped switched off. They are not balance-tested yet, and shotgun spread has no danger-zone indicator, so its splash can hit your own pawns without warning.</description>
+  <loadAfter>
+    <li>Mlie.YayosCombat3</li>
+    <li>Mlie.Suppression</li>
+  </loadAfter>
+</ModMetaData>

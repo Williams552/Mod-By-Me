@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!--
+    1. Internal Suppression Hediff
+
+    Severity scale 0-9, matching the shape used by Suppression (Continued). The previous 0-1 scale
+    with two stages saturated after four rounds: an LMG burst pinned a pawn to maximum before the
+    burst finished, and every round after that did nothing. A wider scale buys a real ramp.
+
+    At the current 0.25 per round:
+      2 rounds  -> 0.5  shaken     (not shown to the player)
+      4 rounds  -> 1.0  wavering   (first visible stage)
+      8 rounds  -> 2.0  ducking
+     22 rounds  -> 5.5  cowering
+
+    Recovery is a steady drain via HediffComp_SuppressionDecay rather than a flat timer that
+    dropped severity to zero in one frame.
+  -->
+  <HediffDef>
+    <defName>FD_Suppressed</defName>
+    <label>suppressed</label>
+    <description>Under enemy fire. Focus, aim and movement suffer while rounds keep landing nearby, and recover once the shooting stops.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.9, 0.45, 0.2)</defaultLabelColor>
+    <initialSeverity>0.25</initialSeverity>
+    <minSeverity>0.001</minSeverity>
+    <maxSeverity>9.0</maxSeverity>
+    <isBad>true</isBad>
+    <makesAlert>false</makesAlert>
+    <comps>
+      <li Class="FireDiscipline.Suppression.HediffCompProperties_SuppressionDecay">
+        <severityPerSecond>0.20</severityPerSecond>
+        <delayTicks>60</delayTicks>
+      </li>
+      <!--
+        On-screen indicator, using the vanilla HediffComp_Effecter.
+        severityIndices are STAGE indices, not severity values: 0 unsettled, 1 shaken, 2 wavering,
+        3 ducking, 4 cowering. Starting at 3 means the icon only appears once a pawn is actually
+        being held down, matching the point where movement and accuracy penalties bite.
+      -->
+      <li Class="HediffCompProperties_Effecter">
+        <stateEffecter>FD_Suppressed</stateEffecter>
+        <severityIndices>3~5</severityIndices>
+      </li>
+    </comps>
+    <stages>
+      <!-- Below 'wavering' the pawn is being shot at but not yet meaningfully affected.
+           Hidden so the health tab is not spammed during every firefight. -->
+      <li>
+        <label>unsettled</label>
+        <becomeVisible>false</becomeVisible>
+      </li>
+      <li>
+        <label>shaken</label>
+        <minSeverity>0.5</minSeverity>
+        <becomeVisible>false</becomeVisible>
+        <statOffsets>
+          <AimingDelayFactor>0.10</AimingDelayFactor>
+        </statOffsets>
+      </li>
+      <li>
+        <label>wavering</label>
+        <minSeverity>1.0</minSeverity>
+        <statOffsets>
+          <AimingDelayFactor>0.25</AimingDelayFactor>
+          <MoveSpeed>-0.15</MoveSpeed>
+        </statOffsets>
+      </li>
+      <li>
+        <label>ducking</label>
+        <minSeverity>2.0</minSeverity>
+        <statOffsets>
+          <AimingDelayFactor>0.45</AimingDelayFactor>
+          <MoveSpeed>-0.35</MoveSpeed>
+          <ShootingAccuracyPawn>-0.10</ShootingAccuracyPawn>
+        </statOffsets>
+      </li>
+      <li>
+        <label>cowering</label>
+        <minSeverity>5.5</minSeverity>
+        <statOffsets>
+          <AimingDelayFactor>0.80</AimingDelayFactor>
+          <MoveSpeed>-0.55</MoveSpeed>
+          <ShootingAccuracyPawn>-0.20</ShootingAccuracyPawn>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <!-- 2. Ally Downed Combat Shock Hediff -->
+  <HediffDef>
+    <defName>FD_CombatShock</defName>
+    <label>combat shock</label>
+    <description>Shaken by seeing an ally downed or killed nearby. Reflexes and aim are temporarily impaired.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.85, 0.35, 0.35)</defaultLabelColor>
+    <initialSeverity>0.35</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>true</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>240~420</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>shaken</label>
+        <minSeverity>0.1</minSeverity>
+        <statOffsets>
+          <AimingDelayFactor>0.30</AimingDelayFactor>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <!-- 3. Concussive Shell Shock Hediff -->
+  <HediffDef>
+    <defName>FD_ShellShock</defName>
+    <label>shell shock</label>
+    <description>Disoriented by a nearby explosive shockwave. Ringing ears, impaired vision, and severe movement slowdown.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.95, 0.3, 0.1)</defaultLabelColor>
+    <initialSeverity>0.50</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>true</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>300~600</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>concussed</label>
+        <minSeverity>0.1</minSeverity>
+        <statOffsets>
+          <AimingDelayFactor>0.25</AimingDelayFactor>
+          <MoveSpeed>-0.20</MoveSpeed>
+        </statOffsets>
+      </li>
+      <li>
+        <label>shell-shocked</label>
+        <minSeverity>0.5</minSeverity>
+        <statOffsets>
+          <AimingDelayFactor>0.60</AimingDelayFactor>
+          <MoveSpeed>-0.45</MoveSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+</Defs>

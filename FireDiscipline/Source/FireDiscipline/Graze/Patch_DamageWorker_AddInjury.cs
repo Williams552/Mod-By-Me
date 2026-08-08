@@ -1,0 +1,139 @@
+using System.Collections.Generic;
+using System.Linq;
+using HarmonyLib;
+using RimWorld;
+using UnityEngine;
+using Verse;
+
+namespace FireDiscipline.Graze
+{
+    /// <summary>
+    /// Harmony Prefix on DamageWorker_AddInjury.Apply (v3 Execution Spec).
+    /// Uses p = TotalEstimatedHitChance at moment of firing:
+    /// grazeChance = clamp(0, 1, (0.65 - p) / 0.45)
+    /// High-precision shots (p >= 0.65) NEVER graze; lucky low-accuracy shots (p <= 0.20) ALWAYS graze.
+    /// Converts fatal organ shots into non-lethal grazing blows (reducing damage by 65% and rerouting to outer limbs).
+    /// </summary>
+    public static class Patch_DamageWorker_AddInjury
+    {
+        public static bool Prefix(DamageWorker_AddInjury __instance, ref DamageInfo dinfo, Thing thing)
+        {
+            if (FireDisciplineMod.Settings != null && !FireDisciplineMod.Settings.IsModuleEnabled(new GrazeModule()))
+                return true;
+
+            if (!(thing is Pawn victim) || victim.Dead || !victim.RaceProps.Humanlike)
+                return true;
+
+            // Only apply Graze to ranged bullet/projectile attacks
+            if (dinfo.Instigator == null || dinfo.Weapon == null || !dinfo.Weapon.IsRangedWeapon)
+                return true;
+
+            BodyPartRecord hitPart = dinfo.HitPart;
+            if (hitPart == null) return true;
+
+            bool isVitalOrgan = IsVitalOrganOrHead(hitPart);
+            if (!isVitalOrgan) return true;
+
+            // Calculate p = TotalEstimatedHitChance via ShotReport
+            float p = 0.425f; // Fallback yielding 0.50 grazeChance if shooter unavailable
+            Pawn shooter = dinfo.Instigator as Pawn;
+
+            if (shooter != null && shooter.equipment?.PrimaryEq?.PrimaryVerb != null)
+            {
+                Verb verb = shooter.equipment.PrimaryEq.PrimaryVerb;
+                ShotReport report = ShotReport.HitReportFor(shooter, verb, victim);
+                p = report.TotalEstimatedHitChance;
+            }
+
+            float grazeChance = CalculateGrazeChance(p);
+
+            if (Rand.Chance(grazeChance))
+            {
+                // GRAZE ACTIVATED!
+                float mult = FireDisciplineMod.Settings?.grazeDamageMultiplier ?? 0.35f;
+                float originalDmg = dinfo.Amount;
+                dinfo.SetAmount(Mathf.Max(1f, originalDmg * mult));
+
+                // Reroute to outer limb
+                if (FireDisciplineMod.Settings?.protectVitalOrgans ?? true)
+                {
+                    BodyPartRecord outerLimb = FindOuterLimb(victim);
+                    if (outerLimb != null)
+                    {
+                        dinfo.SetHitPart(outerLimb);
+                    }
+                }
+
+                // Visual Mote feedback
+                if (victim.Map != null && Find.CameraDriver != null)
+                {
+                    MoteMaker.ThrowText(victim.DrawPos, victim.Map, $"Graze (-{(int)((1f - mult) * 100f)}%)", Color.cyan);
+                }
+
+                Log.Message($"[Fire Discipline Graze v3] {victim.LabelShort}'s {hitPart.def.defName} shot was grazing! p={p:P1}, GrazeChance={grazeChance:P1}. Dmg reduced from {originalDmg:F1} to {dinfo.Amount:F1}");
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// grazeChance = clamp(0, 1, (0.65 - p) / 0.45), where p is the shot's estimated hit chance.
+        ///
+        /// A shot the shooter was likely to make lands normally; one they were unlikely to make gets
+        /// downgraded. p >= 0.65 never grazes, p &lt;= 0.20 always does. Using hit chance rather than
+        /// a stance flag means the rule covers distance, cover, lighting, skill and suppression at
+        /// once, and applies symmetrically to raiders.
+        ///
+        /// Public so the debug harness measures this exact curve instead of a copy of it.
+        /// </summary>
+        public static float CalculateGrazeChance(float hitChance)
+        {
+            FireDisciplineSettings settings = FireDisciplineMod.Settings;
+            float ceiling = settings?.grazeHitChanceCeiling ?? 0.65f;
+            float span = Mathf.Max(0.01f, settings?.grazeChanceSpan ?? 0.45f);
+
+            return Mathf.Clamp01((ceiling - hitChance) / span);
+        }
+
+        public static bool IsVitalOrganOrHead(BodyPartRecord part)
+        {
+            if (part == null || part.def == null) return false;
+            string name = part.def.defName.ToLower();
+            string label = part.def.label.ToLower();
+
+            if (name.Contains("brain") || name.Contains("head") || name.Contains("eye") ||
+                name.Contains("heart") || name.Contains("neck") || name.Contains("spine") || name.Contains("liver"))
+            {
+                return true;
+            }
+
+            if (label.Contains("brain") || label.Contains("head") || label.Contains("eye") ||
+                label.Contains("heart") || label.Contains("neck") || label.Contains("spine"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static BodyPartRecord FindOuterLimb(Pawn pawn)
+        {
+            if (pawn?.health?.hediffSet == null) return null;
+
+            var notMissing = pawn.health.hediffSet.GetNotMissingParts().ToList();
+            var outerLimbs = notMissing.Where(p => 
+                p.def.defName.ToLower().Contains("arm") ||
+                p.def.defName.ToLower().Contains("leg") ||
+                p.def.defName.ToLower().Contains("shoulder") ||
+                p.def.defName.ToLower().Contains("torso")
+            ).ToList();
+
+            if (outerLimbs.Count > 0)
+            {
+                return outerLimbs.RandomElement();
+            }
+
+            return null;
+        }
+    }
+}

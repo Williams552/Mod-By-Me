@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>FireDiscipline</RootNamespace>
+    <AssemblyName>FireDiscipline</AssemblyName>
+    <OutputPath>..\..\1.6\Assemblies\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*" PrivateAssets="all" />
+    <PackageReference Include="Lib.Harmony" Version="2.2.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    Deploy into the RimWorld Mods folder after every successful build. Passes -NoBuild so the
+    script does not re-enter MSBuild. ContinueOnError keeps a failed copy (usually the game is
+    running and holding the old DLL) from failing the build, but it still surfaces as a warning.
+    Run with /p:SkipDeploy=true to build without deploying.
+  -->
+  <Target Name="DeployToRimWorld" AfterTargets="Build" Condition="'$(SkipDeploy)' != 'true'">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\..\deploy.ps1&quot; -NoBuild"
+          ContinueOnError="true" />
+  </Target>
+</Project>

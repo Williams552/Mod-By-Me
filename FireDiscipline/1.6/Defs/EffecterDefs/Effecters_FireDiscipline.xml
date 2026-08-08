@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!--
+    Visual indicator for a pawn under heavy fire.
+
+    Until now suppression was invisible during a firefight: the only way to observe it was to pause
+    and open a health tab, which changes what you are measuring. The whole mechanic was unreadable
+    at the moment it mattered.
+
+    Built entirely from vanilla parts - SubEffecter_DrifterEmoteChance and Mote_Danger, the same
+    pieces the base game uses for its own pawn-state emotes. No new textures, no borrowed assets.
+  -->
+  <EffecterDef>
+    <defName>FD_Suppressed</defName>
+    <children>
+      <li>
+        <subEffecterClass>SubEffecter_DrifterEmoteChance</subEffecterClass>
+        <moteDef>Mote_Danger</moteDef>
+        <!-- Sparse on purpose. A firefight can suppress a dozen pawns at once, and one icon per
+             pawn per few seconds reads as "these are pinned" while a dense stream reads as noise. -->
+        <chancePerTick>0.025</chancePerTick>
+        <scale>0.5~0.7</scale>
+        <positionRadius>0.3</positionRadius>
+        <speed>0.18~0.18</speed>
+        <angle>10~80</angle>
+      </li>
+    </children>
+  </EffecterDef>
+
+</Defs>

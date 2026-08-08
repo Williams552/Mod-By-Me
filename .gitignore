@@ -1,0 +1,24 @@
+# Build output. `dotnet build` regenerates everything here, including 0Harmony.dll,
+# which comes from the Lib.Harmony NuGet package rather than from source control.
+FireDiscipline/1.6/Assemblies/
+[Bb]in/
+[Oo]bj/
+
+# Third-party mods kept locally for reference and decompilation. Separately licensed,
+# re-downloadable, and 64 MB of files this project never builds.
+Reference Mods/
+RunAndGun - Continued/
+
+# Archives and packaged snapshots
+*.rar
+*.zip
+
+# IDE and tooling
+.vs/
+.idea/
+*.user
+*.suo
+
+# OS
+Thumbs.db
+desktop.ini

@@ -1,0 +1,502 @@
+Mono path[0] = 'D:/SteamLibrary/steamapps/common/RimWorld/RimWorldWin64_Data/Managed'
+Mono config path = 'D:/SteamLibrary/steamapps/common/RimWorld/MonoBleedingEdge/etc'
+[PhysX] Initialized MultithreadedTaskDispatcher with 8 workers.
+Initialize engine version: 2022.3.35f1 (011206c7a712)
+[Subsystems] Discovering subsystems at path D:/SteamLibrary/steamapps/common/RimWorld/RimWorldWin64_Data/UnitySubsystems
+GfxDevice: creating device client; threaded=1; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1650 (ID=0x1f99)
+    Vendor:   NVIDIA
+    VRAM:     3935 MB
+    Driver:   32.0.16.1062
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.393 seconds
+- Finished resetting the current domain, in  0.002 seconds
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+[PhysX] Initialized MultithreadedTaskDispatcher with 8 workers.
+UnloadTime: 1.915700 ms
+Command line arguments: -disable-compute-shaders
+RimWorld 1.6.4871 rev591
+Mod Jetpack dependency (Drifter.FlightFramework) needs to have <downloadUrl> and/or <steamWorkshopUrl> specified.
+Tried loading mod with the same packageId multiple times: Ayameduki.HARIdearn. Ignoring the duplicates.
+D:\SteamLibrary\steamapps\workshop\content\294100\2890702894
+D:\SteamLibrary\steamapps\workshop\content\294100\2871413100
+Mod [UY]UY's-Armor dependency (OskarPotocki.VanillaFactionsExpanded.Core) needs to have <downloadUrl> and/or <steamWorkshopUrl> specified.
+Mod Spawn Female Pawns Only dependency (sarg.alphagenes) needs to have <downloadUrl> and/or <steamWorkshopUrl> specified.
+Fallback handler could not load library D:/SteamLibrary/steamapps/common/RimWorld/RimWorldWin64_Data/MonoBleedingEdge/data-000001B370EA9020.dll
+Fallback handler could not load library D:/SteamLibrary/steamapps/common/RimWorld/RimWorldWin64_Data/MonoBleedingEdge/data-000001B3710FB3B0.dll
+[HugsLib] version 12.0.0
+<color=#66ffb5>[MeleeAnim]</color> Hello, world!
+Build date: 7/31/2026 6:45 PM
+Loaded assemblies (8):
+0BetterFloatMenu, Version=16.0.0.0, Culture=neutral, PublicKeyToken=null,
+0ColourPicker, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null,
+AMRetextureSupport, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null,
+Meta.Numerics, Version=3.1.0.0, Culture=neutral, PublicKeyToken=67d25c65a6631347,
+ModRequestAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null,
+ModRequestAPI.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null,
+Unity.Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null,
+zAnimationMod, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+<color=#66ffb5>[MeleeAnim]</color> Scanning 19 mods for animation data...
+<color=#66ffb5>[MeleeAnim]</color> Found 1 mod folders with animation data, total 69 loadable files.
+Smarter Raider AI Initialising...
+Failed to find Verse.TerrainDef named AncientHeavyBridge. There are 383 defs of this type loaded.
+[YayosCombatAddon] SimpleSidearms active, compatibility will be applied
+[YayoCombat] Applying Def patches.
+Fallback handler could not load library D:/SteamLibrary/steamapps/common/RimWorld/RimWorldWin64_Data/MonoBleedingEdge/data-000001B3E9B63020.dll
+[Fire Discipline] Initializing modules (PackageId: william.firediscipline)...
+[Fire Discipline] Encumbrance StatPart dynamically injected into MoveSpeed.
+[Fire Discipline] Module [Gear Encumbrance] ENABLED & Patched.
+[Fire Discipline] StatPart_AimingDelay injected into AimingDelayFactor.
+[Fire Discipline] Patch_ShotReport successfully patched onto ShotReport.HitReportFor.
+[Fire Discipline] Patch_Pawn_PathFollower successfully patched onto StartPath.
+[Fire Discipline] AimStance v2 patches successfully registered manually.
+[Fire Discipline] Module [Aim Mode & Stances v2] ENABLED & Patched.
+[Fire Discipline] External Suppression mod detected! Fire Discipline Stance Suppression Integration is ACTIVE.
+[Fire Discipline] Patched Verb.Available for Pinned state (>0.8 severity).
+[Fire Discipline] Module [Suppression & External Integration] ENABLED & Patched.
+[Fire Discipline] Graze System Module initialized.
+[Fire Discipline] Patched DamageWorker_AddInjury.Apply for Graze calculations.
+[Fire Discipline] Module [Graze System (Anti-One-Shot)] ENABLED & Patched.
+[Fire Discipline] Shock & Shell Shock Module initialized.
+[Fire Discipline] Patched Pawn.Kill for Combat Shock.
+[Fire Discipline] Patched Explosion.StartExplosion for Proportional Shell Shock.
+[Fire Discipline] Module [Shock & Shell Shock System] ENABLED & Patched.
+ldsfld System.Boolean yayoCombat.YayoCombatCore::ammo
+brtrue.s Label0
+ret NULL
+newobj System.Void System.Collections.Generic.List`1<RimWorld.CompApparelReloadable>::.ctor() [Label0]
+stloc.0 NULL
+ldarg.0 NULL
+brtrue.s Label1
+ldnull NULL
+br.s Label2
+ldarg.0 NULL [Label1]
+ldfld Verse.Pawn_EquipmentTracker Verse.Pawn::equipment
+dup NULL
+brtrue.s Label3
+pop NULL
+ldnull NULL
+br.s Label4
+call System.Collections.Generic.List`1<Verse.ThingWithComps> Verse.Pawn_EquipmentTracker::get_AllEquipmentListForReading() [Label3]
+brfalse.s Label5 [Label2, Label4]
+ldarg.0 NULL
+ldfld Verse.Pawn_EquipmentTracker Verse.Pawn::equipment
+callvirt System.Collections.Generic.List`1<Verse.ThingWithComps> Verse.Pawn_EquipmentTracker::get_AllEquipmentListForReading()
+callvirt System.Collections.Generic.Enumerator<Verse.ThingWithComps> System.Collections.Generic.List`1<Verse.ThingWithComps>::GetEnumerator()
+stloc.1 NULL
+br.s Label6 [EX_BeginException]
+ldloca.s 1 (System.Collections.Generic.List`1+Enumerator[Verse.ThingWithComps]) [Label9]
+call virtual Verse.ThingWithComps System.Collections.Generic.Enumerator<Verse.ThingWithComps>::get_Current()
+stloc.2 NULL
+ldloc.2 NULL
+callvirt RimWorld.CompApparelReloadable Verse.ThingWithComps::GetComp()
+stloc.3 NULL
+ldloc.3 NULL
+brfalse.s Label7
+ldloc.2 NULL
+ldfld Verse.ThingDef Verse.Thing::def
+callvirt System.Boolean Verse.ThingDef::get_IsWeapon()
+brfalse.s Label8
+ldloc.0 NULL
+ldloc.3 NULL
+callvirt virtual System.Void System.Collections.Generic.List`1<RimWorld.CompApparelReloadable>::Add(RimWorld.CompApparelReloadable item)
+ldloca.s 1 (System.Collections.Generic.List`1+Enumerator[Verse.ThingWithComps]) [Label6, Label7, Label8]
+call virtual System.Boolean System.Collections.Generic.Enumerator<Verse.ThingWithComps>::MoveNext()
+brtrue.s Label9
+leave.s Label10
+ldloca.s 1 (System.Collections.Generic.List`1+Enumerator[Verse.ThingWithComps]) [EX_BeginFinally]
+constrained. System.Collections.Generic.List`1+Enumerator[Verse.ThingWithComps]
+callvirt abstract virtual System.Void System.IDisposable::Dispose()
+endfinally NULL [EX_EndException]
+ldarg.0 NULL [Label5, Label10]
+brtrue.s Label11
+ldnull NULL
+br.s Label12
+ldarg.0 NULL [Label11]
+ldfld Verse.Pawn_InventoryTracker Verse.Pawn::inventory
+dup NULL
+brtrue.s Label13
+pop NULL
+ldnull NULL
+br.s Label14
+ldfld Verse.ThingOwner`1<Verse.Thing> Verse.Pawn_InventoryTracker::innerContainer [Label13]
+brfalse.s Label15 [Label12, Label14]
+ldarg.0 NULL
+ldfld Verse.Pawn_InventoryTracker Verse.Pawn::inventory
+ldfld Verse.ThingOwner`1<Verse.Thing> Verse.Pawn_InventoryTracker::innerContainer
+callvirt System.Collections.Generic.Enumerator<Verse.Thing> Verse.ThingOwner`1<Verse.Thing>::GetEnumerator()
+stloc.s 4 (System.Collections.Generic.List`1+Enumerator[Verse.Thing])
+br.s Label16 [EX_BeginException]
+ldloca.s 4 (System.Collections.Generic.List`1+Enumerator[Verse.Thing]) [Label19]
+call virtual Verse.Thing System.Collections.Generic.Enumerator<Verse.Thing>::get_Current()
+stloc.s 5 (Verse.Thing)
+ldloc.s 5 (Verse.Thing)
+call static RimWorld.CompApparelReloadable Verse.ThingCompUtility::TryGetComp(Verse.Thing thing)
+stloc.s 6 (RimWorld.CompApparelReloadable)
+ldloc.s 6 (RimWorld.CompApparelReloadable)
+brfalse.s Label17
+ldloc.s 5 (Verse.Thing)
+ldfld Verse.ThingDef Verse.Thing::def
+callvirt System.Boolean Verse.ThingDef::get_IsWeapon()
+brfalse.s Label18
+ldloc.0 NULL
+ldloc.s 6 (RimWorld.CompApparelReloadable)
+callvirt virtual System.Void System.Collections.Generic.List`1<RimWorld.CompApparelReloadable>::Add(RimWorld.CompApparelReloadable item)
+ldloca.s 4 (System.Collections.Generic.List`1+Enumerator[Verse.Thing]) [Label16, Label17, Label18]
+call virtual System.Boolean System.Collections.Generic.Enumerator<Verse.Thing>::MoveNext()
+brtrue.s Label19
+leave.s Label20
+ldloca.s 4 (System.Collections.Generic.List`1+Enumerator[Verse.Thing]) [EX_BeginFinally]
+constrained. System.Collections.Generic.List`1+Enumerator[Verse.Thing]
+callvirt abstract virtual System.Void System.IDisposable::Dispose()
+endfinally NULL [EX_EndException]
+ldloc.0 NULL [Label15, Label20]
+callvirt System.Collections.Generic.Enumerator<RimWorld.CompApparelReloadable> System.Collections.Generic.List`1<RimWorld.CompApparelReloadable>::GetEnumerator()
+stloc.s 7 (System.Collections.Generic.List`1+Enumerator[RimWorld.CompApparelReloadable])
+br Label21 [EX_BeginException]
+ldloca.s 7 (System.Collections.Generic.List`1+Enumerator[RimWorld.CompApparelReloadable]) [Label28]
+call virtual RimWorld.CompApparelReloadable System.Collections.Generic.Enumerator<RimWorld.CompApparelReloadable>::get_Current()
+stloc.s 8 (RimWorld.CompApparelReloadable)
+ldsfld System.Single yayoCombat.YayoCombatCore::s_enemyAmmo
+ldc.r4 1
+ble.s Label22
+ldarg.0 NULL
+brtrue.s Label23
+ldnull NULL
+br.s Label24
+ldarg.0 NULL [Label23]
+call virtual RimWorld.Faction Verse.Thing::get_Faction()
+stloc.s 10 (RimWorld.Faction) [Label24]
+ldloc.s 10 (RimWorld.Faction)
+brfalse.s Label25
+ldloc.s 10 (RimWorld.Faction)
+callvirt System.Boolean RimWorld.Faction::get_IsPlayer()
+brfalse.s Label26
+ldloc.s 8 (RimWorld.CompApparelReloadable) [Label22]
+callvirt virtual System.Int32 RimWorld.CompApparelVerbOwner_Charged::get_MaxCharges()
+ldloc.s 8 (RimWorld.CompApparelReloadable)
+callvirt virtual System.Int32 RimWorld.CompApparelVerbOwner_Charged::get_MaxCharges()
+conv.r4 NULL
+ldsfld System.Single yayoCombat.YayoCombatCore::s_enemyAmmo
+mul NULL
+ldc.r4 0.7
+ldc.r4 1.3
+call static System.Single Verse.Rand::Range(System.Single minInclusive, System.Single maxInclusive)
+mul NULL
+call static System.Int32 UnityEngine.Mathf::RoundToInt(System.Single f)
+call static System.Int32 UnityEngine.Mathf::Min(System.Int32 a, System.Int32 b)
+stloc.s 9 (System.Int32)
+br.s Label27
+ldloc.s 8 (RimWorld.CompApparelReloadable) [Label25, Label26]
+callvirt virtual System.Int32 RimWorld.CompApparelVerbOwner_Charged::get_MaxCharges()
+conv.r4 NULL
+ldsfld System.Single yayoCombat.YayoCombatCore::s_enemyAmmo
+mul NULL
+ldc.r4 0.7
+ldc.r4 1.3
+call static System.Single Verse.Rand::Range(System.Single minInclusive, System.Single maxInclusive)
+mul NULL
+call static System.Int32 UnityEngine.Mathf::RoundToInt(System.Single f)
+stloc.s 9 (System.Int32)
+ldloc.s 8 (RimWorld.CompApparelReloadable) [Label27]
+call static HarmonyLib.Traverse HarmonyLib.Traverse::Create(System.Object root)
+ldstr "remainingCharges"
+callvirt HarmonyLib.Traverse HarmonyLib.Traverse::Field(System.String name)
+ldloc.s 9 (System.Int32)
+box System.Int32
+callvirt HarmonyLib.Traverse HarmonyLib.Traverse::SetValue(System.Object value)
+pop NULL
+ldloca.s 7 (System.Collections.Generic.List`1+Enumerator[RimWorld.CompApparelReloadable]) [Label21]
+call virtual System.Boolean System.Collections.Generic.Enumerator<RimWorld.CompApparelReloadable>::MoveNext()
+brtrue Label28
+leave.s Label29
+ldloca.s 7 (System.Collections.Generic.List`1+Enumerator[RimWorld.CompApparelReloadable]) [EX_BeginFinally]
+constrained. System.Collections.Generic.List`1+Enumerator[RimWorld.CompApparelReloadable]
+callvirt abstract virtual System.Void System.IDisposable::Dispose()
+endfinally NULL [EX_EndException]
+ret NULL [Label29]
+Type BGRenderer probably needs a StaticConstructorOnStartup attribute, because it has a field layers of type Texture2D[]. All assets must be loaded in the main thread.
+Type VideoPlayerUtil probably needs a StaticConstructorOnStartup attribute, because it has a field go of type GameObject. All assets must be loaded in the main thread.
+Type AnimRenderer probably needs a StaticConstructorOnStartup attribute, because it has a field DefaultCutout of type Material. All assets must be loaded in the main thread.
+Type Dialog_AnimationDebugger probably needs a StaticConstructorOnStartup attribute, because it has a field mpb of type MaterialPropertyBlock. All assets must be loaded in the main thread.
+Type GrappleFlyer probably needs a StaticConstructorOnStartup attribute, because it has a field mpb of type MaterialPropertyBlock. All assets must be loaded in the main thread.
+Type GrabUtility probably needs a StaticConstructorOnStartup attribute, because it has a field mpb of type MaterialPropertyBlock. All assets must be loaded in the main thread.
+Type Building_DuelSpot probably needs a StaticConstructorOnStartup attribute, because it has a field invisible of type Graphic. All assets must be loaded in the main thread.
+Unloading 5 Unused Serialized files (Serialized files now loaded: 6)
+Unloading 97 unused Assets to reduce memory usage. Loaded Objects now: 26821.
+Total: 411.453000 ms (FindLiveObjects: 4.723300 ms CreateObjectMapping: 8.335200 ms MarkObjects: 396.976600 ms  DeleteObjects: 1.417300 ms)
+
+CharacterEditor v1.6.3 initializing...
+updating labels for english...
+loading pawn slot content from file...
+character editor instance created
+checking editor settings...
+bodysizes genes are active
+CharacterEditor v1.6.3 ...done
+<color=#66ffb5>[MeleeAnim]</color> Potential patch conflicts (5):
+<color=#66ffb5>[MeleeAnim]</color> 
+static System.Void Verse.PawnGenerator::GenerateGearFor(Verse.Pawn pawn, Verse.PawnGenerationRequest request)
+Prefixes:
+Transpilers:
+Postfixes:
+  [Mlie.YayosCombat3] Postfix
+  [co.uk.epicguru.meleeanimation] Postfix
+  [PeteTimesSix.SimpleSidearms] GenerateGearFor
+
+static System.Collections.Generic.List`1<Verse.FloatMenuOption> RimWorld.FloatMenuMakerMap::GetOptions(System.Collections.Generic.List`1<Verse.Pawn> selectedPawns, UnityEngine.Vector3 clickPos, RimWorld.FloatMenuContext& context)
+Prefixes:
+Transpilers:
+Postfixes:
+  [co.uk.epicguru.meleeanimation] Postfix
+  [net.pardeike.rimworld.mods.achtung] Postfix
+
+Verse.PreRenderResults Verse.PawnRenderer::ParallelGetPreRenderResults(UnityEngine.Vector3 drawLoc, System.Nullable`1<Verse.Rot4> rotOverride, System.Boolean neverAimWeapon, System.Boolean disableCache)
+Prefixes:
+Transpilers:
+  [Mlie.SuppressionMod] Transpiler
+Postfixes:
+  [co.uk.epicguru.meleeanimation] Postfix
+
+virtual System.Boolean RimWorld.Verb_MeleeAttack::TryCastShot()
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+  [PeteTimesSix.SimpleSidearms] TryCastShot
+<color=#66ffb5>[MeleeAnim]</color> Full patch list:
+<color=#66ffb5>[MeleeAnim]</color> 
+static System.Void Verse.PawnGenerator::GenerateGearFor(Verse.Pawn pawn, Verse.PawnGenerationRequest request)
+Prefixes:
+Transpilers:
+Postfixes:
+  [Mlie.YayosCombat3] Postfix
+  [co.uk.epicguru.meleeanimation] Postfix
+  [PeteTimesSix.SimpleSidearms] GenerateGearFor
+
+System.Void RimWorld.Building_ProximityDetector::RunDetection()
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+  [co.uk.epicguru.meleeanimation] Postfix
+
+static System.Collections.Generic.List`1<Verse.FloatMenuOption> RimWorld.FloatMenuMakerMap::GetOptions(System.Collections.Generic.List`1<Verse.Pawn> selectedPawns, UnityEngine.Vector3 clickPos, RimWorld.FloatMenuContext& context)
+Prefixes:
+Transpilers:
+Postfixes:
+  [co.uk.epicguru.meleeanimation] Postfix
+  [net.pardeike.rimworld.mods.achtung] Postfix
+
+System.Boolean Verse.HediffSet::get_HasHead()
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+static System.Boolean RimWorld.InvisibilityUtility::IsPsychologicallyInvisible(Verse.Pawn pawn)
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+static System.Void Verse.PawnRenderUtility::DrawEquipmentAiming(Verse.Thing eq, UnityEngine.Vector3 drawLoc, System.Single aimAngle)
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+System.Void Verse.PawnRenderer::DrawShadowInternal(UnityEngine.Vector3 drawLoc)
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+Verse.PreRenderResults Verse.PawnRenderer::ParallelGetPreRenderResults(UnityEngine.Vector3 drawLoc, System.Nullable`1<Verse.Rot4> rotOverride, System.Boolean neverAimWeapon, System.Boolean disableCache)
+Prefixes:
+Transpilers:
+  [Mlie.SuppressionMod] Transpiler
+Postfixes:
+  [co.uk.epicguru.meleeanimation] Postfix
+
+System.Void Verse.PawnRenderer::ParallelPreRenderPawnAt(UnityEngine.Vector3 drawLoc, System.Nullable`1<Verse.Rot4> rotOverride, System.Boolean neverAimWeapon)
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+System.Void Verse.PawnRenderer::RenderPawnAt(UnityEngine.Vector3 drawLoc, System.Nullable`1<Verse.Rot4> rotOverride, System.Boolean neverAimWeapon)
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+  [co.uk.epicguru.meleeanimation] Postfix
+
+System.Void Verse.PawnRenderTree::ParallelPreDraw(Verse.PawnDrawParms parms)
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+  [co.uk.epicguru.meleeanimation] Postfix
+
+static Verse.Pawn RimWorld.PawnUtility::PawnBlockingPathAt(Verse.IntVec3 c, Verse.Pawn forPawn, System.Boolean actAsIfHadCollideWithPawnsJob, System.Boolean collideOnlyWithStandingPawns, System.Boolean forPathFinder, System.Boolean useId)
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+System.Void RimWorld.Pawn_ApparelTracker::Notify_ApparelChanged()
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+virtual System.Void Verse.Pawn::DrawGUIOverlay()
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+System.Void Verse.Pawn_DrawTracker::Notify_MeleeAttackOn(Verse.Thing Target)
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+Verse.BattleLogEntry_MeleeCombat RimWorld.Verb_MeleeAttack::CreateCombatLog(System.Func`2<Verse.ManeuverDef, Verse.RulePackDef> rulePackGetter, System.Boolean alwaysShow)
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+
+virtual System.Boolean RimWorld.Verb_MeleeAttack::TryCastShot()
+Prefixes:
+  [co.uk.epicguru.meleeanimation] Prefix
+Transpilers:
+Postfixes:
+  [PeteTimesSix.SimpleSidearms] TryCastShot
+Unloading 1 Unused Serialized files (Serialized files now loaded: 7)
+<color=#66ffb5>[MeleeAnim]</color> PreCached all retexture info in 25.0ms
+<color=#66ffb5>[MeleeAnim]</color> Loaded tweak data for 22 weapons.
+<color=#66ffb5>[MeleeAnim]</color> ludeon.rimworld.odyssey 'Odyssey' has 2 missing weapon tweak data.
+<color=#66ffb5>[MeleeAnim]</color> Skipping reporting of missing mod/weapons because user opted out or the feature is disabled by the developer.
+<color=#66ffb5>[MeleeAnim]</color> Patched 2 classes that directly inherit from Verb_MeleeAttack in 192.6 ms to detect hits:
+RimWorld.Verb_MeleeApplyHediff from Assembly-CSharp
+RimWorld.Verb_MeleeAttackDamage from Assembly-CSharp
+<color=#66ffb5>[MeleeAnim]</color> Found 27 items of clothing that cover hands, took 0.61 ms:
+Apparel_Parka (Parka),
+Apparel_CollarShirt (Button-down shirt),
+Apparel_Duster (Duster),
+Apparel_Jacket (Jacket),
+Apparel_PlateArmor (Plate armor),
+Apparel_FlakJacket (Flak jacket),
+Apparel_PowerArmor (Marine armor),
+Apparel_ArmorRecon (Recon armor),
+Apparel_Cape (Cape),
+Apparel_Robe (Robe),
+Apparel_PsyfocusRobe (Eltex robe),
+Apparel_ShirtRuffle (Formal shirt),
+Apparel_RobeRoyal (Prestige robe),
+Apparel_ArmorReconPrestige (Prestige recon armor),
+Apparel_ArmorMarinePrestige (Prestige marine armor),
+Apparel_ArmorCataphract (Cataphract armor),
+Apparel_ArmorCataphractPrestige (Prestige cataphract armor),
+Apparel_ArmorLocust (Locust armor),
+Apparel_ArmorMarineGrenadier (Grenadier armor),
+Apparel_ArmorCataphractPhoenix (Phoenix armor),
+Apparel_Burka (Burka),
+Apparel_KidRomper (Kid romper),
+Apparel_KidParka (Kid parka),
+Apparel_MechlordSuit (Mechlord suit),
+Apparel_LabCoat (Lab coat),
+Apparel_Vacsuit (Vacsuit),
+Apparel_VacsuitChildren (Kid vacsuit)
+Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 26985.
+Total: 202.006000 ms (FindLiveObjects: 1.472600 ms CreateObjectMapping: 2.154500 ms MarkObjects: 198.313200 ms  DeleteObjects: 0.065400 ms)
+
+Unloading 0 Unused Serialized files (Serialized files now loaded: 7)
+Unloading 0 unused Assets to reduce memory usage. Loaded Objects now: 26985.
+Total: 184.139400 ms (FindLiveObjects: 1.171900 ms CreateObjectMapping: 1.873000 ms MarkObjects: 181.047200 ms  DeleteObjects: 0.046900 ms)
+
+Unloading 0 Unused Serialized files (Serialized files now loaded: 7)
+Unloading 0 unused Assets to reduce memory usage. Loaded Objects now: 26985.
+Total: 218.614100 ms (FindLiveObjects: 1.690900 ms CreateObjectMapping: 2.269800 ms MarkObjects: 214.607700 ms  DeleteObjects: 0.045600 ms)
+
+Unloading 0 Unused Serialized files (Serialized files now loaded: 7)
+CE is trying to create default parameter lists ...
+creating default parameter list for genes...
+250 default entities for genes created
+creating default parameter list for objects...
+1654 default entities for objects created
+creating default parameter list for turrets...
+12 default entities for turrets created
+...lists created
+CE is trying to apply modified parameters...
+no modifications for genes
+no modifications for objects
+no modifications for lifestages
+...done
+Unloading 0 unused Assets to reduce memory usage. Loaded Objects now: 26995.
+Total: 356.025400 ms (FindLiveObjects: 1.500100 ms CreateObjectMapping: 2.221000 ms MarkObjects: 352.250100 ms  DeleteObjects: 0.053900 ms)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 7)
+[PhysX] Initialized MultithreadedTaskDispatcher with 8 workers.
+UnloadTime: 1.609800 ms
+Unloading 2 unused Assets to reduce memory usage. Loaded Objects now: 27033.
+Total: 205.635300 ms (FindLiveObjects: 1.201900 ms CreateObjectMapping: 2.243100 ms MarkObjects: 202.131600 ms  DeleteObjects: 0.058500 ms)
+
+Loading game from file Fire Discipline Test with mods:
+  - brrainz.harmony
+  - Ludeon.RimWorld
+  - Ludeon.RimWorld.Royalty
+  - Ludeon.RimWorld.Ideology
+  - Ludeon.RimWorld.Biotech
+  - Ludeon.RimWorld.Anomaly
+  - UnlimitedHugs.HugsLib
+  - brrainz.achtung
+  - Mlie.Suppression
+  - Mlie.YayosCombat3
+  - william.firediscipline
+  - co.uk.epicguru.meleeanimation
+  - Ludeon.RimWorld.Odyssey
+  - MemeGoddess.RunAndGun
+  - pogo.ai
+  - PeteTimesSix.SimpleSidearms
+  - Syrus.YayosCombatAddon
+  - void.charactereditor
+  - Harkon.VEAddOn.VanillaExpandedExtraEmbrasures
+<color=#66ffb5>[MeleeAnim]</color> Loaded 0 animation renderers on map Map-0-PlayerHome
+checking editor settings...
+bodysizes genes are active
+Unloading 1 Unused Serialized files (Serialized files now loaded: 7)
+Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 33835.
+Total: 236.426700 ms (FindLiveObjects: 1.659100 ms CreateObjectMapping: 2.574900 ms MarkObjects: 232.117000 ms  DeleteObjects: 0.075200 ms)
+
+Root level exception in OnGUI(): System.TypeInitializationException: The type initializer for 'FireDiscipline.AimStance.Patch_ShotReport' threw an exception. ---> System.ArgumentException: FieldRefAccess<Verse.ShotReport, System.Single> for factorFromShooterAndDist caused an exception ---> System.ArgumentException: T (FieldRefAccess instance type) must not be a value type
+[Ref 86DCC86F]
+  at HarmonyLib.AccessTools.FieldRefAccess[T,F] (System.String fieldName) [0x00022] in <e53399289d9b419d83f9f5b02c5cf609>:0 
+   --- End of inner exception stack trace ---
+[Ref AE62412E]
+  at HarmonyLib.AccessTools.FieldRefAccess[T,F] (System.String fieldName) [0x000af] in <e53399289d9b419d83f9f5b02c5cf609>:0 
+FireDiscipline.AimStance.Patch_ShotReport..cctor()
+   --- End of inner exception stack trace ---
+[Ref F0F06D4]
+  at Verse.ShotReport.HitReportFor (Verse.Thing caster, Verse.Verb verb, Verse.LocalTargetInfo target) [0x003d9] in <61e4173561894da49d210260257b5097>:0 
+    - POSTFIX Mlie.SuppressionMod: Void SuppressionMod.HarmonyPatches.ShotReport_HitReportFor:Postfix(LocalTargetInfo& target, ShotReport& __result)
+    - POSTFIX william.firediscipline: Void FireDiscipline.AimStance.Patch_ShotReport:Postfix(Thing caster, Verb verb, LocalTargetInfo target, ShotReport& __result)
+  at Verse.TooltipUtility.ShotCalculationTipString (Verse.Thing target) [0x000fb] in <61e4173561894da49d210260257b5097>:0 
+  at Verse.TooltipGiverList.DispenseAllThingTooltips () [0x00127] in <61e4173561894da49d210260257b5097>:0 
+  at RimWorld.MapInterface.MapInterfaceOnGUI_BeforeMainTabs () [0x0008a] in <61e4173561894da49d210260257b5097>:0 
+  at RimWorld.UIRoot_Play.UIRootOnGUI () [0x0001f] in <61e4173561894da49d210260257b5097>:0 
+  at Verse.Root.OnGUI () [0x00046] in <61e4173561894da49d210260257b5097>:0 
+    - POSTFIX UnlimitedHugs.HugsLib: Void HugsLib.Patches.Root_OnGUI_Patch:OnGUIHookUnfiltered()
+Root level exception in OnGUI(): System.TypeInitializationException: The type initializer for 'FireDiscipline.AimStance.Patch_ShotReport' threw an exception. ---> System.ArgumentException: FieldRefAccess<Verse.ShotReport, System.Single> for factorFromShooterAndDist caused an exception ---> System.ArgumentException: T (FieldRefAccess instance type) must not be a value type
+[Ref 86DCC86F] Duplicate stacktrace, see ref for original
+   --- End of inner exception stack trace ---
+[Ref AE62412E] Duplicate stacktrace, see ref for original
+   --- End of inner exception stack trace ---
+[Ref F0F06D4] Duplicate stacktrace, see ref for original

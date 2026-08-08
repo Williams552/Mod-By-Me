@@ -1,0 +1,197 @@
+using FireDiscipline.AimStance;
+using FireDiscipline.Core;
+using RimWorld;
+using UnityEngine;
+using Verse;
+
+namespace FireDiscipline.Suppression
+{
+    /// <summary>
+    /// The internal suppression engine: the thing that actually makes the tactical loop work.
+    /// Rapid fire pins a target, the player flanks, Sharpshot finishes. Without this the mod is
+    /// four accuracy presets.
+    ///
+    /// Owns the FD_Suppressed hediff and the full stance matrix. The matrix has never existed in
+    /// running code before - the previous implementation only ever applied suppression to victims
+    /// standing behind an embrasure, because the hediff write sat inside the embrasure branch.
+    /// Everyone else was suppressed by exactly nothing.
+    /// </summary>
+    public static class SuppressionEngine
+    {
+        private static HediffDef suppressedDefCache;
+
+        public static HediffDef SuppressedDef
+        {
+            get
+            {
+                if (suppressedDefCache == null)
+                {
+                    suppressedDefCache = DefDatabase<HediffDef>.GetNamedSilentFail("FD_Suppressed");
+                }
+                return suppressedDefCache;
+            }
+        }
+
+        /// <summary>
+        /// Suppression inflicted by one shot landing near a pawn, with the full stance matrix
+        /// applied:
+        ///
+        ///   amount = base
+        ///          * inflicted(shooter stance)   Rapid x1.50 - laying down volume
+        ///          * received(victim stance)     Sharpshot x2.00 - exposed and concentrating
+        ///                                        Prone x0.50 - dug in
+        ///          * embrasure(victim position)  x0.30 when enabled
+        ///
+        /// Every multiplier is a mod setting, none are magic numbers.
+        /// </summary>
+        public static float CalculateSuppressionAmount(Pawn shooter, Pawn victim)
+        {
+            FireDisciplineSettings settings = FireDisciplineMod.Settings;
+            float amount = settings?.suppressionBaseAmount ?? 0.25f;
+
+            if (shooter != null && AimStanceTracker.GetStance(shooter) == AimStanceMode.Rapid)
+            {
+                amount *= settings?.rapidSuppressionMultiplier ?? 1.50f;
+            }
+
+            if (victim != null)
+            {
+                AimStanceMode victimStance = AimStanceTracker.GetStance(victim);
+                if (victimStance == AimStanceMode.Sharpshot)
+                {
+                    amount *= settings?.sharpshotSuppressionVulnerability ?? 2.00f;
+                }
+                else if (victimStance == AimStanceMode.Prone)
+                {
+                    amount *= settings?.proneSuppressionResistance ?? 0.50f;
+                }
+
+                if ((settings?.enableEmbrasureInteraction ?? false) && EmbrasureUtility.IsUsingEmbrasure(victim))
+                {
+                    amount *= settings?.embrasureSuppressionMultiplier ?? 0.30f;
+                }
+            }
+
+            return amount;
+        }
+
+        /// <summary>
+        /// Adds suppression severity to a pawn, creating the hediff if needed.
+        /// Returns the resulting severity, or -1 if nothing was applied.
+        /// </summary>
+        public static float ApplySuppression(Pawn victim, float amount)
+        {
+            if (victim == null || victim.Dead || victim.health == null) return -1f;
+            if (amount <= 0f) return -1f;
+
+            HediffDef def = SuppressedDef;
+            if (def == null) return -1f;
+
+            Hediff hediff = victim.health.hediffSet?.GetFirstHediffOfDef(def);
+            if (hediff != null)
+            {
+                hediff.Severity = Mathf.Clamp(hediff.Severity + amount, MinSeverity, MaxSeverity(def));
+                NotifyApplied(hediff);
+                return hediff.Severity;
+            }
+
+            hediff = HediffMaker.MakeHediff(def, victim);
+            hediff.Severity = Mathf.Clamp(amount, MinSeverity, MaxSeverity(def));
+            victim.health.AddHediff(hediff);
+            NotifyApplied(hediff);
+            return hediff.Severity;
+        }
+
+        /// <summary>
+        /// Tells the hediff it was just topped up.
+        ///
+        /// HediffComp_Disappears counts down from creation and is NOT reset by raising severity, so
+        /// without this a pawn under continuous fire loses its suppression 3-5 seconds after the
+        /// FIRST round regardless of how many follow. Measured in game: a pawn taking seven rounds
+        /// in a row went 219 -> 214 -> 207 -> 199 -> 193 -> 186 ticks remaining and then expired
+        /// mid-burst. Suppression that cannot be sustained cannot pin anything down, which is the
+        /// entire point of the mechanic.
+        /// </summary>
+        private static void NotifyApplied(Hediff hediff)
+        {
+            HediffComp_Disappears disappears = hediff?.TryGetComp<HediffComp_Disappears>();
+            if (disappears != null)
+            {
+                disappears.ticksToDisappear = disappears.Props.disappearsAfterTicks.RandomInRange;
+            }
+
+            HediffComp_SuppressionDecay decay = hediff?.TryGetComp<HediffComp_SuppressionDecay>();
+            decay?.Notify_Applied();
+        }
+
+        /// <summary>
+        /// Full path for one shot landing near one pawn: matrix, hediff, and the Sharpshot warmup
+        /// reset that models a marksman losing the shot when rounds crack past.
+        /// </summary>
+        public static void SuppressPawn(Pawn shooter, Pawn victim)
+        {
+            float amount = CalculateSuppressionAmount(shooter, victim);
+
+            float before = LogEvents ? GetSeverity(victim) : 0f;
+            float after = ApplySuppression(victim, amount);
+
+            // Sharpshot pays for its accuracy by being fragile under fire.
+            AimStanceTracker.Notify_Suppressed(victim);
+
+            if (LogEvents && after >= 0f)
+            {
+                LogSuppressionEvent(shooter, victim, amount, before, after);
+            }
+        }
+
+        /// <summary>
+        /// Dev-only live trace. Suppression has no on-screen indicator during a firefight, so
+        /// without this the only way to observe it is to pause and open a health tab, which changes
+        /// what you are measuring. Off by default and toggled from the debug menu.
+        /// </summary>
+        public static bool LogEvents;
+
+        private static void LogSuppressionEvent(Pawn shooter, Pawn victim, float amount, float before, float after)
+        {
+            string shooterPart = shooter != null
+                ? $"{shooter.LabelShort}[{AimStanceTracker.GetStance(shooter)}]"
+                : "unknown";
+
+            // Exposes whether sustained fire actually extends the hediff. HediffComp_Disappears
+            // counts down from creation, so a value that keeps falling while a pawn is still being
+            // shot at means the duration is NOT being refreshed.
+            string remaining = "n/a";
+            HediffDef def = SuppressedDef;
+            if (def != null && victim?.health?.hediffSet != null)
+            {
+                Hediff hediff = victim.health.hediffSet.GetFirstHediffOfDef(def);
+                HediffComp_Disappears disappears = hediff?.TryGetComp<HediffComp_Disappears>();
+                if (disappears != null) remaining = disappears.ticksToDisappear.ToString();
+            }
+
+            Log.Message($"[FD suppress] t={Find.TickManager?.TicksGame} "
+                + $"{shooterPart} -> {victim.LabelShort}[{AimStanceTracker.GetStance(victim)}] "
+                + $"amount={amount:F3} severity {before:F3}->{after:F3} ticksToDisappear={remaining}");
+        }
+
+        public static float GetSeverity(Pawn pawn)
+        {
+            HediffDef def = SuppressedDef;
+            if (def == null || pawn?.health?.hediffSet == null) return 0f;
+
+            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(def);
+            return hediff?.Severity ?? 0f;
+        }
+
+        public const float MinSeverity = 0.01f;
+
+        /// <summary>
+        /// Read from the Def rather than hardcoded, so the severity scale can be retuned in XML
+        /// without the engine silently clamping against a stale ceiling.
+        /// </summary>
+        public static float MaxSeverity(HediffDef def)
+        {
+            return def?.maxSeverity ?? 1.0f;
+        }
+    }
+}
