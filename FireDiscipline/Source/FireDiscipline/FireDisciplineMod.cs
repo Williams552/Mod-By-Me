@@ -270,6 +270,7 @@ namespace FireDiscipline
 
             listing.Gap(10f);
             listing.CheckboxLabeled("Enable High-Precision ShotReport Harmony Patch", ref Settings.enableHighPrecisionShotReportPatch);
+            listing.CheckboxLabeled("Enable Verbose Combat Logging", ref Settings.verboseCombatLogging, "Logs detailed events for graze hits, stance changes, and suppression resets to Player.log.");
 
             listing.Gap(15f);
             listing.Label("<b>What needs a restart:</b>");

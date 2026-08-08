@@ -154,9 +154,10 @@ namespace FireDiscipline
         public float pinnedSeverityThreshold = 0.80f;         // Suppression severity at which a pawn can no longer fire
 
         // =========================================================================
-        // SECTION 6: HARMONY PATCH TOGGLES
+        // SECTION 6: HARMONY PATCH TOGGLES & LOGGING
         // =========================================================================
         public bool enableHighPrecisionShotReportPatch = true; // Toggle for ShotReport Harmony Postfix
+        public bool verboseCombatLogging = false;              // Toggle for hotpath combat event logging (Player.log)
 
         /// <summary>
         /// Picks the suppression engine's value the first time this mod runs, based on what else is
@@ -222,6 +223,7 @@ namespace FireDiscipline
             // Transitions & Patches
             Scribe_Values.Look(ref stanceTransitionTicks, "stanceTransitionTicks", 45);
             Scribe_Values.Look(ref enableHighPrecisionShotReportPatch, "enableHighPrecisionShotReportPatch", true);
+            Scribe_Values.Look(ref verboseCombatLogging, "verboseCombatLogging", false);
 
             // Weapon classification (architecture rule 2)
             Scribe_Values.Look(ref shotgunMinRange, "shotgunMinRange", 8f);

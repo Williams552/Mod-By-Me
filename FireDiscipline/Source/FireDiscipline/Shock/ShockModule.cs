@@ -7,7 +7,9 @@ namespace FireDiscipline.Shock
 {
     public class ShockModule : IModule
     {
-        public string ModuleId => "Shock";
+        public const string Id = "Shock";
+
+        public string ModuleId => Id;
         public string DisplayName => "Shock & Shell Shock System";
         public string Description => "Triggers Combat Shock on nearby allies when a pawn is downed/killed, and Proportional Shell Shock on explosive impact.";
         public bool DefaultEnabled => true;

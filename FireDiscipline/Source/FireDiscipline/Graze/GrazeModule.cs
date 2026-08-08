@@ -7,7 +7,9 @@ namespace FireDiscipline.Graze
 {
     public class GrazeModule : IModule
     {
-        public string ModuleId => "Graze";
+        public const string Id = "Graze";
+
+        public string ModuleId => Id;
         public string DisplayName => "Graze System (Anti-One-Shot)";
         public string Description => "Converts fatal organ/brain shots from low-skill ranged attacks into non-lethal grazing blows (reducing damage by 65%).";
         public bool DefaultEnabled => true;

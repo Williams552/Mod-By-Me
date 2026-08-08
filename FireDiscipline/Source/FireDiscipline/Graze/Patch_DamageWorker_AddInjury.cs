@@ -18,7 +18,7 @@ namespace FireDiscipline.Graze
     {
         public static bool Prefix(DamageWorker_AddInjury __instance, ref DamageInfo dinfo, Thing thing)
         {
-            if (FireDisciplineMod.Settings != null && !FireDisciplineMod.Settings.IsModuleEnabled(new GrazeModule()))
+            if (!Core.PatchRegistry.IsModuleEnabled(GrazeModule.Id))
                 return true;
 
             if (!(thing is Pawn victim) || victim.Dead || !victim.RaceProps.Humanlike)
@@ -70,7 +70,10 @@ namespace FireDiscipline.Graze
                     MoteMaker.ThrowText(victim.DrawPos, victim.Map, $"Graze (-{(int)((1f - mult) * 100f)}%)", Color.cyan);
                 }
 
-                Log.Message($"[Fire Discipline Graze v3] {victim.LabelShort}'s {hitPart.def.defName} shot was grazing! p={p:P1}, GrazeChance={grazeChance:P1}. Dmg reduced from {originalDmg:F1} to {dinfo.Amount:F1}");
+                if (FireDisciplineMod.Settings != null && FireDisciplineMod.Settings.verboseCombatLogging)
+                {
+                    Log.Message($"[Fire Discipline Graze v3] {victim.LabelShort}'s {hitPart.def.defName} shot was grazing! p={p:P1}, GrazeChance={grazeChance:P1}. Dmg reduced from {originalDmg:F1} to {dinfo.Amount:F1}");
+                }
             }
 
             return true;

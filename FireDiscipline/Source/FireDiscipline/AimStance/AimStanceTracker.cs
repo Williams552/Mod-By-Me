@@ -97,7 +97,10 @@ namespace FireDiscipline.AimStance
             var current = GetStance(pawn);
             var next = (AimStanceMode)(((int)current + 1) % 4);
             SetStance(pawn, next);
-            Log.Message($"[Fire Discipline] Stance for {pawn.LabelShort} (ID:{pawn.thingIDNumber}) changed to {next}");
+            if (FireDisciplineMod.Settings != null && FireDisciplineMod.Settings.verboseCombatLogging)
+            {
+                Log.Message($"[Fire Discipline] Stance for {pawn.LabelShort} (ID:{pawn.thingIDNumber}) changed to {next}");
+            }
         }
 
         public static void Notify_Suppressed(Pawn pawn)
@@ -109,7 +112,10 @@ namespace FireDiscipline.AimStance
             if (stance == AimStanceMode.Sharpshot && pawn.stances?.curStance is Stance_Warmup)
             {
                 pawn.stances.SetStance(new Stance_Mobile());
-                Log.Message($"[Fire Discipline] Sharpshot warmup RESET on {pawn.LabelShort} due to suppression!");
+                if (FireDisciplineMod.Settings != null && FireDisciplineMod.Settings.verboseCombatLogging)
+                {
+                    Log.Message($"[Fire Discipline] Sharpshot warmup RESET on {pawn.LabelShort} due to suppression!");
+                }
             }
         }
 

@@ -13,7 +13,7 @@ namespace FireDiscipline.Shock
     {
         public static void Postfix_Kill(Pawn __instance)
         {
-            if (FireDisciplineMod.Settings != null && !FireDisciplineMod.Settings.IsModuleEnabled(new ShockModule()))
+            if (!Core.PatchRegistry.IsModuleEnabled(ShockModule.Id))
                 return;
 
             if (__instance == null || __instance.Map == null || !__instance.RaceProps.Humanlike)
