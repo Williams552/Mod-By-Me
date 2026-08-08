@@ -18,12 +18,14 @@ namespace FireDiscipline.Core
         {
             base.LoadedGame();
             AimStance.AimStanceTracker.ClearCache();
+            Shock.Patch_Pawn_Kill_Down.ClearCache();
         }
 
         public override void StartedNewGame()
         {
             base.StartedNewGame();
             AimStance.AimStanceTracker.ClearCache();
+            Shock.Patch_Pawn_Kill_Down.ClearCache();
         }
 
         public override void GameComponentTick()
@@ -31,10 +33,11 @@ namespace FireDiscipline.Core
             base.GameComponentTick();
 
             int currentTick = Find.TickManager?.TicksGame ?? 0;
-            if (currentTick - lastCleanupTick > 3000) // Cleanup stale pawn stance tracker entries every 3000 ticks (~50s)
+            if (currentTick - lastCleanupTick > 3000) // Cleanup stale entries every 3000 ticks (~50s)
             {
                 lastCleanupTick = currentTick;
                 AimStance.AimStanceTracker.CleanupStaleEntries();
+                Shock.Patch_Pawn_Kill_Down.CleanupStaleEntries();
             }
         }
     }

@@ -13,7 +13,42 @@ namespace FireDiscipline.Shock
     /// </summary>
     public static class Patch_Pawn_Kill_Down
     {
+        /// <summary>
+        /// Cooldown duration in ticks (120 ticks = 2 seconds) to prevent double-triggering Combat Shock when a pawn is downed and killed in rapid succession.
+        /// </summary>
+        public const int DoubleTriggerCooldownTicks = 120;
+
         private static readonly Dictionary<int, int> lastShockTicks = new Dictionary<int, int>();
+
+        public static void ClearCache()
+        {
+            lastShockTicks.Clear();
+        }
+
+        public static void CleanupStaleEntries()
+        {
+            if (lastShockTicks.Count == 0) return;
+
+            int currentTick = Find.TickManager?.TicksGame ?? 0;
+            List<int> expiredKeys = null;
+
+            foreach (var kvp in lastShockTicks)
+            {
+                if (currentTick - kvp.Value > DoubleTriggerCooldownTicks)
+                {
+                    if (expiredKeys == null) expiredKeys = new List<int>();
+                    expiredKeys.Add(kvp.Key);
+                }
+            }
+
+            if (expiredKeys != null)
+            {
+                for (int i = 0; i < expiredKeys.Count; i++)
+                {
+                    lastShockTicks.Remove(expiredKeys[i]);
+                }
+            }
+        }
 
         public static void Postfix_Kill(Pawn __instance)
         {
@@ -36,7 +71,7 @@ namespace FireDiscipline.Shock
             if (victim == null || victim.Map == null || !victim.RaceProps.Humanlike) return;
 
             int currentTick = Find.TickManager?.TicksGame ?? 0;
-            if (lastShockTicks.TryGetValue(victim.thingIDNumber, out int lastTick) && (currentTick - lastTick) < 120)
+            if (lastShockTicks.TryGetValue(victim.thingIDNumber, out int lastTick) && (currentTick - lastTick) < DoubleTriggerCooldownTicks)
             {
                 return; // Prevent double-triggering when pawn is downed and killed within 2 seconds
             }
