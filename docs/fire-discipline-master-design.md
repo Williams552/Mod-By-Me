@@ -788,6 +788,7 @@ Danh sách 44 hằng số cân bằng trong `1.6/Defs/HediffDefs/Hediffs_FireDis
 > **Ghi chú thay đổi hằng số cũ (Luật §8):**
 > - `SuppressionEngine.MinSeverity`: Giá trị CŨ là `0.01f` (hardcode trong C#, lệch 10x so với XML). Đã chuyển sang đọc từ XML def.
 > - `FD_Suppressed minSeverity`: Giá trị CŨ là `0.001` (làm severity không bao giờ <= 0f nên `HediffComp_SuppressionDecay.CompShouldRemove` không bao giờ kích hoạt, làm hediff bám vĩnh viễn trên pawn). Đã hạ về `0` để hediff tự xoá khi hết áp chế.
+> - `Patch_Pawn_Kill_Down clamp floor`: Giá trị CŨ là `0.1f` (hardcode trong C#). Đã chuyển sang đọc `shockDef.minSeverity` (= 0).
 
 ---
 
