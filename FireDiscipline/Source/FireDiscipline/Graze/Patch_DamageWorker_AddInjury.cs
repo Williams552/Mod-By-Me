@@ -101,19 +101,24 @@ namespace FireDiscipline.Graze
         public static bool IsVitalOrganOrHead(BodyPartRecord part)
         {
             if (part == null || part.def == null) return false;
-            string name = part.def.defName.ToLower();
-            string label = part.def.label.ToLower();
 
-            if (name.Contains("brain") || name.Contains("head") || name.Contains("eye") ||
-                name.Contains("heart") || name.Contains("neck") || name.Contains("spine") || name.Contains("liver"))
-            {
-                return true;
-            }
+            // Rule 2: Derive from vanilla BodyPartRecord height, depth, and tags without string matching.
+            if (part.height == BodyPartHeight.Top) return true;
+            if (part.depth == BodyPartDepth.Inside) return true;
 
-            if (label.Contains("brain") || label.Contains("head") || label.Contains("eye") ||
-                label.Contains("heart") || label.Contains("neck") || label.Contains("spine"))
+            if (part.def.tags != null)
             {
-                return true;
+                for (int i = 0; i < part.def.tags.Count; i++)
+                {
+                    var tag = part.def.tags[i];
+                    if (tag == BodyPartTagDefOf.ConsciousnessSource ||
+                        tag == BodyPartTagDefOf.BloodPumpingSource ||
+                        tag == BodyPartTagDefOf.BreathingSource ||
+                        tag == BodyPartTagDefOf.SightSource)
+                    {
+                        return true;
+                    }
+                }
             }
 
             return false;
@@ -124,12 +129,7 @@ namespace FireDiscipline.Graze
             if (pawn?.health?.hediffSet == null) return null;
 
             var notMissing = pawn.health.hediffSet.GetNotMissingParts().ToList();
-            var outerLimbs = notMissing.Where(p => 
-                p.def.defName.ToLower().Contains("arm") ||
-                p.def.defName.ToLower().Contains("leg") ||
-                p.def.defName.ToLower().Contains("shoulder") ||
-                p.def.defName.ToLower().Contains("torso")
-            ).ToList();
+            var outerLimbs = notMissing.Where(p => p.depth == BodyPartDepth.Outside && p.height != BodyPartHeight.Top).ToList();
 
             if (outerLimbs.Count > 0)
             {
