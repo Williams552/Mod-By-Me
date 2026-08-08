@@ -7,15 +7,15 @@ namespace FireDiscipline.AimStance
 {
     /// <summary>
     /// Harmony Prefix on Pawn_PathFollower.StartPath.
-    /// Automatically cancels Prone stance (invoking exit delay) if the pawn is ordered to move.
-    /// Prevents movement entirely while transitioning.
+    /// Automatically cancels Prone stance (invoking exit delay) when a pawn is ordered to move.
+    /// Actual movement delay is handled natively by vanilla Stance_Cooldown and FullBodyBusy set in SetStance.
     /// </summary>
     public static class Patch_Pawn_PathFollower
     {
-        public static bool Prefix(Pawn_PathFollower __instance, Pawn ___pawn)
+        public static void Prefix(Pawn_PathFollower __instance, Pawn ___pawn)
         {
             if (!FireDiscipline.Core.PatchRegistry.IsModuleEnabled(AimStanceModule.Id))
-                return true;
+                return;
 
             if (___pawn != null && ___pawn.Drafted)
             {
@@ -25,14 +25,7 @@ namespace FireDiscipline.AimStance
                     AimStanceTracker.SetStance(___pawn, AimStanceMode.SnapShot);
                     Messages.Message($"{___pawn.LabelShort} is packing up from Prone stance.", ___pawn, MessageTypeDefOf.NeutralEvent, false);
                 }
-
-                // If pawn is currently in a transition delay, DO NOT allow them to start moving!
-                if (AimStanceTracker.IsInTransition(___pawn))
-                {
-                    return false; // Suppress movement StartPath
-                }
             }
-            return true;
         }
     }
 }

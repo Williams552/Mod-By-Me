@@ -243,27 +243,17 @@ Fire Discipline **đã** postfix `ShotReport.HitReportFor`. Nghĩa là giá tr�
 
 ## 6.9 — `Pawn_PathFollower.StartPath` gọi từ đâu, có đường thay thế an toàn hơn không?
 
-### ⚠ Trả lời một phần
+### ✅ Đã xác minh & Xử lý (Task D1)
 
-```
-Verse.AI.Pawn_PathFollower
-    method  Void StartPath(LocalTargetInfo, PathEndMode)
-    method  Void StopDead()
-```
+**Kết luận:** KHÔNG cần `StopDead()` và KHÔNG dùng Prefix `return false`.
 
-**Có `StopDead()`** — một API công khai để dừng di chuyển. Đây là ứng viên rõ ràng thay cho việc Prefix trả `false` trên `StartPath` (vấn đề **D1**).
-
-Khác biệt về bản chất:
-
-| | Prefix `false` trên `StartPath` | Gọi `StopDead()` |
-|---|---|---|
-| Job phía trên | **Vẫn tồn tại**, tưởng pawn đang đi | Được thông báo qua đường vanilla |
-| Kiểu can thiệp | Nuốt một lời gọi của vanilla | Dùng API vanilla cung cấp |
-| Luật 5 | **Vi phạm** | Nhiều khả năng hợp lệ |
-
-⚠ **CHƯA XÁC MINH:** `StopDead()` làm gì với job đang chạy, và gọi nó từ ngoài có an toàn không. **Phải đọc thân hàm trước khi dùng nó sửa D1.**
-
-Câu "gọi từ đâu" cần phân tích call-site — reflection không làm được. Cần ILSpy thật hoặc dnSpy.
+1. **Cơ chế vanilla:** Khi `AimStanceTracker.SetStance` được gọi (ví dụ khi pawn thoát Prone), nó kích hoạt `pawn.stances.SetStance(new Stance_Cooldown(transitionTicks, null, null))`.
+2. **`Pawn_PathFollower.PatherTick`:** Vanilla tự động kiểm tra `pawn.stances.FullBodyBusy`. Trong thời gian `Stance_Cooldown`, `FullBodyBusy` trả về `true` làm `PatherTick` tạm dừng di chuyển mỗi tick mà KHÔNG huỷ đường đi (`StartPath`).
+3. **Giải pháp:** Chuyển Harmony Prefix trên `StartPath` thành `void Prefix(...)`.
+   - Giữ nguyên việc tự động thoát Prone khi nhận lệnh di chuyển.
+   - `StartPath` vanilla luôn được phép chạy để lưu đường đi.
+   - Vanilla tự hoãn di chuyển thật sự cho tới khi `Stance_Cooldown` kết thúc.
+   - Không nuốt lệnh di chuyển (sửa bug người chơi phải click 2 lần), tuân thủ 100% **Luật 5**.
 
 ---
 
@@ -279,7 +269,7 @@ Câu "gọi từ đâu" cần phân tích call-site — reflection không làm �
 | 6.6 | `Verb.Available()` đủ thường xuyên | ⚠ Virtual ✅, tần suất chưa đo | B5 |
 | 6.7 | Vanilla xử "shoot through" | ✅ Bằng cơ chế lean, không có khái niệm embrasure | B4, A8 |
 | **6.8** | **Tên hàm cover + ngữ nghĩa** | ✅ **Đã trả lời** — tên, tính hướng, khói/sáng tách riêng | **B3 mở khoá** |
-| 6.9 | Thay thế cho Prefix `false` | ⚠ Tìm được `StopDead()`, chưa xác minh | D1 |
+| **6.9** | **Thay thế cho Prefix `false`** | ✅ **Đã giải quyết (D1)** — dùng `void Prefix` + vanilla `Stance_Cooldown` | **D1 xong** |
 
 **Ba việc còn cần đọc thân hàm** (ILSpy/dnSpy thật, hoặc đo trong game):
 
