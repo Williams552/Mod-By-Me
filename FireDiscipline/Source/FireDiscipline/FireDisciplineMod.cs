@@ -241,7 +241,7 @@ namespace FireDiscipline
             listing.Label($"Spread Width At Far End: <b>{Settings.shotgunSpreadWidthEnd:F1}c</b> (Default: 3.0 - the muzzle end is always 1 cell wide)");
             Settings.shotgunSpreadWidthEnd = listing.Slider(Settings.shotgunSpreadWidthEnd, 1.0f, 8.0f);
 
-            listing.Label($"Primary Hit Damage: <b>{(int)(Settings.shotgunPrimaryDamageMultiplier * 100f)}%</b> (Default: 70% - the direct hit is reduced to pay for the splash)");
+            listing.Label($"Splash Damage Base: <b>{(int)(Settings.shotgunPrimaryDamageMultiplier * 100f)}%</b> (Default: 70% of the primary hit's damage)");
             Settings.shotgunPrimaryDamageMultiplier = listing.Slider(Settings.shotgunPrimaryDamageMultiplier, 0.30f, 1.00f);
 
             listing.Label($"Edge Damage at Shooting 0 / 20: <b>{(int)(Settings.shotgunEdgeDamageMin * 100f)}% / {(int)(Settings.shotgunEdgeDamageMax * 100f)}%</b> (skill controls the EDGE, never the radius)");

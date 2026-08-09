@@ -152,7 +152,7 @@ namespace FireDiscipline
         public float shotgunSpreadWidthEnd = 3.0f;            // Full width at the far end; the muzzle end is 1 cell
         public float shotgunEdgeDamageMin = 0.15f;            // Edge damage fraction at shooting skill 0
         public float shotgunEdgeDamageMax = 0.55f;            // Edge damage fraction at shooting skill 20
-        public float shotgunPrimaryDamageMultiplier = 0.70f;  // Primary hit is reduced to pay for the splash
+        public float shotgunPrimaryDamageMultiplier = 0.70f;  // Splash Damage Base: 70% of the primary hit's damage
         public float shotgunSplashSuppressionMultiplier = 0.40f; // Splash suppresses at a reduced rate
         public bool shotgunFriendlyFire = true;               // Design 5.5(a): ship both, default ON, read feedback
 
