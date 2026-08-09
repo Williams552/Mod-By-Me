@@ -42,12 +42,17 @@ namespace FireDiscipline.AimStance
                     desc = "Bunker/trench posture (Target size x0.65, no movement, suppression x0.5).";
                 }
 
+                string iconPath = "UI/Commands/FireDiscipline/Stance_SnapShot";
+                if (currentStance == AimStanceMode.Rapid) iconPath = "UI/Commands/FireDiscipline/Stance_Rapid";
+                else if (currentStance == AimStanceMode.Sharpshot) iconPath = "UI/Commands/FireDiscipline/Stance_Sharpshot";
+                else if (currentStance == AimStanceMode.Prone) iconPath = "UI/Commands/FireDiscipline/Stance_Prone";
+
                 Pawn targetPawn = __instance;
                 Command_Action stanceCmd = new Command_Action
                 {
                     defaultLabel = label,
                     defaultDesc = desc + "\nClick to cycle stance (Snap Shot -> Rapid -> Sharpshot -> Prone).",
-                    icon = ContentFinder<Texture2D>.Get("UI/Commands/Attack", true),
+                    icon = ContentFinder<Texture2D>.Get(iconPath, true),
                     action = () =>
                     {
                         AimStanceTracker.CycleStance(targetPawn);
