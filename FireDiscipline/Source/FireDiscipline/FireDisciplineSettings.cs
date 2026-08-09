@@ -95,9 +95,13 @@ namespace FireDiscipline
         // =========================================================================
         // SECTION 5: EMBRASURE INTERACTION CONFIGURATION (Module 5.7 / Wave B4)
         // =========================================================================
-        // Wave B feature: OFF by default. Depends on B3 (cover-driven suppression), which is still
-        // blocked on the unverified cover API - see ILSpy question 6.8. Shipping it enabled would
-        // mean shipping behaviour derived from a return value nobody has confirmed the shape of.
+        // Wave B feature: OFF by default. B3 (cover-driven suppression) is no longer the blocker -
+        // ILSpy question 6.8 is answered and the cover path is live, see SuppressionEngine.
+        // What still holds this OFF is detection: EmbrasureUtility keys off an Impassable structure
+        // with fillPercent in [0.65, 1.0), and that band also admits things that are not embrasures
+        // (FleshmassHeart 0.75, CerebrexStabilizer 0.70). That was tolerable while the effect was a
+        // small accuracy penalty. It is not tolerable now the same match grants x0.30 suppression
+        // resistance, because standing next to Anomaly fleshmass would buy near-immunity to pinning.
         public bool enableEmbrasureInteraction = false;
         // 0.60 -> 0.65 to match design 5.7. CE_Embrasure sits at 0.70 and every real embrasure in
         // the audited modlist stayed detected, so the tighter band cost nothing.
