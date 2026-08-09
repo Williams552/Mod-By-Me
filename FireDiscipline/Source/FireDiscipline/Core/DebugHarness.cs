@@ -683,9 +683,10 @@ namespace FireDiscipline.Core
         /// that is a problem, this is the table that proves it, rather than a feeling during a
         /// firefight.
         ///
-        /// The "sustain" column is the important one: while a pawn keeps taking rounds the decay
-        /// timer never starts, so weapons that can fire again inside the decay delay hold a target
-        /// down indefinitely while weapons that cannot let it recover between bursts.
+        /// The "net/s" column is the important one: it subtracts the decay that runs during the gap
+        /// between bursts, so it answers whether a weapon can build suppression at all rather than
+        /// how fast it would if recovery did not exist. A weapon whose net output is zero or below
+        /// prints NEVER, because no amount of sustained fire from it will reach a stage threshold.
         /// </summary>
         /// <summary>
         /// Debug action C. Monte-Carlo measurement of how SWINGY damage output is, not how large it

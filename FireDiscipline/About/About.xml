@@ -10,26 +10,30 @@
 
 WHAT IT ADDS
 - Four aim stances per drafted pawn: Snap Shot, Rapid, Sharpshot, Prone. Each trades accuracy, aim time and exposure differently.
-- Its own suppression engine. Incoming fire pins pawns down, and stances change how suppression works both ways: Rapid inflicts more, Sharpshot suffers more and loses its aim, Prone resists.
+- Its own suppression engine. Sustained fire slows a pawn down and eventually stops it advancing, so a firing line can hold ground instead of funnelling raiders into a killbox. Stances change suppression both ways: Rapid inflicts more, Sharpshot suffers more and loses its aim, Prone resists.
+- Cover resists suppression. A pawn behind sandbags or a wall accumulates it far more slowly, which is what lets a smaller defending force trade with a larger attacking one.
 - Gear encumbrance: heavy loadouts cost combat move speed.
 - Graze: unlikely long shots that would have hit a vital organ get downgraded instead of killing outright.
-- Combat shock and shell shock from nearby deaths and explosions.
+- Combat shock and shell shock from nearby deaths, downs and explosions.
 
 SUPPRESSION: A CHOICE YOU MAKE
 Fire Discipline has its own suppression engine rather than depending on another mod for one. If you already run a mod that adds suppression, both systems will apply suppression to the same pawn at the same time - severity builds roughly twice as fast, and each mod applies its own debuffs.
 
 So it is a toggle, not an automatic decision. On first install the engine defaults to OFF if another suppression mod or Combat Extended is detected, and ON otherwise. After that the setting is yours; the mod will not change it again.
 
-Turning the engine off keeps the four aim stances, encumbrance, graze and shell shock working normally. What you lose is the stance suppression matrix and the Pinned state. The mod settings window spells out exactly which mechanics are affected either way.
+Turning the engine off keeps the four aim stances, encumbrance, graze and shell shock working normally. What you lose is the stance suppression matrix and the cover interaction. The mod settings window spells out exactly which mechanics are affected either way.
 
 COMPATIBILITY
 - Every module has its own toggle. Turning one off takes effect immediately; turning one on needs a restart, because Harmony patches are registered at startup.
 - No hard dependencies on any other mod.
 - Not compatible in spirit with Combat Extended, which replaces the combat model rather than layering on it. Nothing will crash, but the two will fight over the same mechanics.
-- Adding or removing this mod mid-save is safe. It adds no custom classes to saved data.
+- Adding or removing this mod mid-save is safe. Its hediffs use vanilla classes, so removing it drops them on load rather than breaking the save.
 
-EXPERIMENTAL FEATURES (off by default)
-Embrasure interaction, the Pinned state, and shotgun spread are shipped switched off. They are not balance-tested yet, and shotgun spread has no danger-zone indicator, so its splash can hit your own pawns without warning.</description>
+OFF BY DEFAULT
+Two features ship switched off because they have not been balance-tested in play yet.
+
+- Shotgun spread. Shotguns get a cone of splash damage from the muzzle out to the weapon's own range, thinning out sideways and with distance. It comes with an on-screen danger zone that outlines the cone while you aim and marks cells holding your own pawns in red. Friendly fire is ON when the module is enabled, by design: the warning exists so the choice is yours to make.
+- Embrasure interaction. Pawns firing from behind an embrasure resist suppression. Detection reads a vanilla Def flag that embrasure mods set, so it recognises them without a hardcoded list - but it only matches if you actually run a mod that adds embrasures. It does nothing on its own.</description>
   <loadAfter>
     <li>Mlie.YayosCombat3</li>
     <li>Mlie.Suppression</li>
