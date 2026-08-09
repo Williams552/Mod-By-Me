@@ -1,4 +1,4 @@
-using System.Linq;
+using System.Collections.Generic;
 using FireDiscipline.Core;
 using FireDiscipline.Graze;
 using FireDiscipline.Suppression;
@@ -25,6 +25,8 @@ namespace FireDiscipline.ShotgunAoE
     /// </summary>
     public static class Patch_Projectile_Impact_Shotgun
     {
+        private static readonly List<Pawn> victimBuffer = new List<Pawn>();
+
         /// <summary>
         /// PREFIX, not postfix: Projectile.Impact destroys the projectile before it returns, so a
         /// postfix sees a despawned thing with a null Map. Void prefix, never blocks (rule 5).
@@ -32,20 +34,16 @@ namespace FireDiscipline.ShotgunAoE
         public static void Prefix(Projectile __instance, Thing hitThing)
         {
             if (!PatchRegistry.IsModuleEnabled(ShotgunAoEModule.Id)) return;
-
             if (__instance?.def?.projectile == null || __instance.def.projectile.flyOverhead) return;
 
-            Map map = __instance.Map ?? hitThing?.Map;
-            if (map == null) return;
-
             Pawn shooter = __instance.Launcher as Pawn;
-            ThingDef weaponDef = shooter?.equipment?.Primary?.def;
-            if (weaponDef == null) return;
-
-            if (!IsShotgunShot(weaponDef, __instance)) return;
-
-            FireDisciplineSettings settings = FireDisciplineMod.Settings;
+            Map map = __instance.Map ?? hitThing?.Map;
             IntVec3 impactCell = hitThing?.Position ?? __instance.Position;
+            ThingDef weaponDef = shooter?.equipment?.Primary?.def;
+
+            if (map == null) return;
+            if (weaponDef == null) return;
+            if (!IsShotgunShot(weaponDef, __instance)) return;
 
             // A wedge needs an origin and a direction. Without a pawn shooter there is neither.
             if (shooter == null || !shooter.Spawned) return;
@@ -58,6 +56,8 @@ namespace FireDiscipline.ShotgunAoE
             }
 
             int skill = shooter.skills?.GetSkill(SkillDefOf.Shooting)?.Level ?? 10;
+            FireDisciplineSettings settings = FireDisciplineMod.Settings;
+
             float edge = Mathf.Lerp(
                 settings?.shotgunEdgeDamageMin ?? 0.15f,
                 settings?.shotgunEdgeDamageMax ?? 0.55f,
@@ -70,32 +70,44 @@ namespace FireDiscipline.ShotgunAoE
 
             float maxDistSq = (length + 1f) * (length + 1f);
 
-            // Scan all pawns, but rough-filter by distance before doing vector geometry.
-            // A map has far fewer pawns than the ~900 cells a 17-radius radial scan would touch.
-            // Use ToList() to iterate on a snapshot, avoiding Collection Modified exceptions when TakeDamage downs/kills pawns.
-            foreach (Pawn victim in map.mapPawns.AllPawnsSpawned.ToList())
-            {
-                if (victim.Dead || !victim.RaceProps.Humanlike) continue;
-                if (victim == hitThing) continue;
+            // MUST clear buffer at the START of execution so interrupted calls leave clean state.
+            victimBuffer.Clear();
 
-                // Never the shooter, whatever the friendly-fire setting says. Spread travels
-                // forward from the muzzle; a pawn cannot shoot themselves.
-                if (victim == shooter) continue;
+            // Phase 1 (FILTER): Scan all pawns directly without allocating new lists.
+            // Check distance, wedge geometry, and wall obstruction (LineOfSight). NO damage applied here.
+            var allPawns = map.mapPawns.AllPawnsSpawned;
+            for (int i = 0; i < allPawns.Count; i++)
+            {
+                Pawn victim = allPawns[i];
+                if (victim == null || victim.Dead || !victim.RaceProps.Humanlike) continue;
+                if (victim == hitThing || victim == shooter) continue;
 
                 if (!friendlyFire && victim.Faction == shooter.Faction) continue;
-                
                 if (victim.Position.DistanceToSquared(origin) > maxDistSq) continue;
 
-                // Same geometry the danger overlay draws - one implementation, so the picture
-                // the player positions around cannot drift from the shape that actually hits.
                 if (!ShotgunSpreadGeometry.Contains(origin, victim.Position, direction, length,
-                        spreadPerCell, out float edgeFraction, out float densityFactor))
+                        spreadPerCell, out _, out _))
                 {
                     continue;
                 }
 
-                // Damage falls off both laterally (pellets thin out sideways) and longitudinally
-                // (pellets spread out over distance, reducing density).
+                if (!ShotgunSpreadGeometry.HasLineOfFire(origin, victim.Position, map))
+                {
+                    continue;
+                }
+
+                victimBuffer.Add(victim);
+            }
+
+            // Phase 2 (APPLY): Iterate the filtered buffer to apply damage and suppression.
+            for (int i = 0; i < victimBuffer.Count; i++)
+            {
+                Pawn victim = victimBuffer[i];
+                if (victim == null || victim.Dead) continue;
+
+                ShotgunSpreadGeometry.Contains(origin, victim.Position, direction, length,
+                    spreadPerCell, out float edgeFraction, out float densityFactor);
+
                 float dmgFactor = Mathf.Lerp(1.0f, edge, edgeFraction) * densityFactor;
                 float splashDamage = Mathf.Max(1f, primaryDamage * dmgFactor);
 
@@ -116,10 +128,10 @@ namespace FireDiscipline.ShotgunAoE
                     outerLimb,
                     weaponDef));
 
-                // Splash suppresses at a reduced rate. Without the reduction a shotgun would be the
-                // strongest suppression tool in the game by a wide margin.
+                // Splash suppresses at a reduced rate, additionally scaled by pellet densityFactor over distance.
                 float splashSuppression = SuppressionEngine.CalculateSuppressionAmount(shooter, victim)
-                    * (settings?.shotgunSplashSuppressionMultiplier ?? 0.40f);
+                    * (settings?.shotgunSplashSuppressionMultiplier ?? 0.40f)
+                    * densityFactor;
                 SuppressionEngine.ApplySuppression(victim, splashSuppression);
             }
         }

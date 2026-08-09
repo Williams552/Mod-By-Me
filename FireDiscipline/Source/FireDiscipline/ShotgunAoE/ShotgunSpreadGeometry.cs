@@ -83,6 +83,18 @@ namespace FireDiscipline.ShotgunAoE
         }
 
         /// <summary>
+        /// Checks line of sight from origin to cell, skipping the shooter's own cell.
+        /// LineOfSight checks map obstacles (walls, rock, edifices) but not pawns,
+        /// ensuring shotgun pellets pass through pawns to hit targets behind them as designed,
+        /// while preventing pellets from passing through solid walls.
+        /// </summary>
+        public static bool HasLineOfFire(IntVec3 origin, IntVec3 cell, Map map)
+        {
+            if (map == null) return false;
+            return GenSight.LineOfSight(origin, cell, map, true);
+        }
+
+        /// <summary>
         /// Every cell the spread would touch. Used by the danger overlay; the damage path tests
         /// pawns directly rather than building a list on every impact.
         /// </summary>
@@ -99,7 +111,7 @@ namespace FireDiscipline.ShotgunAoE
             foreach (IntVec3 cell in GenRadial.RadialCellsAround(origin, length + 1f, true))
             {
                 if (!cell.InBounds(map)) continue;
-                if (Contains(origin, cell, direction, length, spreadPerCell, out _, out _))
+                if (Contains(origin, cell, direction, length, spreadPerCell, out _, out _) && HasLineOfFire(origin, cell, map))
                 {
                     cells.Add(cell);
                 }
