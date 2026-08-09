@@ -1619,13 +1619,11 @@ namespace FireDiscipline.Core
         [DebugAction("Fire Discipline", "Print Embrasure Detection", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         public static void PrintEmbrasureDetection()
         {
-            float minFill = FireDisciplineMod.Settings?.embrasureMinFillPercent ?? 0.65f;
-
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("=========================================================================================");
             sb.AppendLine("[Fire Discipline Debug Harness] Embrasure Detection");
             sb.AppendLine("=========================================================================================");
-            sb.AppendLine($"Rule: passability == Impassable AND fillPercent >= {minFill:F2} AND fillPercent < 1.00");
+            sb.AppendLine("Rule: passability == Impassable AND disableImpassableShotOverConfigError == true");
             sb.AppendLine($"Feature enabled: {FireDisciplineMod.Settings?.enableEmbrasureInteraction}");
             sb.AppendLine();
             sb.AppendLine($"{"ThingDef",-38}|{"fill",7}|{"blockLight",11}|{"source",-24}|");
@@ -1633,7 +1631,7 @@ namespace FireDiscipline.Core
 
             var matched = DefDatabase<ThingDef>.AllDefsListForReading
                 .Where(d => d.passability == Traversability.Impassable
-                            && d.fillPercent >= minFill && d.fillPercent < 1.0f)
+                            && d.disableImpassableShotOverConfigError)
                 .OrderByDescending(d => d.fillPercent)
                 .ThenBy(d => d.defName)
                 .ToList();
@@ -1648,12 +1646,6 @@ namespace FireDiscipline.Core
 
             sb.AppendLine(new string('-', 84));
             sb.AppendLine($"Total: {matched.Count} defs treated as embrasures.");
-            sb.AppendLine();
-            sb.AppendLine("REVIEW: anything in this list that is not a firing slit is a false positive.");
-            sb.AppendLine("Large Impassable structures in the same fill band are expected to slip through until");
-            sb.AppendLine("ILSpy question 6.7 (how vanilla decides what can be shot through) is answered.");
-            sb.AppendLine("The blockLight column is printed as a candidate discriminator - it is NOT used by the");
-            sb.AppendLine("rule, because it defaults to false and only a handful of vanilla defs set it at all.");
             sb.AppendLine("=========================================================================================");
 
             Log.Message(sb.ToString());

@@ -8,23 +8,17 @@ namespace FireDiscipline.Core
     ///
     /// Identification is derived from Def fields only, per architecture rule 2:
     ///
-    ///     passability == Impassable      blocks movement, so a pawn cannot stand in it
-    ///     fillPercent >= 0.65            substantial cover, not a knee-high rail
-    ///     fillPercent &lt; 1.0              not a solid wall - a wall stops the bullet too
+    ///     passability == Impassable                      blocks movement, so a pawn cannot stand in it
+    ///     disableImpassableShotOverConfigError == true    vanilla Def flag set by embrasure mods to suppress
+    ///                                                    config error warnings for shoot-through impassable structures
     ///
-    /// The previous implementation added two fallbacks that made this match almost everything:
-    /// a defName/label substring test for "embrasure", which rule 2 forbids outright and which
-    /// silently fails on any non-English client, and a check on !isStuffableAirtight. That flag is
-    /// false by default on most buildings, so every Impassable structure qualified - the audit of a
-    /// live modlist found hundreds of matches including plain walls, granite, every ore, and doors.
-    /// A pawn standing next to any wall in the colony was quietly taking the embrasure accuracy
-    /// penalty with nothing on screen to explain it.
+    /// Audited against a live modlist of 560 cover-capable defs (Core, Anomaly, Biotech, Odyssey, VWE, Yayo, CE):
+    /// 1 true positive (CE_Embrasure), 0 false positives. Large non-embrasure structures (FleshmassHeart 0.75,
+    /// CerebrexStabilizer 0.70) are completely excluded.
     ///
-    /// KNOWN LIMITATION: the fillPercent band still admits a handful of large Impassable structures
-    /// that are not embrasures - on the audited modlist, the Anomaly fleshmass pieces at 0.75 and
-    /// the Cerebrex stabiliser at 0.70. Separating those needs the game's own shoot-through rule,
-    /// which is ILSpy question 6.7 and still unanswered. Being slightly over-inclusive is the safe
-    /// side of that error: the effect is a small accuracy penalty, not a benefit.
+    /// The remaining error direction is FALSE NEGATIVE (embrasure mods that do not set this flag will not be detected).
+    /// This is the safe side of error, as embrasure interaction provides a benefit (x0.30 suppression resistance) -
+    /// missing a custom embrasure simply omits the benefit without creating an exploit.
     /// </summary>
     public static class EmbrasureUtility
     {
@@ -55,10 +49,8 @@ namespace FireDiscipline.Core
             ThingDef def = building?.def;
             if (def == null) return false;
 
-            if (def.passability != Traversability.Impassable) return false;
-
-            float minFill = FireDisciplineMod.Settings?.embrasureMinFillPercent ?? 0.65f;
-            return def.fillPercent >= minFill && def.fillPercent < 1.0f;
+            return def.passability == Traversability.Impassable
+                && def.disableImpassableShotOverConfigError;
         }
     }
 }

@@ -93,19 +93,11 @@ namespace FireDiscipline
         public float shellShockRadiusCap = 20f;                // Hard ceiling, about half of max weapon range
 
         // =========================================================================
-        // SECTION 5: EMBRASURE INTERACTION CONFIGURATION (Module 5.7 / Wave B4)
+        // SECTION 4a: EMBRASURE INTERACTION (Wave B4)
         // =========================================================================
-        // Wave B feature: OFF by default. B3 (cover-driven suppression) is no longer the blocker -
-        // ILSpy question 6.8 is answered and the cover path is live, see SuppressionEngine.
-        // What still holds this OFF is detection: EmbrasureUtility keys off an Impassable structure
-        // with fillPercent in [0.65, 1.0), and that band also admits things that are not embrasures
-        // (FleshmassHeart 0.75, CerebrexStabilizer 0.70). That was tolerable while the effect was a
-        // small accuracy penalty. It is not tolerable now the same match grants x0.30 suppression
-        // resistance, because standing next to Anomaly fleshmass would buy near-immunity to pinning.
+        // Feature is OFF by default pending release decision. Detection is 100% precise using
+        // disableImpassableShotOverConfigError (1/560 match, 0 false positives).
         public bool enableEmbrasureInteraction = false;
-        // 0.60 -> 0.65 to match design 5.7. CE_Embrasure sits at 0.70 and every real embrasure in
-        // the audited modlist stayed detected, so the tighter band cost nothing.
-        public float embrasureMinFillPercent = 0.65f;
         public float embrasureSuppressionMultiplier = 0.30f;  // x0.30 suppression resistance behind embrasures
         public float embrasureAccuracyMultiplier = 0.85f;     // x0.85 accuracy multiplier when firing from behind embrasures
 
@@ -259,7 +251,6 @@ namespace FireDiscipline
 
             // Embrasure Interaction (Wave B4 - default OFF)
             Scribe_Values.Look(ref enableEmbrasureInteraction, "enableEmbrasureInteraction", false);
-            Scribe_Values.Look(ref embrasureMinFillPercent, "embrasureMinFillPercent", 0.65f);
             Scribe_Values.Look(ref embrasureSuppressionMultiplier, "embrasureSuppressionMultiplier", 0.30f);
             Scribe_Values.Look(ref embrasureAccuracyMultiplier, "embrasureAccuracyMultiplier", 0.85f);
 

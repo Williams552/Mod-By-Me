@@ -746,6 +746,7 @@ Dùng **Dubs Performance Analyzer**. Đo trước và sau mỗi module.
 >   - `FD_Suppressed` Stage 3 (ducking): `<AimingDelayFactor>0.45</AimingDelayFactor>` (giảm còn 0.10), `<MoveSpeed>-0.35</MoveSpeed>` (xoá)
 >   - `FD_Suppressed` Stage 4 (cowering): `<AimingDelayFactor>0.80</AimingDelayFactor>` (giảm còn 0.20), `<MoveSpeed>-0.55</MoveSpeed>` (xoá)
 > - **Cân bằng lại decay (2026-08-09):** `suppressionDecayPerSecond` (0.20 -> 0.10), `suppressionDecayDelayTicks` (60 -> 120 / 2 giây).
+> - **Chuyển cờ nhận diện Embrasure (Task B4, 2026-08-09):** Bỏ `embrasureMinFillPercent` (giá trị cũ 0.65f), dùng cờ Def `disableImpassableShotOverConfigError`.
 
 Danh sách các hằng số cân bằng trong `1.6/Defs/HediffDefs/Hediffs_FireDiscipline.xml`, ý nghĩa và cơ chế nạp trong code:
 
