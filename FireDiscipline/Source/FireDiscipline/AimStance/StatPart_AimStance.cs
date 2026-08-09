@@ -16,7 +16,7 @@ namespace FireDiscipline.AimStance
     {
         /// <summary>
         /// Warmup multiplier applied while a pawn is actively in a stance transition window.
-        /// Retained at 3.0f to discourage snapshotting mid-transition.
+        /// Retained at 3.0f to discourage jumping around stances mid-transition.
         /// </summary>
         public const float TransitionWarmupMultiplier = 3.0f;
 

@@ -18,7 +18,7 @@ namespace FireDiscipline.AimStance
 
         public static AimStanceMode GetStance(Pawn pawn)
         {
-            if (pawn == null) return AimStanceMode.SnapShot;
+            if (pawn == null) return AimStanceMode.Standard;
 
             if (pawn.Faction != Faction.OfPlayer)
             {
@@ -61,7 +61,7 @@ namespace FireDiscipline.AimStance
             int transitionTicks = FireDisciplineMod.Settings?.stanceTransitionTicks ?? 45;
             int currentTick = Find.TickManager?.TicksGame ?? 0;
 
-            if (newStance == AimStanceMode.SnapShot)
+            if (newStance == AimStanceMode.Standard)
             {
                 if (currentStance == AimStanceMode.Prone)
                 {
@@ -121,8 +121,8 @@ namespace FireDiscipline.AimStance
 
         public static AimStanceMode GetAutoDefaultStance(Pawn pawn)
         {
-            if (pawn?.equipment?.Primary == null) return AimStanceMode.SnapShot;
-            return AimStanceMode.SnapShot;
+            if (pawn?.equipment?.Primary == null) return AimStanceMode.Standard;
+            return AimStanceMode.Standard;
         }
 
         public static void Notify_PawnRemoved(Pawn pawn)

@@ -354,7 +354,7 @@ namespace FireDiscipline.Core
                 return;
             }
 
-            AimStanceTracker.SetStance(selectedPawn, AimStanceMode.SnapShot);
+            AimStanceTracker.SetStance(selectedPawn, AimStanceMode.Standard);
             
             HediffDef suppressionDef = DefDatabase<HediffDef>.GetNamedSilentFail("FD_Suppressed");
             if (suppressionDef != null)
@@ -366,7 +366,7 @@ namespace FireDiscipline.Core
                 }
             }
 
-            Messages.Message($"Cleared all suppression and reset stance to SnapShot for {selectedPawn.LabelShort}.", MessageTypeDefOf.PositiveEvent, false);
+            Messages.Message($"Cleared all suppression and reset stance to Standard for {selectedPawn.LabelShort}.", MessageTypeDefOf.PositiveEvent, false);
         }
 
         [DebugAction("Fire Discipline", "Test Graze Shot on Selected Pawn", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
@@ -1521,7 +1521,7 @@ namespace FireDiscipline.Core
 
             try
             {
-                AimStanceTracker.SetStance(pawn, AimStanceMode.SnapShot);
+                AimStanceTracker.SetStance(pawn, AimStanceMode.Standard);
 
                 for (int d = 0; d < distances.Length; d++)
                 {

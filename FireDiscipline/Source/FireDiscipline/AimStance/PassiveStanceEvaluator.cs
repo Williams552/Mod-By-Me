@@ -12,7 +12,7 @@ namespace FireDiscipline.AimStance
     {
         public static AimStanceMode EvaluatePassiveStance(Pawn pawn)
         {
-            if (pawn == null) return AimStanceMode.SnapShot;
+            if (pawn == null) return AimStanceMode.Standard;
 
             // Non-player pawn passive stance evaluation:
             LocalTargetInfo currentTarget = pawn.mindState?.enemyTarget;
@@ -29,7 +29,7 @@ namespace FireDiscipline.AimStance
                 }
             }
 
-            return AimStanceMode.SnapShot;
+            return AimStanceMode.Standard;
         }
     }
 }

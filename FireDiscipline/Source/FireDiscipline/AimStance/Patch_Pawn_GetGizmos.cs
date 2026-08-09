@@ -23,7 +23,7 @@ namespace FireDiscipline.AimStance
             {
                 AimStanceMode currentStance = AimStanceTracker.GetStance(__instance);
 
-                string label = "Stance: Snap Shot";
+                string label = "Stance: Standard";
                 string desc = "Baseline vanilla firing speed and accuracy.";
 
                 if (currentStance == AimStanceMode.Rapid)
@@ -42,7 +42,7 @@ namespace FireDiscipline.AimStance
                     desc = "Bunker/trench posture (Target size x0.65, no movement, suppression x0.5).";
                 }
 
-                string iconPath = "UI/Commands/FireDiscipline/Stance_SnapShot";
+                string iconPath = "UI/Commands/FireDiscipline/Stance_Standard";
                 if (currentStance == AimStanceMode.Rapid) iconPath = "UI/Commands/FireDiscipline/Stance_Rapid";
                 else if (currentStance == AimStanceMode.Sharpshot) iconPath = "UI/Commands/FireDiscipline/Stance_Sharpshot";
                 else if (currentStance == AimStanceMode.Prone) iconPath = "UI/Commands/FireDiscipline/Stance_Prone";
@@ -51,7 +51,7 @@ namespace FireDiscipline.AimStance
                 Command_Action stanceCmd = new Command_Action
                 {
                     defaultLabel = label,
-                    defaultDesc = desc + "\nClick to cycle stance (Snap Shot -> Rapid -> Sharpshot -> Prone).",
+                    defaultDesc = desc + "\nClick to cycle stance (Standard -> Rapid -> Sharpshot -> Prone).",
                     icon = ContentFinder<Texture2D>.Get(iconPath, true),
                     action = () =>
                     {

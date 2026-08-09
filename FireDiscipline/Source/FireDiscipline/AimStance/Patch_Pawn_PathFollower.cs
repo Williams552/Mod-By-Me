@@ -22,7 +22,7 @@ namespace FireDiscipline.AimStance
                 // If pawn is in Prone stance, moving automatically exits Prone and incurs transition delay
                 if (AimStanceTracker.GetStance(___pawn) == AimStanceMode.Prone)
                 {
-                    AimStanceTracker.SetStance(___pawn, AimStanceMode.SnapShot);
+                    AimStanceTracker.SetStance(___pawn, AimStanceMode.Standard);
                     Messages.Message($"{___pawn.LabelShort} is packing up from Prone stance.", ___pawn, MessageTypeDefOf.NeutralEvent, false);
                 }
             }
