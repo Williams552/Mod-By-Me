@@ -1128,8 +1128,8 @@ namespace FireDiscipline.Core
             FireDisciplineSettings settings = FireDisciplineMod.Settings;
             float perRound = settings?.suppressionBaseAmount ?? 0.25f;
             float rapidMult = settings?.rapidSuppressionMultiplier ?? 1.50f;
-            float decayPerSec = settings?.suppressionDecayPerSecond ?? 0.20f;
-            int decayDelay = settings?.suppressionDecayDelayTicks ?? 60;
+            float decayPerSec = settings?.suppressionDecayPerSecond ?? 0.10f;
+            int decayDelay = settings?.suppressionDecayDelayTicks ?? 120;
 
             // Stage thresholds are read from the Def so this table cannot drift away from the XML.
             HediffDef def = SuppressionEngine.SuppressedDef;
@@ -1149,12 +1149,11 @@ namespace FireDiscipline.Core
             sb.AppendLine($"Recovery              : {decayPerSec:F2}/s starting {decayDelay} ticks ({decayDelay / 60f:F1}s) after the last round");
             sb.AppendLine($"Stage thresholds      : ducking {duckingAt:F1}, cowering {coweringAt:F1}");
             sb.AppendLine();
-            sb.AppendLine("sec/duck = seconds of sustained fire from one shooter to reach 'ducking'.");
-            sb.AppendLine("sustain  = can this weapon fire again before recovery begins? If NO, the target");
-            sb.AppendLine("           recovers between bursts and a single shooter cannot hold it down.");
+            sb.AppendLine("sec/duck = seconds of sustained fire from one shooter to reach 'ducking' (accounting for decay).");
+            sb.AppendLine("net/s    = net suppression per second generated after subtracting decay during recovery window.");
             sb.AppendLine("enc      = move speed multiplier from this weapon's mass alone on a 35 kg-capacity pawn.");
             sb.AppendLine();
-            sb.AppendLine($"{"defName",-30}|{"kg",6}|{"burst",6}|{"cycle s",8}|{"rnd/s",7}|{"supp/s",7}|{"sec/duck",9}|{"sec/cower",10}|{"sustain",8}|{"enc",6}|{"dps",7}|");
+            sb.AppendLine($"{"defName",-30}|{"kg",6}|{"burst",6}|{"cycle s",8}|{"rnd/s",7}|{"supp/s",7}|{"net/s",7}|{"sec/duck",9}|{"sec/cower",10}|{"enc",6}|{"dps",7}|");
             sb.AppendLine(new string('-', 118));
 
             const float BaselineCarryCapacity = 35f;
@@ -1172,7 +1171,14 @@ namespace FireDiscipline.Core
                     float roundsPerSec = burst / cycleSeconds;
                     float suppPerSec = roundsPerSec * perRound;
 
-                    bool sustains = WeaponClassification.GetBurstGapSeconds(d) < decayDelay / 60f;
+                    float burstDurationSeconds = (burst - 1) * v.ticksBetweenBurstShots / 60f;
+                    float gain = burst * perRound;
+                    float decayWindow = Mathf.Max(0f, cycleSeconds - burstDurationSeconds - (decayDelay / 60f));
+                    float loss = decayPerSec * decayWindow;
+                    float net = (gain - loss) / cycleSeconds;
+
+                    float secToDuck = net > 0f ? duckingAt / net : -1f;
+                    float secToCower = net > 0f ? coweringAt / net : -1f;
 
                     float damage = v.defaultProjectile?.projectile?.GetDamageAmount(null) ?? 0f;
                     float mass = d.GetStatValueAbstract(StatDefOf.Mass);
@@ -1185,22 +1191,24 @@ namespace FireDiscipline.Core
                         Cycle = cycleSeconds,
                         RoundsPerSec = roundsPerSec,
                         SuppPerSec = suppPerSec,
-                        SecToDuck = suppPerSec > 0f ? duckingAt / suppPerSec : 999f,
-                        SecToCower = suppPerSec > 0f ? coweringAt / suppPerSec : 999f,
-                        Sustains = sustains,
+                        NetPerSec = net,
+                        SecToDuck = secToDuck,
+                        SecToCower = secToCower,
                         Enc = StatPart_Encumbrance.MultiplierForLoadRatio(mass / BaselineCarryCapacity),
                         Dps = damage * roundsPerSec
                     };
                 })
-                .OrderByDescending(r => r.SuppPerSec)
+                .OrderByDescending(r => r.NetPerSec)
                 .ToList();
 
             foreach (var r in rows)
             {
                 string name = r.Def.defName.Length > 29 ? r.Def.defName.Substring(0, 29) : r.Def.defName;
+                string duckStr = r.SecToDuck > 0f ? $"{r.SecToDuck:F1}" : "NEVER";
+                string cowerStr = r.SecToCower > 0f ? $"{r.SecToCower:F1}" : "NEVER";
                 sb.AppendLine($"{name,-30}|{r.Mass,6:F1}|{r.Burst,6}|{r.Cycle,8:F2}|{r.RoundsPerSec,7:F2}"
-                    + $"|{r.SuppPerSec,7:F2}|{r.SecToDuck,9:F1}|{r.SecToCower,10:F1}"
-                    + $"|{(r.Sustains ? "yes" : "NO"),8}|{r.Enc,6:F2}|{r.Dps,7:F1}|");
+                    + $"|{r.SuppPerSec,7:F2}|{r.NetPerSec,7:F2}|{duckStr,9}|{cowerStr,10}"
+                    + $"|{r.Enc,6:F2}|{r.Dps,7:F1}|");
             }
 
             sb.AppendLine(new string('-', 118));
@@ -1208,10 +1216,10 @@ namespace FireDiscipline.Core
             {
                 var top = rows[0];
                 var median = rows[rows.Count / 2];
-                sb.AppendLine($"Highest suppression output : {top.Def.defName} at {top.SuppPerSec:F2}/s");
-                sb.AppendLine($"Median                     : {median.Def.defName} at {median.SuppPerSec:F2}/s");
-                sb.AppendLine($"Ratio top:median           : {(median.SuppPerSec > 0f ? top.SuppPerSec / median.SuppPerSec : 0f):F1}x");
-                sb.AppendLine($"Weapons that can sustain   : {rows.Count(r => r.Sustains)} of {rows.Count}");
+                sb.AppendLine($"Highest net suppression output : {top.Def.defName} at {top.NetPerSec:F2}/s");
+                sb.AppendLine($"Median                         : {median.Def.defName} at {median.NetPerSec:F2}/s");
+                sb.AppendLine($"Ratio top:median               : {(median.NetPerSec > 0f ? top.NetPerSec / median.NetPerSec : 0f):F1}x");
+                sb.AppendLine($"Weapons with net positive output : {rows.Count(r => r.NetPerSec > 0f)} of {rows.Count}");
             }
             sb.AppendLine("=========================================================================================");
 
