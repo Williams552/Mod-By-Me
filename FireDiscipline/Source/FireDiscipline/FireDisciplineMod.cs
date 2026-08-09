@@ -80,6 +80,25 @@ namespace FireDiscipline
             listing.Gap(15f);
 
             // =========================================================================
+            // SECTION 0c: COVER SUPPRESSION (Wave B3)
+            // =========================================================================
+            listing.Label("<b><color=#AAAAFF>Cover Suppression</color></b> <i>(Wave B3)</i>");
+
+            listing.CheckboxLabeled("Enable Cover Suppression", ref Settings.enableCoverSuppression,
+                "Cover reduces incoming suppression severity.");
+
+            if (Settings.enableCoverSuppression)
+            {
+                listing.Label($"Cover Suppression Factor: <b>{Settings.coverSuppressionFactor:F2}</b> (Default: 0.85)");
+                Settings.coverSuppressionFactor = listing.Slider(Settings.coverSuppressionFactor, 0.10f, 1.00f);
+
+                listing.Label($"Cover Suppression Floor: <b>{Settings.coverSuppressionFloor:F2}</b> (Default: 0.25 - minimum suppression received)");
+                Settings.coverSuppressionFloor = listing.Slider(Settings.coverSuppressionFloor, 0.10f, 0.80f);
+            }
+
+            listing.Gap(15f);
+
+            // =========================================================================
             // SECTION 1: SHARPSHOT STANCE
             // =========================================================================
             listing.Label("<b><color=#FFD700>Sharpshot Stance (Sniper)</color></b>");

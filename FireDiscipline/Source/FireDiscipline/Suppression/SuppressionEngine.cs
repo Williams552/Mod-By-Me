@@ -70,6 +70,13 @@ namespace FireDiscipline.Suppression
                 {
                     amount *= settings?.embrasureSuppressionMultiplier ?? 0.30f;
                 }
+                else if ((settings?.enableCoverSuppression ?? true) && shooter != null && victim.Map != null)
+                {
+                    float block = CoverUtility.CalculateOverallBlockChance(victim, shooter.Position, victim.Map);
+                    float factor = settings?.coverSuppressionFactor ?? 0.85f;
+                    float floor = settings?.coverSuppressionFloor ?? 0.25f;
+                    amount *= Mathf.Clamp(1f - block * factor, floor, 1f);
+                }
             }
 
             return amount;

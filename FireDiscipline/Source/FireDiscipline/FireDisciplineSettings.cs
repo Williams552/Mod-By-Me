@@ -120,6 +120,15 @@ namespace FireDiscipline
         public int suppressionDecayDelayTicks = 60;           // Grace period after the last round lands
 
         // =========================================================================
+        // SECTION 4d: COVER SUPPRESSION (Wave B3)
+        // =========================================================================
+        public bool enableCoverSuppression = true;
+        // The 5.8 design document originally stated 0.40 and floor 0.35,
+        // but those values were never implemented or tuned until Wave B3.
+        public float coverSuppressionFactor = 0.85f;
+        public float coverSuppressionFloor = 0.25f;
+
+        // =========================================================================
         // SECTION 4c: SHOTGUN SPREAD (Wave B2)
         // =========================================================================
         // Spread is a WEDGE from the muzzle toward the target, not a shape centred on the impact.
@@ -257,6 +266,11 @@ namespace FireDiscipline
             Scribe_Values.Look(ref suppressionRadius, "suppressionRadius", 3.5f);
             Scribe_Values.Look(ref suppressionDecayPerSecond, "suppressionDecayPerSecond", 0.20f);
             Scribe_Values.Look(ref suppressionDecayDelayTicks, "suppressionDecayDelayTicks", 60);
+
+            // Cover Suppression (Wave B3)
+            Scribe_Values.Look(ref enableCoverSuppression, "enableCoverSuppression", true);
+            Scribe_Values.Look(ref coverSuppressionFactor, "coverSuppressionFactor", 0.85f);
+            Scribe_Values.Look(ref coverSuppressionFloor, "coverSuppressionFloor", 0.25f);
 
             // Shotgun spread (Wave B2 - module default OFF)
             Scribe_Values.Look(ref shotgunSpreadWidthEnd, "shotgunSpreadWidthEnd", 3.0f);
