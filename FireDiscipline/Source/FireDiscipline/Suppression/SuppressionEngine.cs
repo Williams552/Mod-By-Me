@@ -11,10 +11,7 @@ namespace FireDiscipline.Suppression
     /// Rapid fire pins a target, the player flanks, Sharpshot finishes. Without this the mod is
     /// four accuracy presets.
     ///
-    /// Owns the FD_Suppressed hediff and the full stance matrix. The matrix has never existed in
-    /// running code before - the previous implementation only ever applied suppression to victims
-    /// standing behind an embrasure, because the hediff write sat inside the embrasure branch.
-    /// Everyone else was suppressed by exactly nothing.
+    /// Owns the FD_Suppressed hediff and the full stance matrix + cover suppression calculation.
     /// </summary>
     public static class SuppressionEngine
     {
