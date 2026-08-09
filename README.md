@@ -48,15 +48,27 @@ Drafted pawns gain access to 4 distinct tactical postures via a clean action giz
 #### 🩹 4. Graze System — Anti-One-Shot Protection (`GrazeModule`)
 - Protects veteran pawns from instant RNG deaths caused by low-skill raiders.
 - Intercepts fatal ranged hits targeting vital organs (*Brain, Head, Eye, Heart, Neck, Spine, Liver*).
-- Downgrades lethal blows into a **Graze Shot**, reducing damage by **65%** and rerouting injuries to non-vital outer limbs (*Arms, Legs, Shoulders*).
+- Downgrades lethal blows into a **Graze Shot** (reducing damage by **65%** and rerouting injuries to non-vital outer limbs). Graze probability is derived dynamically from the shot's actual hit chance, making inherently inaccurate shots more likely to graze rather than using a flat base chance.
 
 #### 💥 5. Combat Shock & Shell Shock (`ShockModule`)
 - **Ally Downed Shock (`FD_CombatShock`):** Nearby allies within 6.0 cells suffer temporary combat shock when a teammate is downed or killed.
-- **Proportional Shell Shock (`FD_ShellShock`):** Explosions generate concussive shockwaves scaling with explosion radius ($2.0 \times \text{radius}$). Mortar shells generate a 9.8-cell concussive wave, inflicting disorienting Shell Shock with smooth distance falloff.
+- **Proportional Shell Shock (`FD_ShellShock`):** Explosions generate non-linear concussive shockwaves ($r + 2\sqrt{r}$, capped at 20 cells). Mortar shells (4.9 radius) generate a **9.3-cell concussive wave**, inflicting disorienting Shell Shock with smooth distance falloff.
 
 #### 🔫 6. Shotgun Cone Spread & Danger Zone (`ShotgunAoEModule` — OFF by default)
 - Simulates realistic pellet spread, creating a cone of splash damage from muzzle to max range (70% primary damage base, density scaled).
 - Includes an on-screen tactical danger zone overlay highlighting friendly pawns in red to prevent accidental teamkills.
+
+---
+
+### 🎛️ Real-Time Mod Options
+
+All parameters can be tuned live in-game under **Options -> Mod Options -> Fire Discipline**:
+- **Sharpshot:** Warmup multiplier, distance exponent, close-range penalty, suppression vulnerability.
+- **Rapid Fire:** Min/max warmup clamps, inflicted suppression multiplier.
+- **Prone Stance:** Target size reduction, accuracy multiplier, suppression resistance.
+- **Graze System:** Hit chance ceiling (default 65%), chance span (default 45%), damage multiplier (default 35%).
+- **Shock System:** Ally shock radius (6.0c), shell shock cap (20) and coefficient (2.0).
+- **Transitions:** Stance transition delay (default 45 ticks).
 
 ---
 
@@ -115,15 +127,27 @@ Pawn ở trạng thái Draft sở hữu 4 tư thế chiến thuật chuyển đ�
 #### 🩹 4. Cơ Chế Graze — Chống Chết Chóc Ngẫu Nhiên (`GrazeModule`)
 - Bảo vệ lính kỳ cựu khỏi những đòn chí mạng ngẫu nhiên từ quân địch skill thấp.
 - Chặn các phát đạn nguy hiểm nhắm vào nội tạng quan trọng (*Não, Đầu, Mắt, Tim, Cổ, Cột sống, Gan*).
-- Chuyển đòn chí mạng thành **Graze Shot (Bắn sượt)**, giảm sát thương đi **65%** và chuyển hướng vết thương ra các chi bên ngoài (*Tay, Chân, Vai*).
+- **Cơ Chế:** Khả năng Graze được suy ra tự động dựa trên tỷ lệ trúng thực tế của viên đạn (đạn càng khó trúng càng dễ sượt). Giảm sát thương đi **65%** và chuyển hướng vết thương ra các chi bên ngoài (*Tay, Chân, Vai*).
 
 #### 💥 5. Shock Đồng Đội & Sóng Xung Kích (`ShockModule`)
 - **Ally Downed Shock (`FD_CombatShock`):** Đồng đội trong phạm vi 6.0 ô bị sốc tinh thần tạm thời khi có lính cùng phe bị gục hoặc chết.
-- **Proportional Shell Shock (`FD_ShellShock`):** Vụ nổ tạo ra sóng xung kích bán kính $2.0 \times \text{bán kính nổ}$. Đạn pháo (4.9 ô) tạo sóng xung kích 9.8 ô, gây Shell Shock choáng váng giảm dần theo khoảng cách.
+- **Proportional Shell Shock (`FD_ShellShock`):** Vụ nổ tạo ra sóng xung kích phi tuyến tính ($r + 2\sqrt{r}$, trần tối đa 20 ô). Đạn pháo (4.9 ô) tạo sóng xung kích **9.3 ô**, gây Shell Shock choáng váng giảm dần theo khoảng cách.
 
 #### 🔫 6. Shotgun Spread & Vùng Nguy Hiểm (`ShotgunAoEModule` — Mặc định TẮT)
 - Giả lập độ tỏa đạn shotgun theo hình nêm từ nòng súng ra tầm xa tối đa (70% sát thương gốc, giảm dần theo mật độ).
 - Hiển thị vùng nguy hiểm trên màn hình, đánh dấu đỏ đồng đội nằm trong tầm bắn để tránh bắn nhầm.
+
+---
+
+### 🎛️ Tùy Chỉnh Thời Gian Thực
+
+Tất cả thông số có thể điều chỉnh ngay trong game tại **Options -> Mod Options -> Fire Discipline**:
+- **Sharpshot:** Hệ số ngắm, hệ số khoảng cách, phạt cự ly gần, điểm yếu áp chế.
+- **Rapid Fire:** Giới hạn thời gian ngắm (min/max), hệ số gây áp chế.
+- **Prone Stance:** Tỷ lệ kích thước mục tiêu, kháng áp chế.
+- **Cơ Chế Graze:** Trần hit-chance (65%), khoảng biên (45%), hệ số giữ sát thương (35%).
+- **Shock Đồng Đội:** Bán kính shock (6.0), giới hạn số ô Shell Shock (20), hệ số Shell Shock (2.0).
+- **Độ Trễ:** Số tick để chuyển đổi tư thế (mặc định 45 tick).
 
 ---
 
