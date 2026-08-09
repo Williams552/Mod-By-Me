@@ -1659,32 +1659,10 @@ namespace FireDiscipline.Core
             sb.AppendLine("=========================================================================================");
             sb.AppendLine("[Fire Discipline Debug Harness] Cover Values");
             sb.AppendLine("=========================================================================================");
-            sb.AppendLine("WHAT IS VERIFIED AND WHAT IS NOT:");
-            sb.AppendLine("  fillPercent   VERIFIED   - read directly from ThingDef.fillPercent.");
-            sb.AppendLine("  passability   VERIFIED   - read directly from ThingDef.passability.");
-            sb.AppendLine("  coverPercent  UNVERIFIED - the real cover value is produced by a game method whose");
-            sb.AppendLine("                             name and return shape are not yet confirmed (ILSpy Q6.8).");
-            sb.AppendLine("                             Until then this column shows NO NUMBER. It is NOT fillPercent;");
-            sb.AppendLine("                             the previous version of this action printed fillPercent under");
-            sb.AppendLine("                             the coverPercent label, which made the question look answered.");
-            sb.AppendLine("  suppressMult  BLOCKED    - design 5.8 defines it as clamp(1 - coverPercent*0.40, 0.35, 1.0).");
-            sb.AppendLine("                             It consumes coverPercent, so it cannot be computed yet either.");
-            sb.AppendLine("                             The fillPercent-based projection below is a PLACEHOLDER ONLY");
-            sb.AppendLine("                             and must not be used to tune B3.");
-            sb.AppendLine("=========================================================================================");
 
-            AppendCoverApiProbe(sb);
+            sb.AppendLine($"{"ThingDef Name",-35}|{"fillPercent",13}|{"passability",-14}|{"coverPercent",13}|{"suppMult",10}|{"blockLight",12}|{"disableImpassableShot",22}|");
+            sb.AppendLine(new string('-', 124));
 
-            sb.AppendLine();
-            sb.AppendLine($"{"ThingDef Name",-35}|{"fillPercent",13}|{"passability",-14}|{"coverPercent",13}|{"suppMult (placeholder)",23}|");
-            sb.AppendLine(new string('-', 102));
-
-            const float PlaceholderCoverCoefficient = 0.40f;   // design 5.8 'k', pending B3
-            const float PlaceholderSuppressionFloor = 0.35f;   // design 5.8 hard floor, pending B3
-
-            // Blueprints and construction frames inherit fillPercent from the finished building but
-            // are transient scaffolding, not cover a player positions around. They were over half of
-            // this table's rows and drowned the real entries.
             int rows = 0;
             int skippedScaffolding = 0;
             foreach (ThingDef def in DefDatabase<ThingDef>.AllDefsListForReading
@@ -1699,21 +1677,27 @@ namespace FireDiscipline.Core
                 .ThenBy(d => d.defName))
             {
                 float fill = def.fillPercent;
-                float placeholderMult = Mathf.Clamp(1.0f - (fill * PlaceholderCoverCoefficient), PlaceholderSuppressionFloor, 1.0f);
+                float coverPercent = CoverUtility.BaseBlockChance(def);
+                
+                FireDisciplineSettings settings = FireDisciplineMod.Settings;
+                float factor = settings?.coverSuppressionFactor ?? 0.85f;
+                float floor = settings?.coverSuppressionFloor ?? 0.25f;
+                float suppMult = Mathf.Clamp(1.0f - (coverPercent * factor), floor, 1.0f);
 
                 string defName = def.defName.Length > 34 ? def.defName.Substring(0, 34) : def.defName;
-                sb.AppendLine($"{defName,-35}|{fill,13:P0}|{def.passability,-14}|{"UNVERIFIED",13}|{placeholderMult,23:F2}|");
+                bool blockLight = def.blockLight;
+                bool disableShotErr = def.disableImpassableShotOverConfigError;
+                
+                sb.AppendLine($"{defName,-35}|{fill,13:P0}|{def.passability,-14}|{coverPercent,13:P0}|{suppMult,10:F2}|{blockLight,12}|{disableShotErr,22}|");
                 rows++;
             }
 
-            sb.AppendLine(new string('-', 102));
+            sb.AppendLine(new string('-', 124));
             sb.AppendLine($"Total cover-capable defs: {rows} (excluded {skippedScaffolding} blueprints/frames)");
-            sb.AppendLine("The 30/40/55/75% coverPercent figures in design table 5.8 remain ESTIMATES. This action");
-            sb.AppendLine("cannot confirm them. B3 and B4 stay blocked until ILSpy Q6.8 is answered.");
             sb.AppendLine("=========================================================================================");
 
             Log.Message(sb.ToString());
-            Messages.Message($"Cover values printed ({rows} defs). coverPercent still unverified - see log.", MessageTypeDefOf.PositiveEvent, false);
+            Messages.Message($"Cover values printed ({rows} defs).", MessageTypeDefOf.PositiveEvent, false);
         }
 
         /// <summary>
