@@ -82,6 +82,7 @@ $items = @(
     @{ Path = 'About';           Required = $true  },
     @{ Path = '1.6\Assemblies';  Required = $true  },
     @{ Path = '1.6\Defs';        Required = $true  },
+    @{ Path = '1.6\Textures';    Required = $false },
     @{ Path = 'LoadFolders.xml'; Required = $false },
     @{ Path = 'README.md';       Required = $false }
 )
