@@ -187,7 +187,7 @@ Khái niệm "embrasure" **không tồn tại trong vanilla**. Không có cờ, 
 
 ## 6.8 — Tên thật của hàm tính cover, và giá trị trả về *(chặn B3 — GIỜ ĐÃ MỞ)*
 
-### ✅ Tên: `Verse.CoverUtility.CalculateOverallBlockChance`
+### ✅ Tên: `Verse.CoverUtility.CalculateOverallBlockChance` VÀ Công thức BaseBlockChance
 
 ```
 Verse.CoverUtility                                  ← namespace Verse, KHÔNG phải RimWorld
@@ -201,6 +201,14 @@ Verse.CoverUtility                                  ← namespace Verse, KHÔNG 
 
 - Tài liệu thiết kế đoán `CoverUtility.CalculateOverallCover` → **sai tên hàm**
 - Reality Report đoán `CalculateOverallBlockChance` → **đúng**
+- Công thức: `BaseBlockChance(def) = (def.Fillage == FillCategory.Full) ? 0.75f : def.fillPercent;`
+- Bảng giá trị thật:
+  - Tường / đá gốc (Full): 0.75
+  - CE_Embrasure: 0.70
+  - Sandbags / Barricade: 0.55
+  - Chunk đá, turret, bàn lớn: 0.50
+  - Giường, kệ, bàn: 0.40
+  - Thùng, cây: 0.25-0.30
 
 ### ✅ Đã gộp trọng số hướng — KHÔNG phải tự tổng hợp từ 8 ô
 
@@ -237,7 +245,6 @@ Fire Discipline **đã** postfix `ShotReport.HitReportFor`. Nghĩa là giá tr�
 
 ### ⚠ CHƯA XÁC MINH
 - Shield belt có được tính vào `coversOverallBlockChance` không. Không thấy field riêng cho shield trên `ShotReport` — nhiều khả năng shield chặn ở lúc đạn chạm, không ở lúc tính hit chance. **Chưa xác nhận.**
-- Giá trị thật của `BaseBlockChance` cho từng loại công trình. Bảng 30/40/55/75% ở thiết kế 5.8 **vẫn là ước lượng** cho tới khi có debug action đo.
 
 ---
 
