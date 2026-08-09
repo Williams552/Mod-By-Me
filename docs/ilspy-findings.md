@@ -120,7 +120,37 @@ Code cũ tính `shotIndex = burstShotCount − burstShotsLeft`, nên ngoài lo�
 
 ## 6.5 — Vanilla đã có `factorFromPosture` chưa?
 
-### ✅ CÓ — và đây là phát hiện đáng giá nhất cho tư thế Prone
+### ⛔ CÓ, NHƯNG **KHÔNG ĐƯỢC DÙNG** — đừng chuyển Prone sang kênh này
+
+> **Cập nhật 2026-08-09, đo bằng IL.** Kết luận ban đầu bên dưới đúng về sự *tồn tại*
+> nhưng sai về *ngữ nghĩa*. Chuyển Prone sang `FactorFromPosture` sẽ **âm thầm gỡ bỏ
+> tác dụng thật của Prone**.
+>
+> Chuỗi tiêu thụ, quét toàn assembly:
+>
+> ```
+> get_FactorFromPosture        ← chỉ: get_AimOnTargetChance · GetTextReadout
+> get_AimOnTargetChance        ← chỉ: get_TotalEstimatedHitChance
+> get_TotalEstimatedHitChance  ← chỉ: GetTextReadout
+> ```
+>
+> Không mắt xích nào tới `TryCastShot`. Phát bắn thật roll bằng:
+>
+> ```
+> AimOnTargetChance_IgnoringPosture = AimOnTargetChance_StandardTarget × factorFromTargetSize
+> ```
+>
+> `FactorFromPosture` (IL 66 byte) chỉ trả `0.5` khi mục tiêu nằm và cách > 4.5 ô — đó là
+> **ước lượng cho tooltip** về việc vanilla chặn đạn theo tư thế ở giai đoạn va chạm, không
+> phải một hệ số áp lúc ngắm.
+>
+> **Bẫy kèm theo:** đổi sang kênh này thì bài regression **vẫn PASS**, vì harness đo đúng
+> con số mà UI hiển thị chứ không đo kết quả roll. Đây là ca mẫu cho việc phép đo và cơ chế
+> nhìn vào hai chỗ khác nhau.
+>
+> **Giữ nguyên** cách hiện tại: nhân vào `factorFromTargetSize`, kênh này **có** feed roll thật.
+
+### ✅ CÓ — và đây là phát hiện đáng giá nhất cho tư thế Prone *(kết luận cũ, giữ để đối chiếu)*
 
 ```
 Verse.ShotReport

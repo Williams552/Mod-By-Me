@@ -70,7 +70,7 @@ Quy tắc thực hành: **sửa hành vi thì grep luôn chuỗi mô tả hành 
 | `EncumbranceModule` | BẬT | StatPart nhân vào `MoveSpeed` theo `MassUtility.Capacity` (chỉ vũ khí + túi, **không** tính giáp) |
 | `SuppressionCoreModule` | BẬT¹ | `FD_Suppressed`, ma trận tư thế, cover kháng suppression, StatPart `MoveSpeed` theo stage |
 | `GrazeModule` | BẬT | Hạ sát thương phát trúng khó; chuyển hướng đòn vào nội tạng ra chi ngoài |
-| `ShockModule` | BẬT | `FD_CombatShock` (đồng đội chết/downed), `FD_ShellShock` (vụ nổ) |
+| `ShockModule` | BẬT | `FD_CombatShock` (đồng đội chết/downed), `FD_ShellShock` (vụ nổ, cản bởi khiên năng lượng active) |
 | `ShotgunAoEModule` | **TẮT** | Nêm splash + overlay cảnh báo vùng nguy hiểm |
 
 ¹ Lần chạy đầu tự đặt TẮT nếu phát hiện mod suppression khác hoặc CE; sau đó người chơi sở hữu công tắc, dò mod không bao giờ ghi đè nữa.
