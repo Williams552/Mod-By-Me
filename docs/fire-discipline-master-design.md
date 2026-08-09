@@ -737,7 +737,15 @@ Dùng **Dubs Performance Analyzer**. Đo trước và sau mỗi module.
 
 ### 8.1 Bảng hằng số cân bằng XML Defs (Task A9)
 
-Danh sách 44 hằng số cân bằng trong `1.6/Defs/HediffDefs/Hediffs_FireDiscipline.xml`, ý nghĩa và cơ chế nạp trong code:
+> **Lịch sử sửa đổi (2026-08-08):** Chuyển trục chính của suppression từ "phạt thời gian ngắm" sang "chặn di chuyển".
+> Giá trị cũ đã bị thay thế / xoá:
+> - Pinned settings (xoá bỏ khỏi `FireDisciplineSettings`): `enableSuppressionPinned` (false), `pinnedSeverityThreshold` (0.80).
+> - `FD_Suppressed` Stage 1 (shaken): `<AimingDelayFactor>0.10</AimingDelayFactor>` (xoá hẳn)
+> - `FD_Suppressed` Stage 2 (wavering): `<AimingDelayFactor>0.25</AimingDelayFactor>` (giảm còn 0.05), `<MoveSpeed>-0.15</MoveSpeed>` (xoá)
+> - `FD_Suppressed` Stage 3 (ducking): `<AimingDelayFactor>0.45</AimingDelayFactor>` (giảm còn 0.10), `<MoveSpeed>-0.35</MoveSpeed>` (xoá)
+> - `FD_Suppressed` Stage 4 (cowering): `<AimingDelayFactor>0.80</AimingDelayFactor>` (giảm còn 0.20), `<MoveSpeed>-0.55</MoveSpeed>` (xoá)
+
+Danh sách các hằng số cân bằng trong `1.6/Defs/HediffDefs/Hediffs_FireDiscipline.xml`, ý nghĩa và cơ chế nạp trong code:
 
 | DefName | Element / Parameter | Giá trị XML | Ý nghĩa / Tác dụng | Code / Vanilla đọc |
 |---|---|---|---|---|
@@ -751,17 +759,13 @@ Danh sách 44 hằng số cân bằng trong `1.6/Defs/HediffDefs/Hediffs_FireDis
 | `FD_Suppressed` | `severityIndices.min` | 3 | Stage min hiện Effecter icon (ducking) | Vanilla `HediffComp_Effecter` |
 | `FD_Suppressed` | `severityIndices.max` | 5 | Stage max hiện Effecter icon (cowering) | Vanilla `HediffComp_Effecter` |
 | `FD_Suppressed` | Stage 1 (shaken) `minSeverity` | 0.5 | Ngưỡng kích hoạt stage shaken (ẩn) | Vanilla `Hediff.CurStage` |
-| `FD_Suppressed` | Stage 1 `AimingDelayFactor` | +0.10 | Phạt thời gian ngắm (+10%) | Vanilla `StatWorker` |
 | `FD_Suppressed` | Stage 2 (wavering) `minSeverity` | 1.0 | Ngưỡng kích hoạt stage wavering | Vanilla `Hediff.CurStage` |
-| `FD_Suppressed` | Stage 2 `AimingDelayFactor` | +0.25 | Phạt thời gian ngắm (+25%) | Vanilla `StatWorker` |
-| `FD_Suppressed` | Stage 2 `MoveSpeed` | -0.15 | Phạt tốc độ di chuyển (-0.15 m/s) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 2 `AimingDelayFactor` | +0.05 | Phạt thời gian ngắm (+5%) | Vanilla `StatWorker` |
 | `FD_Suppressed` | Stage 3 (ducking) `minSeverity` | 2.0 | Ngưỡng kích hoạt stage ducking | Vanilla `Hediff.CurStage` |
-| `FD_Suppressed` | Stage 3 `AimingDelayFactor` | +0.45 | Phạt thời gian ngắm (+45%) | Vanilla `StatWorker` |
-| `FD_Suppressed` | Stage 3 `MoveSpeed` | -0.35 | Phạt tốc độ di chuyển (-0.35 m/s) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 3 `AimingDelayFactor` | +0.10 | Phạt thời gian ngắm (+10%) | Vanilla `StatWorker` |
 | `FD_Suppressed` | Stage 3 `ShootingAccuracyPawn` | -0.10 | Phạt độ chính xác bắn (-0.10) | Vanilla `StatWorker` |
 | `FD_Suppressed` | Stage 4 (cowering) `minSeverity` | 5.5 | Ngưỡng kích hoạt stage cowering | Vanilla `Hediff.CurStage` |
-| `FD_Suppressed` | Stage 4 `AimingDelayFactor` | +0.80 | Phạt thời gian ngắm (+80%) | Vanilla `StatWorker` |
-| `FD_Suppressed` | Stage 4 `MoveSpeed` | -0.55 | Phạt tốc độ di chuyển (-0.55 m/s) | Vanilla `StatWorker` |
+| `FD_Suppressed` | Stage 4 `AimingDelayFactor` | +0.20 | Phạt thời gian ngắm (+20%) | Vanilla `StatWorker` |
 | `FD_Suppressed` | Stage 4 `ShootingAccuracyPawn` | -0.20 | Phạt độ chính xác bắn (-0.20) | Vanilla `StatWorker` |
 | `FD_CombatShock` | `defaultLabelColor.r` | 0.85 | Mã màu R hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
 | `FD_CombatShock` | `defaultLabelColor.g` | 0.35 | Mã màu G hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |

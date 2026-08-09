@@ -254,19 +254,24 @@ namespace FireDiscipline
             listing.Gap(15f);
 
             // =========================================================================
-            // SECTION 5b: SUPPRESSION PINNED (Module 5.3 / Wave B5)
+            // SECTION 5b: SUPPRESSION MOVE SPEED PENALTY
             // =========================================================================
-            listing.Label("<b><color=#FF66AA>Suppression Pinned</color></b> <i>(experimental - off by default)</i>");
+            listing.Label("<b><color=#FF66AA>Suppression Move Speed Penalties</color></b>");
 
-            listing.CheckboxLabeled("Enable Pinned State", ref Settings.enableSuppressionPinned,
-                "Heavily suppressed pawns cannot fire at all, though they can still move. This is the "
-                + "largest balance change in the mod and is not yet balance-tested. Requires a restart to take effect.");
+            listing.Label($"Stage 1 (Shaken) Speed Multiplier: <b>x{Settings.suppressionMoveSpeedFactorStage1:F2}</b> (Default: x0.95)");
+            Settings.suppressionMoveSpeedFactorStage1 = listing.Slider(Settings.suppressionMoveSpeedFactorStage1, 0.10f, 1.00f);
 
-            if (Settings.enableSuppressionPinned)
-            {
-                listing.Label($"Pinned Severity Threshold: <b>{Settings.pinnedSeverityThreshold:F2}</b> (Default: 0.80)");
-                Settings.pinnedSeverityThreshold = listing.Slider(Settings.pinnedSeverityThreshold, 0.50f, 1.00f);
-            }
+            listing.Label($"Stage 2 (Wavering) Speed Multiplier: <b>x{Settings.suppressionMoveSpeedFactorStage2:F2}</b> (Default: x0.80)");
+            Settings.suppressionMoveSpeedFactorStage2 = listing.Slider(Settings.suppressionMoveSpeedFactorStage2, 0.10f, 1.00f);
+
+            listing.Label($"Stage 3 (Ducking) Speed Multiplier: <b>x{Settings.suppressionMoveSpeedFactorStage3:F2}</b> (Default: x0.50)");
+            Settings.suppressionMoveSpeedFactorStage3 = listing.Slider(Settings.suppressionMoveSpeedFactorStage3, 0.10f, 1.00f);
+
+            listing.Label($"Stage 4 (Cowering) Speed Multiplier: <b>x{Settings.suppressionMoveSpeedFactorStage4:F2}</b> (Default: x0.15)");
+            Settings.suppressionMoveSpeedFactorStage4 = listing.Slider(Settings.suppressionMoveSpeedFactorStage4, 0.05f, 1.00f);
+
+            listing.Label($"Suppressed Move Speed Floor: <b>{Settings.suppressedMoveSpeedFloor:F2} c/s</b> (Default: 0.7 - won't speed up slow pawns)");
+            Settings.suppressedMoveSpeedFloor = listing.Slider(Settings.suppressedMoveSpeedFloor, 0.10f, 2.00f);
 
             listing.Gap(15f);
 

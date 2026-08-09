@@ -153,13 +153,13 @@ namespace FireDiscipline
         public bool shotgunFriendlyFire = true;               // Design 5.5(a): ship both, default ON, read feedback
 
         // =========================================================================
-        // SECTION 5b: SUPPRESSION PINNED (Module 5.3 / Wave B5)
+        // SECTION 5b: SUPPRESSION MOVE SPEED PENALTY
         // =========================================================================
-        // Wave B feature: OFF by default. The design document calls this the single largest balance
-        // change in v3, and it blocks a pawn from firing entirely - it must not be on in a build
-        // nobody has balance-tested.
-        public bool enableSuppressionPinned = false;
-        public float pinnedSeverityThreshold = 0.80f;         // Suppression severity at which a pawn can no longer fire
+        public float suppressionMoveSpeedFactorStage1 = 0.95f;
+        public float suppressionMoveSpeedFactorStage2 = 0.80f;
+        public float suppressionMoveSpeedFactorStage3 = 0.50f;
+        public float suppressionMoveSpeedFactorStage4 = 0.15f;
+        public float suppressedMoveSpeedFloor = 0.7f;
 
         // =========================================================================
         // SECTION 6: HARMONY PATCH TOGGLES & LOGGING
@@ -280,9 +280,12 @@ namespace FireDiscipline
             Scribe_Values.Look(ref shotgunSplashSuppressionMultiplier, "shotgunSplashSuppressionMultiplier", 0.40f);
             Scribe_Values.Look(ref shotgunFriendlyFire, "shotgunFriendlyFire", true);
 
-            // Suppression Pinned (Wave B5 - default OFF)
-            Scribe_Values.Look(ref enableSuppressionPinned, "enableSuppressionPinned", false);
-            Scribe_Values.Look(ref pinnedSeverityThreshold, "pinnedSeverityThreshold", 0.80f);
+            // Suppression Move Speed Penalties
+            Scribe_Values.Look(ref suppressionMoveSpeedFactorStage1, "suppressionMoveSpeedFactorStage1", 0.95f);
+            Scribe_Values.Look(ref suppressionMoveSpeedFactorStage2, "suppressionMoveSpeedFactorStage2", 0.80f);
+            Scribe_Values.Look(ref suppressionMoveSpeedFactorStage3, "suppressionMoveSpeedFactorStage3", 0.50f);
+            Scribe_Values.Look(ref suppressionMoveSpeedFactorStage4, "suppressionMoveSpeedFactorStage4", 0.15f);
+            Scribe_Values.Look(ref suppressedMoveSpeedFloor, "suppressedMoveSpeedFloor", 0.7f);
 
             if (moduleEnabledStates == null)
             {

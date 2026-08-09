@@ -1929,78 +1929,7 @@ namespace FireDiscipline.Core
             Log.Message(sb.ToString());
         }
 
-        [DebugAction("Fire Discipline", "Test Pinned Cycle", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
-        public static void TestPinnedCycle()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("=========================================================================================");
-            sb.AppendLine("[Fire Discipline Debug Harness] Action F: Test Pinned Cycle");
-            bool pinnedEnabled = FireDisciplineMod.Settings?.enableSuppressionPinned ?? false;
-            sb.AppendLine($"Pinned Feature Status: {(pinnedEnabled ? "ENABLED" : "DISABLED (OFF by default in settings)")}");
-            sb.AppendLine("=========================================================================================");
 
-            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
-            if (selectedPawn == null)
-            {
-                Messages.Message("Please select a Pawn first to test Pinned cycle.", MessageTypeDefOf.RejectInput, false);
-                return;
-            }
-
-            HediffDef def = SuppressionEngine.SuppressedDef;
-            if (def == null)
-            {
-                Messages.Message("FD_Suppressed hediff def not found.", MessageTypeDefOf.RejectInput, false);
-                return;
-            }
-
-            Hediff hediff = selectedPawn.health?.hediffSet?.GetFirstHediffOfDef(def);
-            float origSeverity = hediff?.Severity ?? 0f;
-
-            try
-            {
-                if (hediff == null)
-                {
-                    hediff = HediffMaker.MakeHediff(def, selectedPawn);
-                    hediff.Severity = 0f;
-                    selectedPawn.health.AddHediff(hediff);
-                }
-
-                Verb verb = selectedPawn.equipment?.PrimaryEq?.PrimaryVerb;
-                sb.AppendLine($"Pawn: {selectedPawn.LabelShort}");
-                sb.AppendLine($"Equipped Ranged Verb: {verb?.EquipmentSource?.def?.defName ?? "None"}");
-                sb.AppendLine();
-                sb.AppendLine($"{"Step Severity",-16}|{"Stage Name",-24}|{"Verb.Available()",-18}|");
-                sb.AppendLine(new string('-', 60));
-
-                float[] testSteps = new float[] { 0.0f, 0.25f, 0.50f, 0.75f, 0.85f, 0.95f, 1.00f };
-
-                foreach (float step in testSteps)
-                {
-                    hediff.Severity = step;
-                    string stageLabel = hediff.CurStage?.label ?? "None";
-                    bool available = verb != null && verb.Available();
-
-                    sb.AppendLine($"{step,-16:F2}|{stageLabel,-24}|{(available ? "True (Can Fire)" : "False (Blocked)"),-18}|");
-                }
-            }
-            finally
-            {
-                // Mandatory Rule: Restore original pawn severity state
-                if (hediff != null)
-                {
-                    if (origSeverity <= 0f)
-                    {
-                        selectedPawn.health.RemoveHediff(hediff);
-                    }
-                    else
-                    {
-                        hediff.Severity = origSeverity;
-                    }
-                }
-            }
-
-            Log.Message(sb.ToString());
-        }
 
         [DebugAction("Fire Discipline", "Print Shotgun Spread Damage", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         public static void PrintShotgunSpreadDamage()

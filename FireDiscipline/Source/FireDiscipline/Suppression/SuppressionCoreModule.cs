@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using FireDiscipline.Core;
 using HarmonyLib;
+using RimWorld;
 using Verse;
 
 namespace FireDiscipline.Suppression
@@ -42,6 +43,18 @@ namespace FireDiscipline.Suppression
                 return;
             }
 
+            if (StatDefOf.MoveSpeed != null)
+            {
+                if (StatDefOf.MoveSpeed.parts == null)
+                {
+                    StatDefOf.MoveSpeed.parts = new System.Collections.Generic.List<RimWorld.StatPart>();
+                }
+                if (!StatDefOf.MoveSpeed.parts.Any(p => p is StatPart_SuppressionMoveSpeed))
+                {
+                    StatDefOf.MoveSpeed.parts.Add(new StatPart_SuppressionMoveSpeed());
+                }
+            }
+
             if (ExternalSuppressionDetection.IsAnyExternalSuppressionActive())
             {
                 Log.Warning("[Fire Discipline] Suppression engine is ENABLED while another suppression mod is active ("
@@ -67,23 +80,6 @@ namespace FireDiscipline.Suppression
             else
             {
                 Log.Error("[Fire Discipline] Failed to find Projectile.Impact - suppression will not run.");
-            }
-
-            // Pinned (Wave B5) is opt-in and off by default. Verb.Available is called very often,
-            // so when the feature is off the patch is not registered at all rather than being
-            // short-circuited inside the postfix.
-            if (!(FireDisciplineMod.Settings?.enableSuppressionPinned ?? false))
-            {
-                Log.Message("[Fire Discipline] Suppression Pinned is disabled - Verb.Available left unpatched.");
-                return;
-            }
-
-            var availableMethod = AccessTools.Method(typeof(Verb), nameof(Verb.Available));
-            if (availableMethod != null)
-            {
-                var postfix = typeof(Patch_Verb_Available).GetMethod(nameof(Patch_Verb_Available.Postfix), BindingFlags.Static | BindingFlags.Public);
-                harmony.Patch(availableMethod, postfix: new HarmonyMethod(postfix));
-                Log.Message("[Fire Discipline] Patched Verb.Available for Pinned state.");
             }
         }
     }
