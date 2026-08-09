@@ -95,10 +95,10 @@ namespace FireDiscipline
         // =========================================================================
         // SECTION 4a: EMBRASURE INTERACTION (Wave B4)
         // =========================================================================
-        // Feature is OFF by default pending release decision. Detection is 100% precise using
-        // disableImpassableShotOverConfigError (1/560 match, 0 false positives).
+        // Feature is OFF by default pending release decision. Applies an accuracy penalty
+        // when firing through narrow embrasure slits. Cover suppression resistance is handled
+        // automatically by standard cover calculation.
         public bool enableEmbrasureInteraction = false;
-        public float embrasureSuppressionMultiplier = 0.30f;  // x0.30 suppression resistance behind embrasures
         public float embrasureAccuracyMultiplier = 0.85f;     // x0.85 accuracy multiplier when firing from behind embrasures
 
         // =========================================================================
@@ -251,7 +251,6 @@ namespace FireDiscipline
 
             // Embrasure Interaction (Wave B4 - default OFF)
             Scribe_Values.Look(ref enableEmbrasureInteraction, "enableEmbrasureInteraction", false);
-            Scribe_Values.Look(ref embrasureSuppressionMultiplier, "embrasureSuppressionMultiplier", 0.30f);
             Scribe_Values.Look(ref embrasureAccuracyMultiplier, "embrasureAccuracyMultiplier", 0.85f);
 
             // Suppression engine

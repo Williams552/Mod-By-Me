@@ -40,7 +40,7 @@ namespace FireDiscipline.Suppression
         ///          * inflicted(shooter stance)   Rapid x1.50 - laying down volume
         ///          * received(victim stance)     Sharpshot x2.00 - exposed and concentrating
         ///                                        Prone x0.50 - dug in
-        ///          * embrasure(victim position)  x0.30 when enabled
+        ///          * cover(victim position)      reduced by CoverUtility.CalculateOverallBlockChance
         ///
         /// Every multiplier is a mod setting, none are magic numbers.
         /// </summary>
@@ -66,11 +66,7 @@ namespace FireDiscipline.Suppression
                     amount *= settings?.proneSuppressionResistance ?? 0.50f;
                 }
 
-                if ((settings?.enableEmbrasureInteraction ?? false) && EmbrasureUtility.IsUsingEmbrasure(victim))
-                {
-                    amount *= settings?.embrasureSuppressionMultiplier ?? 0.30f;
-                }
-                else if ((settings?.enableCoverSuppression ?? true) && shooter != null && victim.Map != null)
+                if ((settings?.enableCoverSuppression ?? true) && shooter != null && victim.Map != null)
                 {
                     float block = CoverUtility.CalculateOverallBlockChance(victim, shooter.Position, victim.Map);
                     float factor = settings?.coverSuppressionFactor ?? 0.85f;

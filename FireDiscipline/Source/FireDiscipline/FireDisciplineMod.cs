@@ -216,17 +216,13 @@ namespace FireDiscipline
             // =========================================================================
             // SECTION 6: EMBRASURE INTERACTION (Module 5.7)
             // =========================================================================
-            listing.Label("<b><color=#00FFaa>Embrasure Interaction</color></b> <i>(experimental - off by default)</i>");
+            listing.Label("<b><color=#00FFaa>Embrasure Interaction</color></b> <i>(off by default)</i>");
 
             listing.CheckboxLabeled("Enable Embrasure Interaction", ref Settings.enableEmbrasureInteraction,
-                "Pawns leaning past an embrasure resist suppression but fire less accurately. Experimental: "
-                + "embrasure detection is not yet verified against the game's cover calculation.");
+                "Embrasures provide cover automatically like any other obstacle. Enabling this option adds an accuracy penalty when firing through narrow embrasure slits.");
 
             if (Settings.enableEmbrasureInteraction)
             {
-                listing.Label($"Embrasure Suppression Resistance: <b>{(int)(Settings.embrasureSuppressionMultiplier * 100f)}%</b> (-{(int)((1f - Settings.embrasureSuppressionMultiplier) * 100f)}% suppression taken)");
-                Settings.embrasureSuppressionMultiplier = listing.Slider(Settings.embrasureSuppressionMultiplier, 0.10f, 0.70f);
-
                 listing.Label($"Embrasure Firing Accuracy Multiplier: <b>{(int)(Settings.embrasureAccuracyMultiplier * 100f)}%</b> (-{(int)((1f - Settings.embrasureAccuracyMultiplier) * 100f)}% accuracy penalty)");
                 Settings.embrasureAccuracyMultiplier = listing.Slider(Settings.embrasureAccuracyMultiplier, 0.50f, 1.00f);
             }
