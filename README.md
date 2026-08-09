@@ -12,7 +12,7 @@
 
 ### 📖 Design Philosophy & Core Intent
 
-**Fire Discipline** adds a streamlined **tactical combat layer** on top of RimWorld 1.6 vanilla combat. It is **not** a bloated combat overhaul that breaks save files or requires endless XML patchlists for modded weapons.
+**Fire Discipline** adds a tactical combat layer to RimWorld 1.6. It is designed to work alongside vanilla combat mechanics without requiring a new save file or custom XML patches for modded weapons.
 
 The mod is engineered around two primary design goals:
 1. **Enhance Tactical Depth:** Give players real squad-level combat choices (Tactical Aim Stances, Movement Suppression, Cover Resistance, Logistics & Encumbrance) so gunfights involve maneuvering, flanking, and counterplay rather than stat-checking.
@@ -91,7 +91,7 @@ All parameters can be tuned live in-game under **Options -> Mod Options -> Fire 
 
 ### 📖 Triết Lý Thiết Kế & Mục Tiêu
 
-**Fire Discipline** bổ sung một **lớp chiến thuật sâu sắc** trực tiếp lên hệ thống chiến đấu Vanilla RimWorld 1.6. Đây **không phải** là một bản mod combat overhaul nặng nề gây lỗi save hay đòi hỏi danh sách patch XML riêng cho từng mod vũ khí.
+**Fire Discipline** bổ sung một lớp chiến thuật vào hệ thống chiến đấu của RimWorld 1.6. Mod được thiết kế để hoạt động song song với cơ chế combat vanilla, không yêu cầu tạo save mới và không cần patch XML riêng cho các mod vũ khí khác.
 
 Mod được thiết kế xoay quanh 2 mục tiêu cốt lõi:
 1. **Tăng Tính Chiến Thuật:** Cung cấp cho người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để mỗi cuộc chạm súng đòi hỏi di chuyển, bọc lót và phản công chứ không chỉ so chỉ số.
