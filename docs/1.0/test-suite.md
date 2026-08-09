@@ -1,4 +1,4 @@
-# Fire Discipline — Acceptance Criteria & Test Suite
+﻿# Fire Discipline — Acceptance Criteria & Test Suite
 
 Tài liệu quy định tiêu chuẩn chấp nhận (Acceptance Criteria) và danh sách các kịch bản kiểm thử (Test Cases) cho Mod **Fire Discipline** (`packageId`: `william.firediscipline`).
 
@@ -19,7 +19,7 @@ Mod được coi là **hoàn thành và đạt chất lượng** khi thỏa mãn
 ## 📋 2. Các Bước Thực Hiện Kiểm Thử (Testing Workflow)
 
 1. **Chuẩn bị môi trường:**
-   - Đảm bảo thư mục [FireDiscipline](file:///d:/Games/Rimworld/Mod%20By%20Me/FireDiscipline/) đã có file `1.6/Assemblies/FireDiscipline.dll`.
+   - Đảm bảo thư mục [FireDiscipline](../../FireDiscipline/) đã có file `1.6/Assemblies/FireDiscipline.dll`.
    - Mở game RimWorld, bật **Development Mode** trong Options để theo dõi Log Console.
 2. **Cấu hình Load Order:**
    ```
@@ -83,3 +83,4 @@ Mod được coi là **hoàn thành và đạt chất lượng** khi thỏa mãn
   4. Load lại file Save vừa tạo.
 - **Kỳ vọng:**
   - Game load thành công 100%, Pawn hoạt động bình thường, không có lỗi đỏ `Missing Class` hay `NullReferenceException` trong DevLog Console.
+

@@ -1,4 +1,4 @@
-# Knowledge Base — Yayo's Shooting 2 Analysis
+﻿# Knowledge Base — Yayo's Shooting 2 Analysis
 
 > Mod tham chiếu: **Yayo's Shooting 2** (Steam Workshop ID: `2020785943`)
 > Tác giả gốc: YAYO (công khai mời fork và nâng cấp)
@@ -58,4 +58,8 @@ Fire Discipline áp dụng thiết kế **mới 100%** cho **Module 5.2 (Aim Mod
   // Nhắm kỹ (Careful Aim): Warmup x2.0, Accuracy x1.5
   // Bắn nhanh (Snap Shot): Mặc định
   ```
-- Fire Discipline áp dụng các hệ số này trực tiếp thông qua lớp [AimStanceTracker.cs](file:///d:/Games/Rimworld/Mod%20By%20Me/FireDiscipline/Source/FireDiscipline/AimStance/AimStanceTracker.cs) và [Patch_Verb_WarmupTicks.cs](file:///d:/Games/Rimworld/Mod%20By%20Me/FireDiscipline/Source/FireDiscipline/AimStance/Patch_Verb_WarmupTicks.cs).
+- Fire Discipline áp dụng các hệ số này trực tiếp thông qua lớp [AimStanceTracker.cs](../../../FireDiscipline/Source/FireDiscipline/AimStance/AimStanceTracker.cs) và StatPart tiêm vào `AimingDelayFactor`.
+
+> ⚠ Bản trước còn dẫn tới `Patch_Verb_WarmupTicks.cs`. **File đó đã bị xoá ở A5** vì nó
+> nhân đôi hiệu ứng mà StatPart đã áp — cùng một khoản phạt warmup tính hai lần.
+

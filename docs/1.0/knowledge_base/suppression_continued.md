@@ -1,66 +1,68 @@
-# Knowledge Base — Suppression (Continued) Integration Analysis
+# Knowledge Base — Suppression (Continued)
 
-> Mod tham chiếu: **Suppression (Continued)** (Tác giả: Mlie, Steam Workshop ID: `2559826227`)
-> `packageId`: `Mlie.Suppression`
-> Thư mục nguồn tại chỗ: `Suppression (Continued)/`
-
----
-
-## 1. Phân Tích Cơ Chế Suppression (Continued)
-
-Mod *Suppression (Continued)* hoạt động dựa trên nguyên lý:
-1. **Hook đạn bay:** Sử dụng Harmony Patch lên `Projectile.Tick` hoặc kiểm tra vị trí đạn bay qua các ô tile xung quanh Pawn.
-2. **Áp chế bằng Hediff (`Hediff_Suppression`):**
-   - Khi đạn bay sát qua Pawn, mức độ áp chế (Suppression level) tăng lên.
-   - Khi mức áp chế đạt ngưỡng, Pawn nhận các `HediffStage` giảm tốc độ di chuyển (`MoveSpeed`), giảm độ chính xác bắn (`ShootingAccuracyPawn`) và tăng thời gian chuẩn bị ngắm (`WarmupTime`).
+> Mod tham chiếu: **Suppression (Continued)** (Mlie, Workshop `2559826227`)
+> `packageId`: `Mlie.Suppression` · nguồn tại chỗ: `Reference Mods/Suppression (Continued)/`
 
 ---
 
-## 2. Chiến Lược Tích Hợp Của Fire Discipline (`william.firediscipline`)
+## 1. Cách nó hoạt động
 
-Để tuân thủ Nguyên tắc kiến trúc #7 ("Không hard dependency, tự phát hiện và phối hợp khi phát hiện mod khác"), **Module 5.1 (Suppression Integration)** của Fire Discipline vận hành theo 2 chế độ:
+1. **Hook đạn bay:** Harmony patch `Bullet.Impact`, tính severity theo khoảng cách tới điểm chạm.
+2. **Áp chế bằng Hediff** `Suppressed`, thang **0–9**, 5 stage: `unsettled` · `shaken` · `wavering` · `ducking` · `cowering`.
+3. **Hiệu ứng KHÔNG nằm trong XML.** File `Hediffs_Global_Suppression.xml` chỉ có nhãn stage, không một `statOffsets` nào. Toàn bộ đi qua patch `StatWorker_GetValueUnfinalized`.
+
+---
+
+## 2. Hằng số thật — đọc từ `1.6/Assemblies/SuppressionMod.dll`
 
 ```
-                      [Khởi chạy Mod]
-                             │
-            Kiểm tra: ModsConfig.IsActive("Mlie.Suppression")
-                             │
-             ┌───────────────┴───────────────┐
-           [CÓ]                             [KHÔNG]
-             │                                 │
-     (Supplementary Mode)              (Internal Lightweight Engine)
-  - Tắt module áp chế nội bộ       - Bật engine áp chế thưa tick (15-30 ticks)
-  - Cho Stance & Cover tương tác   - Thêm Hediff áp chế nhẹ nội bộ
-    trực tiếp với Hediff của Mlie  - Không ảnh hưởng FPS
+movespeedFactorByHediffStage      = [1, 1, 1, 0.80, 0.65]
+accuracyFactorByHediffStage       = [1, 1, 1, 0.80, 0.40]
+aimingDelayFactorByHediffStage    = [1, 1, 1, 1.50, 3.00]
+coverAdvantageFactorByHediffStage = [1, 1, 1, 0.85, 0.70]
+
+suppressedMovespeedMin     = 0.7    (sàn tuyệt đối, ô/giây)
+severityReductionPerSecond = 0.1
+severityDelayTicks         = 60
+maxDistanceToImpact        = 3      minDistanceFromLauncher = 5
+duckingHediffStage = 3              proneHediffStage = 4
 ```
+
+**Ba stage đầu hoàn toàn không có tác dụng gì.** Hiệu ứng chỉ bắt đầu từ `ducking`.
 
 ---
 
-## 3. Mã Nguồn Tương Tác Giữa Hai Mod
+## 3. Bốn điều Fire Discipline học được
 
-Lớp [SuppressionIntegrationModule.cs](file:///d:/Games/Rimworld/Mod%20By%20Me/FireDiscipline/Source/FireDiscipline/Suppression/SuppressionIntegrationModule.cs) thực hiện việc này tại thời điểm startup:
+**a) Dồn sức vào `AimingDelayFactor`, không phải `MoveSpeed`.** Họ dùng `×1.5` / `×3.0` cho ngắm, trong khi `MoveSpeed` chỉ xuống `×0.65`. Fire Discipline đi **ngược lại** — có chủ đích, vì trục di chuyển giúp bên phòng thủ ít quân giữ đất.
 
-```csharp
-public const string ExternalSuppressionPackageId = "Mlie.Suppression";
+**b) Họ đã thử hạ `MoveSpeed` và gặp vấn đề.** Comment của chính tác giả trong XML:
 
-public bool ShouldEnable()
-{
-    // Đọc từ Mod Settings
-    return FireDisciplineMod.Settings?.IsModuleEnabled(this) ?? DefaultEnabled;
-}
+> *"Can't really use 'moving' stat as it just tends to knock them over"*
 
-public void OnStartup()
-{
-    bool externalActive = ModsConfig.IsActive(ExternalSuppressionPackageId);
-    if (externalActive)
-    {
-        Log.Message("[Fire Discipline] Detected external mod 'Mlie.Suppression'. Deferring to upstream & enabling Supplementary Mode.");
-    }
-}
-```
+và ở stage `cowering`:
+
+> *"Prone. Can't fire back or move (Disabled above, doesn't seem to add anything interesting to concept)"*
+
+Họ thử **cả hai** thứ Fire Discipline định làm — hạ MoveSpeed mạnh và khoá bắn — rồi bỏ cả hai, và phải thêm sàn `suppressedMovespeedMin = 0.7`.
+
+Fire Discipline vẫn đi hướng đó nhưng **lấy sàn 0.7 của họ**. Đối chiếu: `4.6 × 0.15 = 0.69` — cực trị thang của ta rơi đúng chỗ họ đặt sàn.
+
+**c) Ba stage đầu để trống là có lý.** Fire Discipline theo hình dạng đó: stage `shaken` không mang hiệu ứng nào.
+
+**d) `coverAdvantageFactor` — cover **giảm** tác dụng khi bị áp chế.** Chiều **ngược** với B3 của Fire Discipline (cover *giảm* suppression nhận vào). Chưa cân nhắc, ghi lại vì đáng xem ở 1.1.
 
 ---
 
-## 4. Kết Luận & Quy Tắc An Toàn
-- **Tránh trùng lặp Hediff:** Việc check `ModsConfig.IsActive("Mlie.Suppression")` ngăn chặn tình trạng Pawn bị áp chế 2 lần từ 2 mod khác nhau.
-- **Tháo mod an toàn:** Nếu gỡ *Suppression (Continued)*, Fire Discipline tự động chuyển về engine áp chế nội bộ mà không báo lỗi `NullReferenceException`.
+## 4. Chồng chéo — quy tắc an toàn
+
+Nếu cả hai mod cùng bật, **một pawn nhận suppression từ cả hai** — severity tích nhanh gần gấp đôi, mỗi mod áp debuff riêng.
+
+Fire Discipline **không tự tắt** khi phát hiện `Mlie.Suppression`. Đây là toggle của người
+chơi: lần chạy đầu tự đặt TẮT nếu dò thấy mod suppression khác hoặc CE, sau đó người chơi
+sở hữu công tắc và việc dò không bao giờ ghi đè nữa. Settings window cảnh báo hai chiều.
+
+> ⚠ Bản trước của file này mô tả một cơ chế "Supplementary Mode / Internal Engine" tự
+> chuyển theo `ModsConfig.IsActive`, cài đặt trong `SuppressionIntegrationModule.cs`.
+> **Class đó đã bị xoá và cơ chế đó đã bị bỏ** — cổng gate của nó đảo ngược, bật module
+> khi *có* mod ngoài. Xem [`../lessons-and-wrong-turns.md`](../lessons-and-wrong-turns.md) §2.4.

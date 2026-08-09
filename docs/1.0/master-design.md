@@ -1,7 +1,24 @@
 # Fire Discipline — Master Design Document
 
-> Tài liệu thiết kế tổng hợp. Thay thế `rimworld-combat-mod-definition.md`, `project_handoff.md`, `fire-discipline-v3-execution-spec.md`.
-> Backlog tầng RTS giữ ở `tactical-expansion-features.md`, tóm tắt tại mục 9.
+> **LƯU TRỮ 1.0.** Đây là tài liệu **ý định thiết kế**, không phải trạng thái code.
+> Trạng thái hiện tại: [`../architecture.md`](../architecture.md). Việc tiếp theo: [`../1.1-roadmap.md`](../1.1-roadmap.md).
+>
+> Backlog tầng RTS: [`rejected-rts-command-layer.md`](rejected-rts-command-layer.md) — **đã chốt KHÔNG làm**, tóm tắt tại mục 9.
+
+## ⚠ Chỗ thiết kế đã lệch khỏi bản đã phát hành
+
+Giữ nguyên văn bản gốc bên dưới để thấy ý định ban đầu. Nơi nào lệch, **code đúng**:
+
+| Mục | Tài liệu nói | Đã phát hành |
+|---|---|---|
+| §1, §4 | "5 module" | **6 module.** `SuppressionCoreModule` và `ShotgunAoEModule` đã tách đôi |
+| §4.3 | `SuppressionIntegrationModule.cs`, bật khi **có** mod suppression ngoài | **Class đã xoá.** Cổng gate bị bỏ hẳn: engine luôn có mặt, người chơi tự bật/tắt; dò mod ngoài chỉ đặt mặc định lần chạy đầu |
+| §5.3 | Pinned — pawn không bắn được khi severity > 0.8 | **Đã gỡ hoàn toàn** cùng `Patch_Verb_Available`. Suppression giờ trừng phạt **di chuyển**, và `cowering` là nấc cuối của chính trục đó. Ngưỡng `0.80` vốn thuộc thang severity cũ 0–1; thang hiện tại là 0–9 |
+| §5.7 | Embrasure có hệ số kháng suppression riêng | **Đã gộp vào cover chung.** Embrasure chỉ còn phạt độ chính xác khi bắn qua khe. Nhận diện bằng cờ Def `disableImpassableShotOverConfigError` |
+| §5.8 | `k = 0.40`, sàn `0.35`, `coverPercent` là **ước lượng** | `k = 0.85`, sàn `0.25`. Bảng 30/40/55/75% **đã xác minh đúng**: `BaseBlockChance = (Fillage == Full) ? 0.75f : fillPercent` |
+| §7.1 | 9 debug action cần bổ sung | Harness hiện có **22 action** |
+
+Bug và hướng đi sai gặp phải khi thu hẹp khoảng cách này: [`lessons-and-wrong-turns.md`](lessons-and-wrong-turns.md).
 
 ---
 
@@ -14,7 +31,7 @@
 | **RimWorld** | 1.6 **only** (không làm 1.5 — nhớ set `supportedVersions` chỉ `1.6`) |
 | **Ngôn ngữ** | Tiếng Anh |
 | **Assembly** | `1.6/Assemblies/FireDiscipline.dll` |
-| **Trạng thái** | 5 module lõi hoàn thành · chưa phát hành |
+| **Trạng thái** | ~~5 module lõi hoàn thành · chưa phát hành~~ → **6 module, 1.0 xong phần code, còn chờ chơi thử** |
 
 **Một câu định nghĩa:**
 
@@ -132,6 +149,12 @@ Chỉ tính thứ pawn **mang** thì khôi phục được lựa chọn:
 Hai thay đổi trên đi cùng nhau nhưng ngược chiều: đổi mẫu số làm phạt nặng hơn, bỏ giáp làm phạt nhẹ đi nhiều. Xạ thủ LMG đi **6.8% → 20% → 3.8%** qua hai bước.
 
 ### 4.3 Suppression Integration — `SuppressionIntegrationModule.cs`
+
+> ⚠ **Class này đã bị xoá.** Thay bằng `SuppressionCoreModule`. Cổng gate mô tả dưới đây
+> **đảo ngược so với ý định** — nó bật module khi *có* mod suppression ngoài, khiến người
+> chơi standalone mất sạch tính năng. Đã bỏ hẳn khái niệm cổng: engine luôn có mặt,
+> người chơi tự bật/tắt, dò mod ngoài chỉ đặt mặc định lần chạy đầu và cảnh báo hai chiều.
+> Ma trận tư thế bên dưới **vẫn đúng** và vẫn đang chạy.
 
 `IsExternalSuppressionModActive()` phát hiện `Mlie.Suppression`, `suppression.mod`, `CombatExtended`. Không có → engine nội bộ (`FD_Suppressed` + `Patch_Projectile_Impact.cs`). Có → Dormant, 0% overhead.
 

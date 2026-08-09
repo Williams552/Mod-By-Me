@@ -1,4 +1,4 @@
-# Knowledge Base — Yayo's Combat 3 Integration Analysis
+﻿# Knowledge Base — Yayo's Combat 3 Integration Analysis
 
 > Mod tham chiếu: **Yayo's Combat 3 (Continued)** (Tác giả: Mlie, Steam Workshop ID: `2854006492`)
 > `packageId`: `Mlie.YayosCombat3`
@@ -20,7 +20,7 @@ Yayo's Combat 3 giải quyết 3 mảng chính trong combat RimWorld:
 Một điểm sáng trong kiến trúc của Yayo's Combat 3 là:
 - **Không hard-code patch riêng cho từng mod vũ khí:** Yayo's Combat 3 tự động tính toán loại đạn, sức xuyên giáp của mọi loại súng từ bất kỳ mod vũ khí nào dựa trên các chỉ số Stat có sẵn (`TechLevel`, `Mass`, `Damage`, `Range`).
 - **Ứng dụng vào Fire Discipline:**
-  - Lớp [StatPart_Encumbrance.cs](file:///d:/Games/Rimworld/Mod%20By%20Me/FireDiscipline/Source/FireDiscipline/Encumbrance/StatPart_Encumbrance.cs) học hỏi triết lý này: Tự động tính toán khối lượng trang bị từ `apparel.WornApparel` và `equipment.Primary` của mọi mod giáp/súng ngoài kia mà không cần viết file patch riêng cho từng mod.
+  - Lớp [StatPart_Encumbrance.cs](../../../FireDiscipline/Source/FireDiscipline/Encumbrance/StatPart_Encumbrance.cs) học hỏi triết lý này: Tự động tính toán khối lượng trang bị từ `apparel.WornApparel` và `equipment.Primary` của mọi mod giáp/súng ngoài kia mà không cần viết file patch riêng cho từng mod.
 
 ---
 
@@ -44,3 +44,4 @@ Trong file `About/About.xml` của Fire Discipline, chúng ta đặt:
 ```
 
 Đảm bảo Fire Discipline luôn tải sau Yayo's Combat 3 để các patch XML dùng `MayRequire` chạy sạch sẽ và chính xác.
+

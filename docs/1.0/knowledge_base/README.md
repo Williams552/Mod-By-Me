@@ -1,21 +1,26 @@
-# Fire Discipline — Knowledge Base Index (Mod Tham Chiếu)
+# Knowledge Base — Mod tham chiếu
 
-Thư mục này lưu trữ phân tích kiến trúc, danh sách API, lỗi cấu trúc (Structural Bugs) cần tránh và chiến lược tích hợp của các mod tham chiếu đối me đối với **Fire Discipline** (`william.firediscipline`).
-
----
-
-## 📚 Danh Mục Tài Liệu Knowledge Base
-
-| # | Tài liệu | Mod Tham Chiếu | Mục Đích Phân Tích & Kết Luận |
-|---|---|---|---|
-| 1 | [yayos_shooting_2.md](file:///d:/Games/Rimworld/Mod%20By%20Me/docs/knowledge_base/yayos_shooting_2.md) | **Yayo's Shooting 2** (Workshop 2020785943) | **Nền tảng cho Module 5.2 (Aim Mode & Stance)**. Phân tích nguyên nhân lỗi gãy cấu trúc (do thay `verbClass` & thêm `VerbProperties` trực tiếp vào `ThingDef`). Khẳng định giải pháp Postfix của Fire Discipline. |
-| 2 | [suppression_continued.md](file:///d:/Games/Rimworld/Mod%20By%20Me/docs/knowledge_base/suppression_continued.md) | **Suppression (Continued)** (Mlie - Workshop 2559826227) | **Nền tảng cho Module 5.1 (Suppression Integration)**. Phân tích cấu trúc Hediff áp chế, cách hook đạn bay và cơ chế nhường quyền khi phát hiện `Mlie.Suppression`. |
-| 3 | [yayos_combat_3.md](file:///d:/Games/Rimworld/Mod%20By%20Me/docs/knowledge_base/yayos_combat_3.md) | **Yayo's Combat 3 (Continued)** (Mlie - Workshop 2854006492) | **Bài học "Suy ra, đừng khai báo"**. Phân tích cách tự tính toán stat phụ thuộc từ vũ khí/giáp gốc của mod khác mà không cần viết file patch riêng. |
-| 4 | [smarter_raider_ai.md](file:///d:/Games/Rimworld/Mod%20By%20Me/docs/knowledge_base/smarter_raider_ai.md) | **Smarter Raider AI** (Workshop 2945497357) | **Ranh giới tầng AI**. Xác định các hàm pathfinding / `AvoidGrid` mà Fire Discipline **tuyệt đối không chạm vào** để né xung đột lag FPS. |
+Phân tích kiến trúc, API, lỗi cấu trúc cần tránh, và điều Fire Discipline học được từ
+bốn mod tham chiếu. Nguồn tại chỗ: `Reference Mods/`.
 
 ---
 
-## 🎯 Nguyên Tắc Đóng Góp Kiến Thức (KI Principles)
-1. **Kiểm chứng trên Mã Nguồn Thực tế:** Mọi phân tích dựa trên source code thực tế đã kiểm tra tại `d:\Games\Rimworld\Mod By Me\`.
-2. **Không phỏng đoán:** Trích dẫn tên class, tên method và file nguồn cụ thể.
-3. **Độ bền vững:** Ghi chú rõ điểm yếu của từng mod upstream để Fire Discipline không đi lại vết xe đổ.
+| Tài liệu | Mod | Học được gì |
+|---|---|---|
+| [`yayos_shooting_2.md`](yayos_shooting_2.md) | **Yayo's Shooting 2** (`2020785943`) | Vì sao **không** thay `verbClass` và không thêm `VerbProperties` thẳng vào `ThingDef`. Đây là nguồn gốc của luật 1 và luật 8 |
+| [`suppression_continued.md`](suppression_continued.md) | **Suppression (Continued)** (Mlie, `2559826227`) | Cấu trúc Hediff áp chế, thang 0–9, và **hằng số thật đọc từ DLL**. Họ đã thử hạ `MoveSpeed` rồi phải thêm sàn — Fire Discipline lấy lại sàn đó |
+| [`yayos_combat_3.md`](yayos_combat_3.md) | **Yayo's Combat 3 (Continued)** (Mlie, `2854006492`) | Bài học **"suy ra, đừng khai báo"** — tính stat phụ thuộc từ vũ khí/giáp gốc của mod khác mà không cần patch riêng. Nguồn gốc của luật 2 |
+| [`smarter_raider_ai.md`](smarter_raider_ai.md) | **Smarter Raider AI** (`2945497357`) | Ranh giới tầng AI: các hàm pathfinding / `AvoidGrid` **tuyệt đối không chạm**. Nguồn gốc của luật 5 |
+
+---
+
+## Nguyên tắc
+
+1. **Kiểm chứng trên mã nguồn thật**, không phải trên mô tả Workshop. Vài kết luận trong
+   thư mục này đến từ đọc IL của DLL, không phải từ tài liệu của tác giả.
+2. **Không phỏng đoán.** Trích tên class, tên method, tên file cụ thể.
+3. **Ghi rõ điểm yếu của mod upstream** để không đi lại vết xe đổ — và ghi cả chỗ họ
+   thử rồi bỏ, vì đó là dữ liệu đắt nhất.
+
+> ⚠ `suppression_continued.md` từng mô tả một cơ chế tích hợp hai chế độ đã bị bỏ.
+> Đã sửa. Xem [`../lessons-and-wrong-turns.md`](../lessons-and-wrong-turns.md) §2.4.
