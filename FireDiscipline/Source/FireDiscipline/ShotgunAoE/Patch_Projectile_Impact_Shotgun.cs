@@ -100,6 +100,11 @@ namespace FireDiscipline.ShotgunAoE
                 BodyPartRecord outerLimb = Patch_DamageWorker_AddInjury.FindOuterLimb(victim)
                     ?? victim.RaceProps.body.corePart;
 
+                if (outerLimb == null || outerLimb.coverageAbs <= 0f)
+                {
+                    continue;
+                }
+
                 victim.TakeDamage(new DamageInfo(
                     DamageDefOf.Bullet,
                     splashDamage,

@@ -129,7 +129,9 @@ namespace FireDiscipline.Graze
             if (pawn?.health?.hediffSet == null) return null;
 
             var notMissing = pawn.health.hediffSet.GetNotMissingParts().ToList();
-            var outerLimbs = notMissing.Where(p => p.depth == BodyPartDepth.Outside && p.height != BodyPartHeight.Top).ToList();
+            // Vanilla Hediff_Injury.PostAdd throws an error if part.coverageAbs <= 0,
+            // because those are structural parts that cannot be hit directly.
+            var outerLimbs = notMissing.Where(p => p.depth == BodyPartDepth.Outside && p.height != BodyPartHeight.Top && p.coverageAbs > 0f).ToList();
 
             if (outerLimbs.Count > 0)
             {
