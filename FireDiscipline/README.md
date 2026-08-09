@@ -3,6 +3,7 @@
 [![RimWorld 1.6](https://img.shields.io/badge/RimWorld-1.6-brightgreen.svg)](https://rimworldgame.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Compatibility](https://img.shields.io/badge/Save%20Compatibility-Mid--Save%20Safe-blue.svg)](#-compatibility--load-order--t%C6%B0%C6%A1ng-th%C3%ADch--th%E1%BB%A9-t%E1%BB%B1-load)
+[![Download Latest Release](https://img.shields.io/github/v/release/Williams552/Mod-By-Me?label=Download%20Latest%20Release&color=brightgreen&logo=github)](https://github.com/Williams552/Mod-By-Me/releases/latest)
 
 > **[English](#english)** | **[Tiếng Việt](#tiếng-việt)**
 
