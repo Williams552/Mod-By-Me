@@ -251,29 +251,30 @@ Giật nòng: phát thứ N trong loạt → accuracy ×Pow(0.93, N)
 
 ### 5.5 Shotgun spread AoE
 
-⚠️ **Cập nhật 2026-08-07: hình dạng đổi từ ĐĨA sang NỬA ĐĨA, và `R` đổi 2.5 → 4.0.**
+⚠️ **Cập nhật 2026-08-09 (Geometry & Falloff): hình nón quét hêt tầm bắn thực tế.**
+* **Giá trị CŨ (bị loại bỏ):** Splash damage đạt 100% ở mọi cự ly dọc theo trục (chỉ giảm ở 2 bên rìa). Độ dài nón (length) bị giới hạn cứng `min(8, khoảng_cách_tới_mục_tiêu)`.
+* **Giá trị MỚI:** Damage giảm dần (falloff) theo cự ly dựa trên **Mật độ (Density)** do nón loe ra. Nón dài bằng 100% tầm xa thực của vũ khí (VD: 15.9 ô cho Pump Shotgun), xuyên qua mục tiêu chính để trúng kẻ địch núp sau.
 
-**Hình dạng.** Đĩa tròn tâm điểm chạm **với tới cả phía sau nòng súng**: bắn mục tiêu gần hơn bán kính thì người bắn nằm trong vụ nổ của chính mình, và đồng đội đứng sau lưng ăn mảnh bay ngược chiều. Giờ là **nửa đĩa hướng ra xa người bắn** — loại mọi thứ nằm sau mặt phẳng đi qua điểm chạm.
+**Hình dạng.** Đĩa tròn tâm điểm chạm **với tới cả phía sau nòng súng**: bắn mục tiêu gần hơn bán kính thì người bắn nằm trong vụ nổ của chính mình, và đồng đội đứng sau lưng ăn mảnh bay ngược chiều. Hiện tại đã đổi sang **hình nón (wedge) từ miệng nòng súng**.
 
 Người bắn **luôn** được loại, không phụ thuộc toggle friendly fire. Toggle đó chỉ quyết định pawn **khác** cùng phe.
 
-**Đã cân nhắc và loại bỏ: hình nón thật từ nòng.** Nửa góc của nó là `atan(R / cự_ly)` — 9° ở 15 ô nhưng **40° ở 3 ô**, nên bắn sát mặt còn loe rộng hơn cả đĩa nó thay thế. Nó cũng phá lý do `R` được cố định ngay từ đầu: một con số duy nhất người chơi học thuộc và tính vị trí theo đó.
-
-**Bán kính 2.5 → 4.0.** Nửa đĩa `R=2.5` phủ ~10 ô, trong khi đĩa đầy cũ phủ ~20. Chỉ cần `3.5` là khôi phục diện tích cũ; `4.0` phủ ~25 ô — **cố ý rộng hơn trước**, vì playtest cho thấy pump shotgun chưa tạo đủ áp lực chống tiếp cận, mà đó chính là vai trò của cơ chế này.
+**Đã cân nhắc và loại bỏ: hình nón thật theo góc từ nòng.** Nửa góc của nó là `atan(R / cự_ly)` — 9° ở 15 ô nhưng **40° ở 3 ô**, nên bắn sát mặt còn loe rộng hơn cả đĩa nó thay thế. Hiện tại độ rộng được nội suy theo chiều dài ô tuyệt đối từ một cự ly tham chiếu cố định (8 ô) để không bị hẹp lại ở tầm gần khi súng có tầm cực xa.
 
 ⚠️ Chưa đo lại chỉ tiêu 7.3 (*"Shotgun 3 mục tiêu cụm ≤ Snap × 2.0"*) sau thay đổi này.
 
 ```
-R = 4.0 ô (nửa đĩa hướng ra xa người bắn; cố định theo vũ khí, KHÔNG theo skill)
+WidthEndRef = 3.0 ô (tại reference_range = 8 ô)
 e = lerp(0.15, 0.55, shootingSkill / 20)
-dmgFactor(d) = lerp(1.0, e, d / R)
+densityFactor(d) = HalfWidthAtMuzzle / widthAtDistance
+dmgFactor(d, lateral) = lerp(1.0, e, lateral / halfWidth) * densityFactor(d)
 primaryDamage ×0.70
 ```
 
 **Nhận diện shotgun:** dùng lại `d₀` của Rapid — `AccuracyTouch ≥ AccuracyMedium`. Loại trừ `Projectile_Explosive` và `range > 25`.
 **Cài đặt:** `Patch_Projectile_Impact.cs` đã làm đúng dạng tính toán này. Không cần projectile class mới.
 
-**Vì sao:** skill điều khiển **viền**, không điều khiển bán kính — nếu cả hai cùng scale thì thành bậc hai. `R` cố định thành con số người chơi học thuộc và tính vị trí theo đó.
+**Vì sao:** skill điều khiển **viền**, không điều khiển chiều dài — nếu cả hai cùng scale thì thành bậc hai.
 
 | # | Quyết định kèm | Trạng thái |
 |---|---|---|

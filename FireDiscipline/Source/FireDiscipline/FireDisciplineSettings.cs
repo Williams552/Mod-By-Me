@@ -136,7 +136,6 @@ namespace FireDiscipline
         // (CompProperties_AbilityFireSpew: range 7.9, lineWidthEnd 3), which is defined by WIDTH AT
         // THE END rather than by an angle - the reason a true cone was rejected earlier, since an
         // angle-based cone opens to 40 degrees at point-blank range.
-        public float shotgunSpreadLength = 8.0f;              // Reach from the muzzle, capped by the shot distance
         public float shotgunSpreadWidthEnd = 3.0f;            // Full width at the far end; the muzzle end is 1 cell
         public float shotgunEdgeDamageMin = 0.15f;            // Edge damage fraction at shooting skill 0
         public float shotgunEdgeDamageMax = 0.55f;            // Edge damage fraction at shooting skill 20
@@ -260,7 +259,6 @@ namespace FireDiscipline
             Scribe_Values.Look(ref suppressionDecayDelayTicks, "suppressionDecayDelayTicks", 60);
 
             // Shotgun spread (Wave B2 - module default OFF)
-            Scribe_Values.Look(ref shotgunSpreadLength, "shotgunSpreadLength", 8.0f);
             Scribe_Values.Look(ref shotgunSpreadWidthEnd, "shotgunSpreadWidthEnd", 3.0f);
             Scribe_Values.Look(ref shotgunEdgeDamageMin, "shotgunEdgeDamageMin", 0.15f);
             Scribe_Values.Look(ref shotgunEdgeDamageMax, "shotgunEdgeDamageMax", 0.55f);

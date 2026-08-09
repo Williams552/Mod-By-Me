@@ -24,16 +24,19 @@ namespace FireDiscipline.ShotgunAoE
         /// <summary>Muzzle end is always one cell wide, so half of it.</summary>
         private const float HalfWidthAtMuzzle = 0.5f;
 
+        private const float FallbackSpreadLength = 8f;   // Fallback range if weaponDef is null
+        private const float SpreadReferenceRange = 8f;   // Distance at which widthEnd is measured
+
         /// <summary>
         /// Resolves the wedge for a shot from origin toward target. False when there is no usable
         /// direction - the shooter standing on the target cell, for instance.
         /// </summary>
-        public static bool TryResolve(IntVec3 origin, IntVec3 target, out Vector3 direction,
-            out float length, out float halfWidthEnd)
+        public static bool TryResolve(IntVec3 origin, IntVec3 target, ThingDef weaponDef, out Vector3 direction,
+            out float length, out float spreadPerCell)
         {
             direction = Vector3.zero;
             length = 0f;
-            halfWidthEnd = 0f;
+            spreadPerCell = 0f;
 
             Vector3 toTarget = (target - origin).ToVector3();
             toTarget.y = 0f;
@@ -43,10 +46,12 @@ namespace FireDiscipline.ShotgunAoE
 
             direction = toTarget.normalized;
 
-            // Never reaches past the target: at long range the pellets have dispersed well before
-            // they get there, and the target itself is already covered by the primary hit.
-            length = Mathf.Min(settings?.shotgunSpreadLength ?? 8.0f, toTarget.magnitude);
-            halfWidthEnd = (settings?.shotgunSpreadWidthEnd ?? 3.0f) * 0.5f;
+            // Use the actual weapon range for the spread, so pellets can hit targets behind the primary target.
+            float actualRange = weaponDef != null ? WeaponClassification.GetWeaponRange(weaponDef) : FallbackSpreadLength;
+            length = actualRange;
+            
+            float widthEndAtRef = (settings?.shotgunSpreadWidthEnd ?? 3.0f) * 0.5f;
+            spreadPerCell = (widthEndAtRef - HalfWidthAtMuzzle) / SpreadReferenceRange;
 
             return length > 0.1f;
         }
@@ -57,9 +62,10 @@ namespace FireDiscipline.ShotgunAoE
         /// the damage falloff interpolates along.
         /// </summary>
         public static bool Contains(IntVec3 origin, IntVec3 cell, Vector3 direction, float length,
-            float halfWidthEnd, out float edgeFraction)
+            float spreadPerCell, out float edgeFraction, out float densityFactor)
         {
             edgeFraction = 0f;
+            densityFactor = 1f;
 
             Vector3 offset = (cell - origin).ToVector3();
             offset.y = 0f;
@@ -68,10 +74,11 @@ namespace FireDiscipline.ShotgunAoE
             if (along < 0f || along > length) return false;
 
             float lateral = (offset - direction * along).magnitude;
-            float halfWidth = Mathf.Lerp(HalfWidthAtMuzzle, halfWidthEnd, along / length);
+            float halfWidth = HalfWidthAtMuzzle + along * spreadPerCell;
             if (lateral > halfWidth) return false;
 
             edgeFraction = Mathf.Clamp01(lateral / Mathf.Max(halfWidth, 0.01f));
+            densityFactor = HalfWidthAtMuzzle / Mathf.Max(halfWidth, 0.01f);
             return true;
         }
 
@@ -79,12 +86,12 @@ namespace FireDiscipline.ShotgunAoE
         /// Every cell the spread would touch. Used by the danger overlay; the damage path tests
         /// pawns directly rather than building a list on every impact.
         /// </summary>
-        public static List<IntVec3> AffectedCells(IntVec3 origin, IntVec3 target, Map map)
+        public static List<IntVec3> AffectedCells(IntVec3 origin, IntVec3 target, Map map, ThingDef weaponDef)
         {
             var cells = new List<IntVec3>();
             if (map == null) return cells;
 
-            if (!TryResolve(origin, target, out Vector3 direction, out float length, out float halfWidthEnd))
+            if (!TryResolve(origin, target, weaponDef, out Vector3 direction, out float length, out float spreadPerCell))
             {
                 return cells;
             }
@@ -92,7 +99,7 @@ namespace FireDiscipline.ShotgunAoE
             foreach (IntVec3 cell in GenRadial.RadialCellsAround(origin, length + 1f, true))
             {
                 if (!cell.InBounds(map)) continue;
-                if (Contains(origin, cell, direction, length, halfWidthEnd, out _))
+                if (Contains(origin, cell, direction, length, spreadPerCell, out _, out _))
                 {
                     cells.Add(cell);
                 }

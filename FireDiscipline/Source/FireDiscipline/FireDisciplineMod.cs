@@ -219,10 +219,7 @@ namespace FireDiscipline
             // =========================================================================
             listing.Label("<b><color=#FFAA88>Shotgun Spread</color></b> <i>(module off by default - no danger-zone overlay yet)</i>");
 
-            listing.Label($"Spread Length: <b>{Settings.shotgunSpreadLength:F1}c</b> from the muzzle (Default: 8.0 - capped by the distance to the target)");
-            Settings.shotgunSpreadLength = listing.Slider(Settings.shotgunSpreadLength, 2.0f, 15.0f);
-
-            listing.Label($"Spread Width At Far End: <b>{Settings.shotgunSpreadWidthEnd:F1}c</b> (Default: 3.0 - the muzzle end is always 1 cell wide, so the wedge covers about {0.5f * Settings.shotgunSpreadLength * (1f + Settings.shotgunSpreadWidthEnd) * 0.5f:F0} cells)");
+            listing.Label($"Spread Width At Far End: <b>{Settings.shotgunSpreadWidthEnd:F1}c</b> (Default: 3.0 - the muzzle end is always 1 cell wide)");
             Settings.shotgunSpreadWidthEnd = listing.Slider(Settings.shotgunSpreadWidthEnd, 1.0f, 8.0f);
 
             listing.Label($"Primary Hit Damage: <b>{(int)(Settings.shotgunPrimaryDamageMultiplier * 100f)}%</b> (Default: 70% - the direct hit is reduced to pay for the splash)");

@@ -50,8 +50,8 @@ namespace FireDiscipline.ShotgunAoE
             if (shooter == null || !shooter.Spawned) return;
 
             IntVec3 origin = shooter.Position;
-            if (!ShotgunSpreadGeometry.TryResolve(origin, impactCell, out Vector3 direction,
-                    out float length, out float halfWidthEnd))
+            if (!ShotgunSpreadGeometry.TryResolve(origin, impactCell, weaponDef, out Vector3 direction,
+                    out float length, out float spreadPerCell))
             {
                 return;
             }
@@ -67,10 +67,12 @@ namespace FireDiscipline.ShotgunAoE
 
             bool friendlyFire = settings?.shotgunFriendlyFire ?? true;
 
-            // Scan around the SHOOTER, not the impact - the wedge starts at the muzzle.
-            foreach (Thing thing in GenRadial.RadialDistinctThingsAround(origin, map, length + 1f, true))
+            float maxDistSq = (length + 1f) * (length + 1f);
+
+            // Scan all pawns, but rough-filter by distance before doing vector geometry.
+            // A map has far fewer pawns than the ~900 cells a 17-radius radial scan would touch.
+            foreach (Pawn victim in map.mapPawns.AllPawnsSpawned)
             {
-                if (!(thing is Pawn victim)) continue;
                 if (victim.Dead || !victim.RaceProps.Humanlike) continue;
                 if (victim == hitThing) continue;
 
@@ -79,20 +81,20 @@ namespace FireDiscipline.ShotgunAoE
                 if (victim == shooter) continue;
 
                 if (!friendlyFire && victim.Faction == shooter.Faction) continue;
+                
+                if (victim.Position.DistanceToSquared(origin) > maxDistSq) continue;
 
                 // Same geometry the danger overlay draws - one implementation, so the picture
                 // the player positions around cannot drift from the shape that actually hits.
                 if (!ShotgunSpreadGeometry.Contains(origin, victim.Position, direction, length,
-                        halfWidthEnd, out float edgeFraction))
+                        spreadPerCell, out float edgeFraction, out float densityFactor))
                 {
                     continue;
                 }
 
-                // Falloff is LATERAL. Design 5.5 calls the parameter the "edge" of the spread:
-                // pellets thin out sideways, so a pawn clipped by the rim takes less than one on
-                // the centre line. Falling off with distance from the muzzle instead would make the
-                // cell beside your own shotgunner the most dangerous place on the map.
-                float dmgFactor = Mathf.Lerp(1.0f, edge, edgeFraction);
+                // Damage falls off both laterally (pellets thin out sideways) and longitudinally
+                // (pellets spread out over distance, reducing density).
+                float dmgFactor = Mathf.Lerp(1.0f, edge, edgeFraction) * densityFactor;
                 float splashDamage = Mathf.Max(1f, primaryDamage * dmgFactor);
 
                 BodyPartRecord outerLimb = Patch_DamageWorker_AddInjury.FindOuterLimb(victim)

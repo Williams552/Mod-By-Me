@@ -2060,21 +2060,34 @@ namespace FireDiscipline.Core
             IntVec3 targetCell = origin + new IntVec3(10, 0, 0); // Simulated target cell at 10c
 
             // Rule 8: Call production ShotgunSpreadGeometry.AffectedCells
-            List<IntVec3> cells = ShotgunAoE.ShotgunSpreadGeometry.AffectedCells(origin, targetCell, map);
+            List<IntVec3> cells = ShotgunAoE.ShotgunSpreadGeometry.AffectedCells(origin, targetCell, map, weaponDef);
             sb.AppendLine($"Simulated Target Cell: {targetCell} (Distance: 10c)");
             sb.AppendLine($"Total Affected AoE Cells: {cells.Count}");
             sb.AppendLine();
-            sb.AppendLine($"{"Cell Position",-18}|{"Distance from Origin",-24}|{"Contains Ally?",-16}|");
-            sb.AppendLine(new string('-', 60));
+            sb.AppendLine($"{"Cell Position",-18}|{"Distance",-10}|{"Density",-10}|{"Splash %",-10}|{"Contains Ally?",-16}|");
+            sb.AppendLine(new string('-', 68));
+
+            FireDisciplineSettings settings = FireDisciplineMod.Settings;
+            int skill = shooter.skills?.GetSkill(RimWorld.SkillDefOf.Shooting)?.Level ?? 10;
+            float edge = UnityEngine.Mathf.Lerp(
+                settings?.shotgunEdgeDamageMin ?? 0.15f,
+                settings?.shotgunEdgeDamageMax ?? 0.55f,
+                UnityEngine.Mathf.Clamp01(skill / 20f));
+
+            ShotgunAoE.ShotgunSpreadGeometry.TryResolve(origin, targetCell, weaponDef, out Vector3 direction, out float length, out float spreadPerCell);
 
             foreach (IntVec3 cell in cells)
             {
                 float d = (cell - origin).LengthHorizontal;
                 Pawn pawnInCell = cell.GetFirstPawn(map);
                 bool isAlly = pawnInCell != null && pawnInCell.Faction == shooter.Faction && pawnInCell != shooter;
-
                 string allyNote = isAlly ? $"YES ({pawnInCell.LabelShort})" : "No";
-                sb.AppendLine($"{cell,-18}|{d,-24:F1}c|{allyNote,-16}|");
+
+                if (ShotgunAoE.ShotgunSpreadGeometry.Contains(origin, cell, direction, length, spreadPerCell, out float edgeFraction, out float densityFactor))
+                {
+                    float dmgFactor = UnityEngine.Mathf.Lerp(1.0f, edge, edgeFraction) * densityFactor;
+                    sb.AppendLine($"{cell,-18}|{d,-10:F1}c|{densityFactor,-10:F2}|{dmgFactor * 100f,-9:F0}%|{allyNote,-16}|");
+                }
             }
 
             Log.Message(sb.ToString());

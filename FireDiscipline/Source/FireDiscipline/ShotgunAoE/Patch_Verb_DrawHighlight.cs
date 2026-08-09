@@ -30,7 +30,8 @@ namespace FireDiscipline.ShotgunAoE
 
             if (!ShotgunSpreadGeometry.WouldSpread(shooter)) return;
 
-            List<IntVec3> cells = ShotgunSpreadGeometry.AffectedCells(shooter.Position, target.Cell, shooter.Map);
+            ThingDef weaponDef = shooter.equipment?.Primary?.def;
+            List<IntVec3> cells = ShotgunSpreadGeometry.AffectedCells(shooter.Position, target.Cell, shooter.Map, weaponDef);
             if (cells.Count == 0) return;
 
             GenDraw.DrawFieldEdges(cells, SpreadColor);
