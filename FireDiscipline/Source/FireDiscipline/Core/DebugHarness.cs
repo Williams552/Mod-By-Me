@@ -477,16 +477,15 @@ namespace FireDiscipline.Core
             // what is actually being applied - otherwise the readout claims an effect that is not live.
             bool applied = featureOn && isBehindEmbrasure;
             float accMult = applied ? (FireDisciplineMod.Settings?.embrasureAccuracyMultiplier ?? 0.85f) : 1.0f;
-            float suppMult = applied ? (FireDisciplineMod.Settings?.embrasureSuppressionMultiplier ?? 0.30f) : 1.0f;
 
             string status = isBehindEmbrasure ? "<color=#00FF00>BEHIND EMBRASURE</color>" : "<color=#FF5555>OPEN GROUND / COVER (NO EMBRASURE)</color>";
             if (!featureOn) status += " <color=#FFAA00>[FEATURE DISABLED - no modifiers applied]</color>";
-            string msg = $"[Embrasure Test] {selectedPawn.LabelShort} | Status: {status} | Accuracy Mult: x{accMult:F2} | Suppression Resistance: x{suppMult:F2}";
+            string msg = $"[Embrasure Test] {selectedPawn.LabelShort} | Status: {status} | Firing Accuracy Mult: x{accMult:F2}";
 
             if (selectedPawn.Map != null && Find.CameraDriver != null && applied)
             {
                 MoteMaker.ThrowText(selectedPawn.DrawPos, selectedPawn.Map,
-                    $"Embrasure (Supp x{suppMult:F2}, Acc x{accMult:F2})", Color.green);
+                    $"Embrasure (Acc x{accMult:F2})", Color.green);
             }
 
             Log.Message(msg);
