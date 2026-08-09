@@ -32,8 +32,8 @@
     <makesAlert>false</makesAlert>
     <comps>
       <li Class="FireDiscipline.Suppression.HediffCompProperties_SuppressionDecay">
-        <severityPerSecond>0.20</severityPerSecond>
-        <delayTicks>60</delayTicks>
+        <severityPerSecond>0.10</severityPerSecond>
+        <delayTicks>120</delayTicks>
       </li>
       <!--
         On-screen indicator, using the vanilla HediffComp_Effecter.

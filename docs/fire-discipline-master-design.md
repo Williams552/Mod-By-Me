@@ -737,13 +737,15 @@ Dùng **Dubs Performance Analyzer**. Đo trước và sau mỗi module.
 
 ### 8.1 Bảng hằng số cân bằng XML Defs (Task A9)
 
-> **Lịch sử sửa đổi (2026-08-08):** Chuyển trục chính của suppression từ "phạt thời gian ngắm" sang "chặn di chuyển".
-> Giá trị cũ đã bị thay thế / xoá:
-> - Pinned settings (xoá bỏ khỏi `FireDisciplineSettings`): `enableSuppressionPinned` (false), `pinnedSeverityThreshold` (0.80).
-> - `FD_Suppressed` Stage 1 (shaken): `<AimingDelayFactor>0.10</AimingDelayFactor>` (xoá hẳn)
-> - `FD_Suppressed` Stage 2 (wavering): `<AimingDelayFactor>0.25</AimingDelayFactor>` (giảm còn 0.05), `<MoveSpeed>-0.15</MoveSpeed>` (xoá)
-> - `FD_Suppressed` Stage 3 (ducking): `<AimingDelayFactor>0.45</AimingDelayFactor>` (giảm còn 0.10), `<MoveSpeed>-0.35</MoveSpeed>` (xoá)
-> - `FD_Suppressed` Stage 4 (cowering): `<AimingDelayFactor>0.80</AimingDelayFactor>` (giảm còn 0.20), `<MoveSpeed>-0.55</MoveSpeed>` (xoá)
+> **Lịch sử sửa đổi (2026-08-08/09):**
+> - Chuyển trục chính của suppression từ "phạt thời gian ngắm" sang "chặn di chuyển".
+> - Giá trị cũ đã bị thay thế / xoá:
+>   - Pinned settings (xoá bỏ khỏi `FireDisciplineSettings`): `enableSuppressionPinned` (false), `pinnedSeverityThreshold` (0.80).
+>   - `FD_Suppressed` Stage 1 (shaken): `<AimingDelayFactor>0.10</AimingDelayFactor>` (xoá hẳn)
+>   - `FD_Suppressed` Stage 2 (wavering): `<AimingDelayFactor>0.25</AimingDelayFactor>` (giảm còn 0.05), `<MoveSpeed>-0.15</MoveSpeed>` (xoá)
+>   - `FD_Suppressed` Stage 3 (ducking): `<AimingDelayFactor>0.45</AimingDelayFactor>` (giảm còn 0.10), `<MoveSpeed>-0.35</MoveSpeed>` (xoá)
+>   - `FD_Suppressed` Stage 4 (cowering): `<AimingDelayFactor>0.80</AimingDelayFactor>` (giảm còn 0.20), `<MoveSpeed>-0.55</MoveSpeed>` (xoá)
+> - **Cân bằng lại decay (2026-08-09):** `suppressionDecayPerSecond` (0.20 -> 0.10), `suppressionDecayDelayTicks` (60 -> 120 / 2 giây).
 
 Danh sách các hằng số cân bằng trong `1.6/Defs/HediffDefs/Hediffs_FireDiscipline.xml`, ý nghĩa và cơ chế nạp trong code:
 
@@ -754,8 +756,8 @@ Danh sách các hằng số cân bằng trong `1.6/Defs/HediffDefs/Hediffs_FireD
 | `FD_Suppressed` | `defaultLabelColor.b` | 0.2 | Mã màu B hiển thị Hediff label | Vanilla `HediffUIUtility` / Health Tab |
 | `FD_Suppressed` | `minSeverity` | 0 | Sàn severity tối thiểu (phải = 0 để HediffComp_SuppressionDecay xoá hediff khi hết áp chế) | `SuppressionEngine.MinSeverity(def)` |
 | `FD_Suppressed` | `maxSeverity` | 9.0 | Trần severity tối đa | `SuppressionEngine.MaxSeverity(def)` |
-| `FD_Suppressed` | `severityPerSecond` | 0.20 | Tốc độ suy giảm severity mỗi giây | `HediffComp_SuppressionDecay` |
-| `FD_Suppressed` | `delayTicks` | 60 | Ticks chờ trước khi bắt đầu suy giảm (1s) | `HediffComp_SuppressionDecay` |
+| `FD_Suppressed` | `severityPerSecond` | 0.10 | Tốc độ suy giảm severity mỗi giây | `HediffComp_SuppressionDecay` |
+| `FD_Suppressed` | `delayTicks` | 120 | Ticks chờ trước khi bắt đầu suy giảm (2s) | `HediffComp_SuppressionDecay` |
 | `FD_Suppressed` | `severityIndices.min` | 3 | Stage min hiện Effecter icon (ducking) | Vanilla `HediffComp_Effecter` |
 | `FD_Suppressed` | `severityIndices.max` | 5 | Stage max hiện Effecter icon (cowering) | Vanilla `HediffComp_Effecter` |
 | `FD_Suppressed` | Stage 1 (shaken) `minSeverity` | 0.5 | Ngưỡng kích hoạt stage shaken (ẩn) | Vanilla `Hediff.CurStage` |

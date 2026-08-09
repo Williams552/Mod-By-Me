@@ -120,8 +120,8 @@ namespace FireDiscipline
 
         public float suppressionBaseAmount = 0.25f;           // Severity added by one round landing nearby
         public float suppressionRadius = 3.5f;                // Cells around an impact that feel it
-        public float suppressionDecayPerSecond = 0.20f;       // Recovery rate once the shooting stops
-        public int suppressionDecayDelayTicks = 60;           // Grace period after the last round lands
+        public float suppressionDecayPerSecond = 0.10f;       // Recovery rate once the shooting stops
+        public int suppressionDecayDelayTicks = 120;          // Grace period after the last round lands
 
         // =========================================================================
         // SECTION 4d: COVER SUPPRESSION (Wave B3)
@@ -268,8 +268,8 @@ namespace FireDiscipline
             Scribe_Values.Look(ref suppressionEngineDefaultApplied, "suppressionEngineDefaultApplied", false);
             Scribe_Values.Look(ref suppressionBaseAmount, "suppressionBaseAmount", 0.25f);
             Scribe_Values.Look(ref suppressionRadius, "suppressionRadius", 3.5f);
-            Scribe_Values.Look(ref suppressionDecayPerSecond, "suppressionDecayPerSecond", 0.20f);
-            Scribe_Values.Look(ref suppressionDecayDelayTicks, "suppressionDecayDelayTicks", 60);
+            Scribe_Values.Look(ref suppressionDecayPerSecond, "suppressionDecayPerSecond", 0.10f);
+            Scribe_Values.Look(ref suppressionDecayDelayTicks, "suppressionDecayDelayTicks", 120);
 
             // Cover Suppression (Wave B3)
             Scribe_Values.Look(ref enableCoverSuppression, "enableCoverSuppression", true);

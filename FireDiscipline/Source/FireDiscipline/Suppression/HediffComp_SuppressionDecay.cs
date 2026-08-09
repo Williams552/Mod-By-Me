@@ -5,10 +5,10 @@ namespace FireDiscipline.Suppression
     public class HediffCompProperties_SuppressionDecay : HediffCompProperties
     {
         /// <summary>Severity removed per second once decay starts.</summary>
-        public float severityPerSecond = 0.20f;
+        public float severityPerSecond = 0.10f;
 
         /// <summary>Grace period after the last round lands before decay begins.</summary>
-        public int delayTicks = 60;
+        public int delayTicks = 120;
 
         public HediffCompProperties_SuppressionDecay()
         {
