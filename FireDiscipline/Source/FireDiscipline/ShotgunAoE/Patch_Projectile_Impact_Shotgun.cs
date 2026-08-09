@@ -1,3 +1,4 @@
+using System.Linq;
 using FireDiscipline.Core;
 using FireDiscipline.Graze;
 using FireDiscipline.Suppression;
@@ -71,7 +72,8 @@ namespace FireDiscipline.ShotgunAoE
 
             // Scan all pawns, but rough-filter by distance before doing vector geometry.
             // A map has far fewer pawns than the ~900 cells a 17-radius radial scan would touch.
-            foreach (Pawn victim in map.mapPawns.AllPawnsSpawned)
+            // Use ToList() to iterate on a snapshot, avoiding Collection Modified exceptions when TakeDamage downs/kills pawns.
+            foreach (Pawn victim in map.mapPawns.AllPawnsSpawned.ToList())
             {
                 if (victim.Dead || !victim.RaceProps.Humanlike) continue;
                 if (victim == hitThing) continue;
