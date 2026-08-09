@@ -33,7 +33,7 @@ OFF BY DEFAULT
 Two features ship switched off because they have not been balance-tested in play yet.
 
 - Shotgun spread. Shotguns get a cone of splash damage from the muzzle out to the weapon's own range, thinning out sideways and with distance. It comes with an on-screen danger zone that outlines the cone while you aim and marks cells holding your own pawns in red. Friendly fire is ON when the module is enabled, by design: the warning exists so the choice is yours to make.
-- Embrasure interaction. Pawns firing from behind an embrasure resist suppression. Detection reads a vanilla Def flag that embrasure mods set, so it recognises them without a hardcoded list - but it only matches if you actually run a mod that adds embrasures. It does nothing on its own.</description>
+- Embrasure interaction. Pawns behind an embrasure resist suppression, and pay for it with some accuracy while firing through the slit. Detection reads a vanilla Def flag that embrasure mods set, so it recognises them without a hardcoded list - but it only matches if you actually run a mod that adds embrasures. It does nothing on its own.</description>
   <loadAfter>
     <li>Mlie.YayosCombat3</li>
     <li>Mlie.Suppression</li>
