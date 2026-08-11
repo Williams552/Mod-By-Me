@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FireDiscipline.Core;
 using HarmonyLib;
 using RimWorld;
@@ -20,6 +21,7 @@ namespace FireDiscipline.AimStance
         private static readonly AccessTools.StructFieldRef<ShotReport, float> shooterFactorRef = AccessTools.StructFieldRefAccess<ShotReport, float>("factorFromShooterAndDist");
         private static readonly AccessTools.StructFieldRef<ShotReport, float> targetSizeRef = AccessTools.StructFieldRefAccess<ShotReport, float>("factorFromTargetSize");
         private static readonly AccessTools.StructFieldRef<ShotReport, float> coverBlockRef = AccessTools.StructFieldRefAccess<ShotReport, float>("coversOverallBlockChance");
+        private static readonly AccessTools.StructFieldRef<ShotReport, List<CoverInfo>> coversListRef = AccessTools.StructFieldRefAccess<ShotReport, List<CoverInfo>>("covers");
 
         // Cached field accessor. This used to be a Traverse lookup evaluated on every shot report -
         // the slowest reflection path Harmony offers, sitting in a method that also runs every frame
@@ -129,12 +131,27 @@ namespace FireDiscipline.AimStance
                 FireDisciplineSettings settings = FireDisciplineMod.Settings;
                 if (settings != null && settings.enableCoverStacking && caster != null && caster.Map != null)
                 {
-                    float lineBlock = CoverStackingUtility.LineCoverBlockChance(caster.Position, target, caster.Map);
+                    List<CoverInfo> lineCoverBuffer = CoverStackingUtility.GetLineCoverInfosBuffer();
+                    float lineBlock = CoverStackingUtility.LineCoverBlockChance(caster.Position, target, caster.Map, lineCoverBuffer);
                     if (lineBlock > 0f)
                     {
                         float combined = coverBlock + (1f - coverBlock) * lineBlock;
                         float cap = settings.coverStackingCap;
                         coverBlock = Mathf.Min(combined, cap);
+
+                        // Itemize line cover items in __result.covers for player-facing tooltip readout UI
+                        if (lineCoverBuffer != null && lineCoverBuffer.Count > 0 && coversListRef != null)
+                        {
+                            ref List<CoverInfo> covers = ref coversListRef(ref __result);
+                            if (covers == null)
+                            {
+                                covers = new List<CoverInfo>();
+                            }
+                            for (int i = 0; i < lineCoverBuffer.Count; i++)
+                            {
+                                covers.Add(lineCoverBuffer[i]);
+                            }
+                        }
                     }
                 }
 

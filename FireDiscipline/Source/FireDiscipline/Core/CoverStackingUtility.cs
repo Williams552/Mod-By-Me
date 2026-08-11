@@ -14,9 +14,20 @@ namespace FireDiscipline.Core
     {
         // P4: Pre-cleared static buffer for cells to avoid allocations in hot path.
         private static readonly List<IntVec3> cellBuffer = new List<IntVec3>();
+        private static readonly List<CoverInfo> lineCoverInfoBuffer = new List<CoverInfo>();
 
         public static float LineCoverBlockChance(IntVec3 shooterLoc, LocalTargetInfo target, Map map)
         {
+            return LineCoverBlockChance(shooterLoc, target, map, null);
+        }
+
+        public static float LineCoverBlockChance(IntVec3 shooterLoc, LocalTargetInfo target, Map map, List<CoverInfo> outCoverInfos)
+        {
+            if (outCoverInfos != null)
+            {
+                outCoverInfos.Clear();
+            }
+
             // P5: Early-out before map access or calculations if settings or map are invalid/disabled.
             FireDisciplineSettings settings = FireDisciplineMod.Settings;
             if (settings == null || !settings.enableCoverStacking || map == null || !target.IsValid)
@@ -85,14 +96,25 @@ namespace FireDiscipline.Core
                 float b = baseBlock * lineFactor;
                 // Vanilla accumulation formula: num += (1 - num) * b
                 lineBlock += (1f - lineBlock) * b;
+
+                if (outCoverInfos != null)
+                {
+                    outCoverInfos.Add(new CoverInfo(coverThing, b));
+                }
             }
 
             return lineBlock;
         }
 
+        public static List<CoverInfo> GetLineCoverInfosBuffer()
+        {
+            return lineCoverInfoBuffer;
+        }
+
         public static void ClearCache()
         {
             cellBuffer.Clear();
+            lineCoverInfoBuffer.Clear();
         }
     }
 }
