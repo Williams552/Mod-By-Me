@@ -51,6 +51,17 @@ namespace FireDiscipline.AimStance
             return false;
         }
 
+        private static readonly HarmonyLib.AccessTools.FieldRef<Verb, System.Nullable<int>> cachedBurstShotCountRef =
+            HarmonyLib.AccessTools.FieldRefAccess<Verb, System.Nullable<int>>("cachedBurstShotCount");
+
+        private static void ClearVerbBurstCache(Pawn pawn)
+        {
+            if (pawn?.equipment?.PrimaryEq?.PrimaryVerb is Verb verb && cachedBurstShotCountRef != null)
+            {
+                cachedBurstShotCountRef(verb) = null;
+            }
+        }
+
         public static void SetStance(Pawn pawn, AimStanceMode newStance)
         {
             if (pawn == null) return;
@@ -84,6 +95,9 @@ namespace FireDiscipline.AimStance
                 }
             }
 
+            // Reset Verb burst shot count cache so RimWorld immediately re-evaluates ShotsPerBurst for new stance
+            ClearVerbBurstCache(pawn);
+
             // Cancel active warmup if mid-shot
             if (pawn.stances?.curStance is Stance_Warmup)
             {
@@ -91,11 +105,26 @@ namespace FireDiscipline.AimStance
             }
         }
 
+        public static bool IsDugIn(Pawn pawn)
+        {
+            if (pawn == null || pawn.Dead || pawn.health == null) return false;
+            // Update live dug-in state for pawn
+            PronePassiveTracker.UpdatePawnDugInState(pawn);
+
+            HediffDef def = PronePassiveTracker.DugInDef;
+            if (def != null && pawn.health.hediffSet?.HasHediff(def) == true)
+            {
+                return true;
+            }
+
+            return pawn.pather != null && !pawn.pather.MovingNow && pawn.Drafted;
+        }
+
         public static void CycleStance(Pawn pawn)
         {
             if (pawn == null) return;
             var current = GetStance(pawn);
-            var next = (AimStanceMode)(((int)current + 1) % 4);
+            var next = (AimStanceMode)(((int)current + 1) % 3);
             SetStance(pawn, next);
             if (FireDisciplineMod.Settings != null && FireDisciplineMod.Settings.verboseCombatLogging)
             {
@@ -105,18 +134,7 @@ namespace FireDiscipline.AimStance
 
         public static void Notify_Suppressed(Pawn pawn)
         {
-            if (pawn == null) return;
-            AimStanceMode stance = GetStance(pawn);
-
-            // Sharpshot Vulnerability: If suppressed while in Sharpshot, reset warmup!
-            if (stance == AimStanceMode.Sharpshot && pawn.stances?.curStance is Stance_Warmup)
-            {
-                pawn.stances.SetStance(new Stance_Mobile());
-                if (FireDisciplineMod.Settings != null && FireDisciplineMod.Settings.verboseCombatLogging)
-                {
-                    Log.Message($"[Fire Discipline] Sharpshot warmup RESET on {pawn.LabelShort} due to suppression!");
-                }
-            }
+            // Warmup reset on suppression removed completely per design request.
         }
 
         public static AimStanceMode GetAutoDefaultStance(Pawn pawn)
