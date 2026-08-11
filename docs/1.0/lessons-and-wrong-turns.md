@@ -14,7 +14,7 @@
 | # | Bug | Hệ quả thật | Phát hiện bằng |
 |---|---|---|---|
 | 1 | `Patch_Projectile_Impact` là **Postfix** trên `Projectile.Impact` | `Impact` huỷ viên đạn trước khi trả về → `__instance.Map` là `null` → hàm return ngay dòng đầu, **mỗi viên đạn**. Engine "chạy" nhưng đóng góp bằng 0 | Debug action in log từng phát bắn |
-| 2 | Recoil Rapid đọc `burstShotsLeft` ngoài loạt bắn | Ngoài loạt `burstShotsLeft = 0` → `shotIndex = burstCount` → phạt **×0.93⁶ = ×0.65 vĩnh viễn**. Đo được: Rapid @3ô = 24% trong khi SnapShot = 37% | Ma trận hit chance |
+| 2 | Recoil Rapid đọc `burstShotsLeft` ngoài loạt bắn | Ngoài loạt `burstShotsLeft = 0` → `shotIndex = burstCount` → phạt **×0.93⁶ = ×0.65 vĩnh viễn**. Đo được: Rapid @3ô = 24% trong khi StandardShot = 37% | Ma trận hit chance |
 | 3 | Cooldown đọc từ `verbProps.defaultCooldownTime` | Field đó **bằng 0 trên hầu hết vũ khí**; RimWorld lấy từ stat `RangedWeapon_Cooldown`. Sai ở **3 chỗ** | Bảng DPS |
 | 4 | Hệ quả của #3 trong `CalculateRapidWarmupRatio` | `cooldown = 0` → `rawRatio = 0` → **clamp về đáy 0.30 cho mọi vũ khí**. Cả dải `0.30–0.75` chưa bao giờ được dùng | như trên |
 | 5 | `HediffComp_Disappears` không refresh khi bị bắn tiếp | Suppression tan sau 3–5 giây kể từ viên **đầu**. Đo được: 219→214→…→186 tick rồi hết hạn giữa loạt | Log từng phát bắn |

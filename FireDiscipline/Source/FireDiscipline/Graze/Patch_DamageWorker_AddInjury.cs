@@ -8,11 +8,13 @@ using Verse;
 namespace FireDiscipline.Graze
 {
     /// <summary>
-    /// Harmony Prefix on DamageWorker_AddInjury.Apply (v3 Execution Spec).
-    /// Uses p = TotalEstimatedHitChance at moment of firing:
-    /// grazeChance = clamp(0, 1, (0.65 - p) / 0.45)
-    /// High-precision shots (p >= 0.65) NEVER graze; lucky low-accuracy shots (p <= 0.20) ALWAYS graze.
-    /// Converts fatal organ shots into non-lethal grazing blows (reducing damage by 65% and rerouting to outer limbs).
+    /// Harmony Prefix Can thiệp vào quá trình gây sát thương (DamageWorker_AddInjury.Apply) để thực thi cơ chế Graze.
+    /// 
+    /// [TÍNH NĂNG / FEATURE]: Module Cơ chế Sượt Đạn (GrazeModule - Anti-One-Shot Protection).
+    /// [TẠI SAO LÀM THẾ / RATIONALE]: Loại bỏ cảm giác ức chế phi lý trong Vanilla RimWorld khi lính kỳ cựu mặc giáp xịn bị đạn rác từ raider skill thấp bắn trúng não chết ngay lập tức (RNG death).
+    /// [ĐIỀU CHỈNH MẶC ĐỊNH / DEFAULTS]: Bật mặc định. Trần Hit Chance = 0.65 (phát bắn trúng >= 65% không bao giờ Graze). Giảm 65% sát thương (chỉ nhận 35% sát thương gốc).
+    /// [Ý NGHĨA & CƠ CHẾ / MECHANICS]: Kiểm tra các đòn tấn công tầm xa nhắm vào 7 cơ quan sinh tồn (Brain, Head, Eye, Heart, Neck, Spine, Liver). 
+    ///     Nếu thỏa mãn công thức Graze Chance dựa trên Hit Chance, đòn đánh bị giảm 65% sát thương và vết thương được đổi hướng (reroute) sang các chi phụ bên ngoài.
     /// </summary>
     public static class Patch_DamageWorker_AddInjury
     {

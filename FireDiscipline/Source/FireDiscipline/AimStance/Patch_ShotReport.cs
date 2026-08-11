@@ -97,7 +97,7 @@ namespace FireDiscipline.AimStance
                     // whole recoil stack permanently - measured at x0.65 for a 6-round weapon, on every
                     // first shot and on every mouse-over aim preview. Rapid ended up LESS accurate than
                     // Standard Shot at point blank, which is the opposite of what the stance is for.
-                    if (verb != null && verb.verbProps.burstShotCount >= 3 && burstShotsLeftRef != null)
+                    if (verb != null && verb.verbProps.burstShotCount >= 2 && burstShotsLeftRef != null)
                     {
                         int shotsLeft = burstShotsLeftRef(verb);
                         if (shotsLeft > 0)
@@ -105,7 +105,13 @@ namespace FireDiscipline.AimStance
                             int shotIndex = Mathf.Max(0, verb.verbProps.burstShotCount - shotsLeft);
                             if (shotIndex > 0)
                             {
-                                factor *= Mathf.Pow(RecoilPerShot, shotIndex);
+                                float recoilPower = 1.0f;
+                                ThingDef wDef = verb.EquipmentSource?.def;
+                                if (wDef != null && WeaponClassification.HasShotgunProfile(wDef) && verb.verbProps.burstShotCount > 1)
+                                {
+                                    recoilPower = FireDisciplineMod.Settings?.shotgunRapidRecoilMultiplier ?? 2.50f;
+                                }
+                                factor *= Mathf.Pow(RecoilPerShot, shotIndex * recoilPower);
                             }
                         }
                     }
@@ -118,13 +124,6 @@ namespace FireDiscipline.AimStance
                 }
             }
 
-            // 2. Embrasure Interaction Accuracy Modifier (Section 5.7, Wave B4 - off by default)
-            if ((FireDisciplineMod.Settings?.enableEmbrasureInteraction ?? false)
-                && caster is Pawn shooter && EmbrasureUtility.IsUsingEmbrasure(shooter) && shooterFactorRef != null)
-            {
-                float embrasureMult = FireDisciplineMod.Settings?.embrasureAccuracyMultiplier ?? 0.85f;
-                shooterFactorRef(ref __result) *= embrasureMult;
-            }
 
             // 3. Target Dug-In (Prone) Modifiers
             if (target.HasThing && target.Thing is Pawn targetPawn && targetSizeRef != null)

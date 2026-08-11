@@ -46,10 +46,10 @@ grazeChance = clamp(0, 1, (0.65 − p) / 0.45)
 
 | Tình huống | `p` | grazeChance |
 |---|---|---|
-| Touch 3, skill 4, Snap | 77.9% | 0% |
+| Touch 3, skill 4, Standard | 77.9% | 0% |
 | Long 40, skill 16, Sharpshot | 52.4% | 28% |
-| Long 40, skill 16, Snap | 44.6% | 45% |
-| Long 40, skill 10, Snap | 19.5% | 100% |
+| Long 40, skill 16, Standard | 44.6% | 45% |
+| Long 40, skill 10, Standard | 19.5% | 100% |
 
 → Rapid kiếm được sát thương chí mạng ở cự ly gần, Sharpshot ở cự ly xa, Prone và bắn hoảng loạn thì không — **mà không cần đặc cách cho tư thế nào**.
 
@@ -178,7 +178,7 @@ primaryDamage ×0.70
 
 ### Vấn đề
 
-CE tách **fire mode** (bao nhiêu viên: single / burst / auto) khỏi **aim mode** (ngắm kỹ đến đâu: aimed / snapshot / suppressive). Hai hệ thống độc lập, tổ hợp thành ma trận.
+CE tách **fire mode** (bao nhiêu viên: single / burst / auto) khỏi **aim mode** (ngắm kỹ đến đâu: aimed / Standardshot / suppressive). Hai hệ thống độc lập, tổ hợp thành ma trận.
 
 Fire Discipline gộp cả hai vào một trục 4 tư thế → **mất khả năng diễn đạt "bắn nhiều đạn nhưng vẫn ngắm kỹ"**.
 

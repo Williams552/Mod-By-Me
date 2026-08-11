@@ -105,8 +105,11 @@ namespace FireDiscipline
                 listing.Label($"    Max Suppressed Target Cover Degradation: <b>-{(Settings.suppressionCoverDegradationMax * 100f):F0}%</b> (Default: -40%)");
                 Settings.suppressionCoverDegradationMax = listing.Slider(Settings.suppressionCoverDegradationMax, 0.10f, 0.70f);
             }
+            listing.Label($"  Multi-Shot Shotgun (>1 burst) Rapid Recoil Multiplier: <b>x{Settings.shotgunRapidRecoilMultiplier:F2}</b> (Default: x2.50 power - 2.5x higher than LMG)");
+            Settings.shotgunRapidRecoilMultiplier = listing.Slider(Settings.shotgunRapidRecoilMultiplier, 1.00f, 5.00f);
 
-            listing.CheckboxLabeled("  Enable Rapid Full-Auto Burst Expansion", ref Settings.enableRapidFullAuto,
+            listing.Gap(5f);
+            listing.CheckboxLabeled("  Enable Rapid Full-Auto Expansion for Heavy Automatics", ref Settings.enableRapidFullAuto,
                 "Expands burst shot count for heavy automatic weapons (burst >= min gate) in exchange for a cooldown penalty.");
             if (Settings.enableRapidFullAuto)
             {
@@ -149,8 +152,8 @@ namespace FireDiscipline
 
             if (Settings.enableCoverSuppression)
             {
-                listing.Label($"  Cover Suppression Factor: <b>{Settings.coverSuppressionFactor:F2}</b> (Default: 0.85)");
-                Settings.coverSuppressionFactor = listing.Slider(Settings.coverSuppressionFactor, 0.10f, 1.00f);
+                listing.Label($"  Cover Suppression Factor: <b>{Settings.coverSuppressionFactor:F2}</b> (Default: 1.00)");
+                Settings.coverSuppressionFactor = listing.Slider(Settings.coverSuppressionFactor, 0.00f, 3.00f);
 
                 listing.Label($"  Cover Suppression Floor: <b>{Settings.coverSuppressionFloor:F2}</b> (Default: 0.25 - minimum suppression received)");
                 Settings.coverSuppressionFloor = listing.Slider(Settings.coverSuppressionFloor, 0.10f, 0.80f);
@@ -226,14 +229,6 @@ namespace FireDiscipline
             listing.Label($"  Shell Shock Radius Cap: <b>{Settings.shellShockRadiusCap:F0}c</b> (Default: 20c)");
             Settings.shellShockRadiusCap = listing.Slider(Settings.shellShockRadiusCap, 8f, 40f);
 
-            listing.Gap(10f);
-            listing.Label("  <b><color=#00FFaa>[Embrasure Interaction]</color></b>");
-            listing.CheckboxLabeled("  Enable Embrasure Interaction Accuracy Penalty", ref Settings.enableEmbrasureInteraction);
-            if (Settings.enableEmbrasureInteraction)
-            {
-                listing.Label($"    Embrasure Firing Accuracy Multiplier: <b>{(int)(Settings.embrasureAccuracyMultiplier * 100f)}%</b>");
-                Settings.embrasureAccuracyMultiplier = listing.Slider(Settings.embrasureAccuracyMultiplier, 0.50f, 1.00f);
-            }
 
             listing.GapLine(15f);
 
@@ -316,7 +311,7 @@ namespace FireDiscipline
                     + $"{Settings.sharpshotSuppressionVulnerability:F2}) and losing its aim to incoming fire");
                 listing.Label("  - Prone resisting suppression (x"
                     + $"{Settings.proneSuppressionResistance:F2})");
-                listing.Label("  - Embrasure suppression resistance");
+                listing.Label("  - Cover suppression resistance");
                 listing.Label("  - The Pinned state");
                 listing.Label("<color=#99FF99><b>These still work normally:</b></color>");
                 listing.Label("  - All four aim stances, their accuracy curves and warmup times");

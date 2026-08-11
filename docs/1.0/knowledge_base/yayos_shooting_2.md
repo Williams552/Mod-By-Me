@@ -56,7 +56,7 @@ Fire Discipline áp dụng thiết kế **mới 100%** cho **Module 5.2 (Aim Mod
 - **Công thức tính điều chỉnh độ chính xác (Accuracy adjustment):**
   ```csharp
   // Nhắm kỹ (Careful Aim): Warmup x2.0, Accuracy x1.5
-  // Bắn nhanh (Snap Shot): Mặc định
+  // Bắn nhanh (Standard Shot): Mặc định
   ```
 - Fire Discipline áp dụng các hệ số này trực tiếp thông qua lớp [AimStanceTracker.cs](../../../FireDiscipline/Source/FireDiscipline/AimStance/AimStanceTracker.cs) và StatPart tiêm vào `AimingDelayFactor`.
 

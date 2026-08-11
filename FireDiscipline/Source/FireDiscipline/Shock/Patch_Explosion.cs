@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using HarmonyLib;
 using FireDiscipline.AimStance;
+using FireDiscipline.Core;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -8,9 +9,14 @@ using Verse;
 namespace FireDiscipline.Shock
 {
     /// <summary>
-    /// Harmony Postfix on Explosion.StartExplosion (v3 Execution Spec).
-    /// Calculates non-linear Shell Shock radius: shockRadius = min(20, r + 2 * sqrt(r)).
-    /// Enforces 5 strict filter gates (Physical dmg only, floor cut < 0.15, non-drafted x0.3, LOS check, 40-pawn cap).
+    /// Harmony Postfix Can thiệp vào vụ nổ (Explosion.StartExplosion) để tạo sóng xung kích gây choáng.
+    /// 
+    /// [TÍNH NĂNG / FEATURE]: Module Sốc Chiến đấu & Sóng Xung Kích (ShockModule - Proportional Shell Shock).
+    /// [TẠI SAO LÀM THẾ / RATIONALE]: Giả lập thực tế hiệu ứng sóng xung kích concussive từ vụ nổ lớn (như pháo kích Mortar hay tên lửa Doomsday) 
+    ///     khiến Pawn xung quanh bị choáng váng, ù tai, giảm tốc độ di chuyển và tăng thời gian ngắm bắn thay vì đứng ngơ ngác không bị ảnh hưởng.
+    /// [ĐIỀU CHỈNH MẶC ĐỊNH / DEFAULTS]: Bán kính sóng xung kích tính theo công thức phi tuyến tính: shockRadius = min(20, r + 2*sqrt(r)). Đạn pháo 4.9 ô -> sóng xung kích 9.3 ô (Trần 20 ô).
+    /// [Ý NGHĨA & CƠ CHẾ / MECHANICS]: Khi nổ xảy ra, quét các Pawn nằm trong bán kính sóng xung kích (kiểm tra Line of Sight và lọc các sát thương vật lý). 
+    ///     Gán Hediff `FD_ShellShock` với mức độ suy giảm dần theo khoảng cách đến tâm nổ.
     /// </summary>
     public static class Patch_Explosion
     {
@@ -87,6 +93,13 @@ namespace FireDiscipline.Shock
                         baseSeverity *= 0.30f;
                     }
 
+                    // Gate 2.3b: Active Energy Shield Absorption (Law 2 - CompShield)
+                    float activeShieldFraction = ShieldUtility.GetActiveShieldEnergyFraction(victim);
+                    if (activeShieldFraction > 0f)
+                    {
+                        baseSeverity *= (1.0f - 0.85f * activeShieldFraction);
+                    }
+
                     // Gate 2.1: Floor cut: Ignore if severity < 0.15
                     if (baseSeverity < 0.15f)
                         continue;
@@ -105,6 +118,7 @@ namespace FireDiscipline.Shock
                         hediff.Severity = baseSeverity;
                         victim.health.AddHediff(hediff);
                     }
+                    hediff.TryGetComp<HediffComp_TimedDecay>()?.Notify_Applied();
 
                     // Sharpshot warmup reset from concussive shockwave
                     AimStanceTracker.Notify_Suppressed(victim);

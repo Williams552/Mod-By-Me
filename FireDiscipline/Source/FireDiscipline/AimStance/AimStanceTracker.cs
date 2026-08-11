@@ -5,10 +5,15 @@ using Verse;
 namespace FireDiscipline.AimStance
 {
     /// <summary>
-    /// Lightweight runtime tracker for Pawn stances v2.
-    /// Manages transition costs, auto default stance derivation, and suppression resets.
-    /// Fixed v3: Uses explicit tick-based transitionEndTicks to prevent weapon cooldowns from sticking x3.0 aiming delay.
-    /// Invalidates pawn statCache on stance change for real-time Stat Card updates.
+    /// Bộ theo dõi và quản lý tư thế tác chiến thời gian thực cho Pawn.
+    /// 
+    /// [TÍNH NĂNG / FEATURE]: Module Tư thế Tác chiến (AimStanceModule) - Quản lý việc chuyển đổi và áp dụng tư thế cho Pawn.
+    /// [TẠI SAO LÀM THẾ / RATIONALE]: Giúp người chơi điều khiển tiểu đội linh hoạt giữa bắn nhanh cự ly gần và bắn tỉa cự ly xa; 
+    ///     tự động gán tư thế tối ưu cho NPC/Quân địch mà không làm giảm hiệu năng (dùng cache phân chia theo tick).
+    /// [ĐIỀU CHỈNH MẶC ĐỊNH / DEFAULTS]: Tư thế mặc định là Standard. Độ trễ chuyển tư thế là 45 ticks (0.75 giây). 
+    ///     Tự động đánh giá tư thế NPC mỗi 45 ticks.
+    /// [Ý NGHĨA & CƠ CHẾ / MECHANICS]: Lưu trữ tư thế hiện tại của từng Pawn ID (`pawnStances`), xử lý phạt độ trễ khi chuyển đổi tư thế 
+    ///     (`transitionEndTicks`), và tự động làm mới StatCache để giao diện Character Sheet hiển thị chỉ số chính xác ngay lập tức.
     /// </summary>
     public static class AimStanceTracker
     {

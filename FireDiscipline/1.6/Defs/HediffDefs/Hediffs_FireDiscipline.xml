@@ -91,13 +91,14 @@
     <description>Shaken by seeing an ally downed or killed nearby. Reflexes and aim are temporarily impaired.</description>
     <hediffClass>HediffWithComps</hediffClass>
     <defaultLabelColor>(0.85, 0.35, 0.35)</defaultLabelColor>
+    <minSeverity>0</minSeverity>
     <initialSeverity>0.35</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
     <isBad>true</isBad>
     <comps>
-      <li Class="HediffCompProperties_Disappears">
-        <disappearsAfterTicks>240~420</disappearsAfterTicks>
-        <showRemainingTime>true</showRemainingTime>
+      <li Class="FireDiscipline.Core.HediffCompProperties_TimedDecay">
+        <severityPerSecond>0.08</severityPerSecond>
+        <delayTicks>180</delayTicks>
       </li>
     </comps>
     <stages>
@@ -118,13 +119,14 @@
     <description>Disoriented by a nearby explosive shockwave. Ringing ears, impaired vision, and severe movement slowdown.</description>
     <hediffClass>HediffWithComps</hediffClass>
     <defaultLabelColor>(0.95, 0.3, 0.1)</defaultLabelColor>
+    <minSeverity>0</minSeverity>
     <initialSeverity>0.50</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
     <isBad>true</isBad>
     <comps>
-      <li Class="HediffCompProperties_Disappears">
-        <disappearsAfterTicks>300~600</disappearsAfterTicks>
-        <showRemainingTime>true</showRemainingTime>
+      <li Class="FireDiscipline.Core.HediffCompProperties_TimedDecay">
+        <severityPerSecond>0.08</severityPerSecond>
+        <delayTicks>240</delayTicks>
       </li>
     </comps>
     <stages>
@@ -143,6 +145,22 @@
           <AimingDelayFactor>0.60</AimingDelayFactor>
           <MoveSpeed>-0.45</MoveSpeed>
         </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <!-- 4. Automatic Passive Dug-In (Prone) Hediff -->
+  <HediffDef>
+    <defName>FD_DugIn</defName>
+    <label>dug-in (prone)</label>
+    <description>Hunkered down in a low posture while stationary. Reduces target profile, improves cover integration, and grants suppression resistance.</description>
+    <hediffClass>Hediff</hediffClass>
+    <defaultLabelColor>(0.4, 0.8, 0.4)</defaultLabelColor>
+    <isBad>false</isBad>
+    <stages>
+      <li>
+        <label>dug-in</label>
+        <becomeVisible>true</becomeVisible>
       </li>
     </stages>
   </HediffDef>

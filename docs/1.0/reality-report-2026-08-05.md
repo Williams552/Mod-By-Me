@@ -334,7 +334,7 @@ Setter `Thing.Position` **không cập nhật thingGrid/regionGrid** khi thing �
 
 **#3 — Rò rỉ bộ nhớ: 3 Dictionary không bao giờ dọn.**
 `AimStanceTracker.cs:15-17` giữ `pawnStances`, `passiveCache`, `transitionEndTicks` khoá theo `thingIDNumber`. Không có hook `Notify_Despawned` / `Pawn.Kill` / `Pawn.Destroy` nào xoá entry. `ClearCache()` (`:122`) tồn tại nhưng **không nơi nào gọi**. Trong một save chạy dài với hàng nghìn raider, `passiveCache` phình vô hạn — và nó nhận **mọi pawn không thuộc player**, kể cả thú rừng, muffalo, chuột. Không nghiêm trọng về TPS (chỉ tra dictionary) nhưng là rò rỉ thật và tồn tại qua nhiều lần load map.
-Ngoài ra `pawnStances` **không được Scribe** → mọi tư thế reset về SnapShot sau khi load. Có thể là chủ ý, nhưng chưa ghi ở đâu.
+Ngoài ra `pawnStances` **không được Scribe** → mọi tư thế reset về StandardShot sau khi load. Có thể là chủ ý, nhưng chưa ghi ở đâu.
 
 **#4 — Cấp phát rác trên hot path.**
 `new GrazeModule()` mỗi lần một pawn nhận sát thương (`Patch_DamageWorker_AddInjury.cs:21`) · `new ShockModule()` mỗi lần pawn chết (`Patch_Pawn_Kill_Down.cs:16`) và mỗi vụ nổ (`Patch_Explosion.cs:19`) · `new SuppressionIntegrationModule()` mỗi va chạm đạn (`Patch_Projectile_Impact.cs:32`).
@@ -363,8 +363,8 @@ Chỉ để đọc `ModuleId` là một string hằng. Trong một raid lớn, �
 **#12 — `Log.Message` mỗi lần graze** (`Patch_DamageWorker_AddInjury.cs:74`) và **mỗi lần đổi stance** (`AimStanceTracker.cs:100`) và **mỗi lần reset warmup** (`:112`). Trong raid lớn đây là spam log nặng — `Log.Message` ở RimWorld không rẻ (nó ghi vào buffer UI). Nên bọc sau một cờ `devMode`.
 
 **#13 — `SetStance` tính phí transition sai so với tài liệu.**
-Tài liệu 5.2 (`:92`): *"ra lệnh di chuyển khi Prone → tự về SnapShot + 45 ticks. **Về SnapShot luôn miễn phí.**"*
-Code `AimStanceTracker.cs:78-84`: áp `Stance_Cooldown(45)` khi vào **bất kỳ** stance non-Snap nào (Rapid, Sharpshot, Prone). Và `:66-73` áp phí khi Prone→SnapShot, tức **về SnapShot KHÔNG miễn phí** khi đang Prone.
+Tài liệu 5.2 (`:92`): *"ra lệnh di chuyển khi Prone → tự về StandardShot + 45 ticks. **Về StandardShot luôn miễn phí.**"*
+Code `AimStanceTracker.cs:78-84`: áp `Stance_Cooldown(45)` khi vào **bất kỳ** stance non-Standard nào (Rapid, Sharpshot, Prone). Và `:66-73` áp phí khi Prone→StandardShot, tức **về StandardShot KHÔNG miễn phí** khi đang Prone.
 Cộng với `StatPart_AimStance.cs:23` nhân `AimingDelayFactor ×3.0` trong suốt transition. Tổng chi phí đổi tư thế cao hơn thiết kế đáng kể, và ×3.0 là con số chưa từng được duyệt.
 
 **#14 — `PassiveStanceEvaluator` đọc `pawn.mindState.enemyTarget`.** Có `?.` guard ✅ và `IsValid` check ✅ nên an toàn. Tần suất: **45 tick (0.75s) mỗi pawn không thuộc player**, cache tại `AimStanceTracker.cs:32`. Đạt yêu cầu A4 (30–60 tick) ✅. Nhưng cache áp cho **mọi** pawn non-player kể cả thú vật — nên gate bằng `RaceProps.Humanlike` để giảm rác dictionary.

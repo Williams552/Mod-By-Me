@@ -9,7 +9,7 @@
   <description>A tactical layer on top of vanilla combat. No new save required, no per-weapon patches: everything is derived from vanilla stats, so weapons from other mods work without support being added for them.
 
 WHAT IT ADDS
-- Four aim stances per drafted pawn: Snap Shot, Rapid, Sharpshot, Prone. Each trades accuracy, aim time and exposure differently.
+- Four aim stances per drafted pawn: Standard, Rapid, Sharpshot, Prone. Each trades accuracy, aim time and exposure differently.
 - Its own suppression engine. Sustained fire slows a pawn down and eventually stops it advancing, so a firing line can hold ground instead of funnelling raiders into a killbox. Stances change suppression both ways: Rapid inflicts more, Sharpshot suffers more and loses its aim, Prone resists.
 - Cover resists suppression. A pawn behind sandbags or a wall accumulates it far more slowly, which is what lets a smaller defending force trade with a larger attacking one.
 - Gear encumbrance: heavy loadouts cost combat move speed.

@@ -6,11 +6,14 @@ using Verse;
 namespace FireDiscipline.Encumbrance
 {
     /// <summary>
-    /// StatPart dynamically injected into StatDefOf.MoveSpeed.
-    ///
-    /// Two effects live here, owned by two different modules: the load penalty (Encumbrance) and the
-    /// Prone stance multiplier (AimStance). Load counts weapons and inventory only - worn apparel is
-    /// vanilla's business, see CarriedMass.
+    /// StatPart can thiệp trực tiếp vào stat Tốc độ di chuyển (StatDefOf.MoveSpeed).
+    /// 
+    /// [TÍNH NĂNG / FEATURE]: Module Tải trọng & Hành trang (EncumbranceModule).
+    /// [TẠI SAO LÀM THẾ / RATIONALE]: Khuyến khích người chơi trang bị linh hoạt (lính cơ động mang đồ nhẹ vs lính hạng nặng); 
+    ///     phạt di chuyển hợp lý dựa trên trọng lượng vũ khí + đồ trong túi mà không phạt trùng lặp lên bộ giáp đang mặc (do giáp đã có stat penalty riêng của Vanilla).
+    /// [ĐIỀU CHỈNH MẶC ĐỊNH / DEFAULTS]: Ngưỡng sức chở = 0.15 (15% capacity không phạt). Mức phạt tối đa = 0.35 (-35% MoveSpeed).
+    /// [Ý NGHĨA & CƠ CHẾ / MECHANICS]: Đọc tổng khối lượng đồ cầm tay + túi hành trang (`CarriedMass`), so sánh với `CarryingCapacity` của Pawn, 
+    ///     và tính toán hệ số trừ MoveSpeed hiển thị minh bạch trên bảng thông tin nhân vật (Stat Sheet).
     /// </summary>
     public class StatPart_Encumbrance : StatPart
     {
@@ -29,7 +32,7 @@ namespace FireDiscipline.Encumbrance
             }
 
             if (PatchRegistry.IsModuleEnabled(AimStanceModule.Id)
-                && AimStanceTracker.GetStance(pawn) == AimStanceMode.Prone)
+                && AimStanceTracker.IsDugIn(pawn))
             {
                 float proneMult = FireDisciplineMod.Settings?.proneMoveSpeedMultiplier ?? 0.60f;
                 val *= proneMult;
@@ -43,10 +46,10 @@ namespace FireDiscipline.Encumbrance
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
                 if (PatchRegistry.IsModuleEnabled(AimStanceModule.Id)
-                    && AimStanceTracker.GetStance(pawn) == AimStanceMode.Prone)
+                    && AimStanceTracker.IsDugIn(pawn))
                 {
                     float proneMult = FireDisciplineMod.Settings?.proneMoveSpeedMultiplier ?? 0.60f;
-                    sb.AppendLine($"Fire Discipline Stance (Prone): x{(int)(proneMult * 100f)}%");
+                    sb.AppendLine($"Fire Discipline Passive (Dug-In / Prone): x{(int)(proneMult * 100f)}%");
                 }
 
                 float multiplier = PatchRegistry.IsModuleEnabled(EncumbranceModule.Id)

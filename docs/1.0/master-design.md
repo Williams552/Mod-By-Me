@@ -97,16 +97,16 @@ d:\Games\Rimworld\Mod By Me\
 
 ### 4.1 Aim Mode & Tactical Stances — `AimStanceModule.cs`
 
-`SnapShot` (0), `Rapid` (1), `Sharpshot` (2), `Prone` (3). Tracking qua `AimStanceTracker.cs` theo `thingIDNumber`. *(Tư thế thứ 5 — Suppression — xem 5.6.)*
+`StandardShot` (0), `Rapid` (1), `Sharpshot` (2), `Prone` (3). Tracking qua `AimStanceTracker.cs` theo `thingIDNumber`. *(Tư thế thứ 5 — Suppression — xem 5.6.)*
 
 | Tư thế | Vai trò | Cơ chế |
 |---|---|---|
-| **SnapShot** | Baseline; **tư thế duy nhất không có chi phí chuyển** | Không hediff, không patch |
+| **StandardShot** | Baseline; **tư thế duy nhất không có chi phí chuyển** | Không hediff, không patch |
 | **Rapid** | Dồn hoả lực cự ly gần | Warmup ratio = `clamp(0.30, 0.75, cooldown/(warmup+cooldown))`; phạt `0.93^(d−d₀)` khi `d > d₀` (`d₀ = 12` nếu `Touch ≥ Medium`, ngược lại `5`) |
 | **Sharpshot** | Sát thương tầm xa, dễ vỡ | Số mũ `d × 0.80`; phạt `<5ô → ×0.70`; warmup `×1.40` |
 | **Prone** | Chịu đựng hoả lực | Người bắn `×0.85` **phẳng**; mục tiêu `factorFromTargetSize ×0.65` |
 
-**Chi phí chuyển:** ra lệnh di chuyển khi Prone → tự về SnapShot + 45 ticks `Stance_Cooldown`. Về SnapShot luôn miễn phí.
+**Chi phí chuyển:** ra lệnh di chuyển khi Prone → tự về StandardShot + 45 ticks `Stance_Cooldown`. Về StandardShot luôn miễn phí.
 *Vì sao:* nếu đổi tư thế miễn phí, lối chơi tối ưu là swap mỗi phát bắn — tái tạo đúng micro tedium mà vấn đề #2 liệt là thứ cần diệt.
 
 **`PassiveStanceEvaluator.cs`** gán tư thế thụ động cho raider theo cự ly + vũ khí.
@@ -160,7 +160,7 @@ Hai thay đổi trên đi cùng nhau nhưng ngược chiều: đổi mẫu số 
 
 | Tư thế | Nhận suppression | Gây suppression |
 |---|---|---|
-| Snap | ×1.0 | ×1.0 |
+| Standard | ×1.0 | ×1.0 |
 | Rapid | ×1.0 | **×1.50** |
 | Sharpshot | **×2.00** + reset warmup | ×1.0 |
 | Prone | **×0.50** | ×1.0 |
@@ -284,7 +284,7 @@ Người bắn **luôn** được loại, không phụ thuộc toggle friendly f
 
 **Đã cân nhắc và loại bỏ: hình nón thật theo góc từ nòng.** Nửa góc của nó là `atan(R / cự_ly)` — 9° ở 15 ô nhưng **40° ở 3 ô**, nên bắn sát mặt còn loe rộng hơn cả đĩa nó thay thế. Hiện tại độ rộng được nội suy theo chiều dài ô tuyệt đối từ một cự ly tham chiếu cố định (8 ô) để không bị hẹp lại ở tầm gần khi súng có tầm cực xa.
 
-⚠️ Chưa đo lại chỉ tiêu 7.3 (*"Shotgun 3 mục tiêu cụm ≤ Snap × 2.0"*) sau thay đổi này.
+⚠️ Chưa đo lại chỉ tiêu 7.3 (*"Shotgun 3 mục tiêu cụm ≤ Standard × 2.0"*) sau thay đổi này.
 
 ```
 WidthEndRef = 3.0 ô (tại reference_range = 8 ô)
@@ -598,7 +598,7 @@ RimWorld **không có API docs chính thức** — decompile `Assembly-CSharp.dl
 | E | `Print Weapon Classification` | Với mọi `ThingDef` vũ khí ranged đang load: `d₀`, có phải shotgun-like không, `burstShotCount`, `extra shots` ở Suppression stance |
 | F | `Test Pinned Cycle` | Đẩy severity lên 1.0, log thời điểm pinned bật/tắt, kháng tích luỹ, và hit chance vào pawn khi pinned |
 | G | `Test Embrasure Detection` | Quét bản đồ, in mọi thing thoả tiêu chí **5.7**: `passability == Impassable && fillPercent >= 0.65 && < 1.0`, kèm mọi ô lân cận 8-way đủ điều kiện hưởng kháng |
-| H | `Print Shotgun Spread Damage` | Tổng sát thương lên 1 / 2 / 3 mục tiêu ở các cự ly, so với Snap baseline |
+| H | `Print Shotgun Spread Damage` | Tổng sát thương lên 1 / 2 / 3 mục tiêu ở các cự ly, so với Standard baseline |
 | I | `Print Cover Values` | Quét mọi `ThingDef` có thể làm cover trong modlist đang load: `fillPercent`, `passability`, `coverPercent` thật, và `suppressionMult` tương ứng. **Các con số 30/40/55/75% trong bảng 5.8 hiện là ước lượng, chưa đọc từ Def** |
 
 **E là action giá trị nhất** — nó kiểm chứng nguyên tắc kiến trúc số 2 trên toàn bộ modlist thật, không phải trên giả định.
@@ -623,24 +623,24 @@ Bolt-action một mình là ca biên — không đủ để chứng minh công t
 | Kiểm tra | Pass khi |
 |---|---|
 | Mod tắt hết feature | Ma trận trùng **khớp tuyệt đối** với vanilla, mọi ô |
-| SnapShot | Trùng khớp tuyệt đối với vanilla |
+| StandardShot | Trùng khớp tuyệt đối với vanilla |
 
-*Nếu SnapShot lệch dù một chữ số, có patch đang chạy khi không nên chạy.*
+*Nếu StandardShot lệch dù một chữ số, có patch đang chạy khi không nên chạy.*
 
 **Stances:**
 
 | Module | Chỉ tiêu | Ngưỡng |
 |---|---|---|
-| Rapid | DPS ở Touch | ≥ Snap × 1.30 |
-| Rapid | DPS ở Medium | ≤ Snap × 0.70 |
+| Rapid | DPS ở Touch | ≥ Standard × 1.30 |
+| Rapid | DPS ở Medium | ≤ Standard × 0.70 |
 | Rapid | Đường phạt theo cự ly | Xác nhận `0.93^(d−d₀)`, `d₀` đúng cho từng vũ khí |
-| Sharpshot | Hit chance ở Long, skill 10 | **+8 đến +12 điểm phần trăm** so với Snap |
+| Sharpshot | Hit chance ở Long, skill 10 | **+8 đến +12 điểm phần trăm** so với Standard |
 | Sharpshot | Hit chance ở Long, skill 16 | **≤ +8pp** — để xạ thủ giỏi không kéo dài khoảng cách |
-| Sharpshot | DPS ở Touch | ≤ Snap × 0.65 |
-| Prone | Xác suất **bị trúng** khi có cover | ≤ Snap × 0.55 |
-| Prone | DPS khi bắn ra | ≤ Snap × 0.85 |
-| Suppression | DPS tổng | ≤ Snap × 0.85 |
-| Suppression | Suppression output/giây | ≥ Snap × 2.50 |
+| Sharpshot | DPS ở Touch | ≤ Standard × 0.65 |
+| Prone | Xác suất **bị trúng** khi có cover | ≤ Standard × 0.55 |
+| Prone | DPS khi bắn ra | ≤ Standard × 0.85 |
+| Suppression | DPS tổng | ≤ Standard × 0.85 |
+| Suppression | Suppression output/giây | ≥ Standard × 2.50 |
 | Suppression | Số đòn vào bộ phận sống còn | **0** |
 
 *Chỉ tiêu Sharpshot dùng mức tăng tương đối, không dùng con số tuyệt đối — vì bảng harness cho thấy skill 16 đã tự đạt 44.6% ở Long mà không cần Sharpshot.*
@@ -671,7 +671,7 @@ Bolt-action một mình là ca biên — không đủ để chứng minh công t
 
 | Kiểm tra | Pass khi |
 |---|---|
-| Hit chance vào pawn pinned | ≈ Snap × 0.50 |
+| Hit chance vào pawn pinned | ≈ Standard × 0.50 |
 | Kháng tích luỹ | Pawn không thể bị pinned liên tục quá 2 chu kỳ |
 | Colonist bị pinned | Vẫn di chuyển được, vẫn nhận lệnh di chuyển |
 | Save/load khi đang pinned | Trạng thái khôi phục đúng, không kẹt vĩnh viễn |
@@ -681,11 +681,11 @@ Bolt-action một mình là ca biên — không đủ để chứng minh công t
 
 | Kiểm tra | Pass khi |
 |---|---|
-| Full-auto tổng DPS | Trong khoảng Snap × 0.95–1.15 *(hình dạng đổi, không phải sức mạnh)* |
+| Full-auto tổng DPS | Trong khoảng Standard × 0.95–1.15 *(hình dạng đổi, không phải sức mạnh)* |
 | Giật nòng | Phát cuối loạt có hit chance thấp hơn phát đầu, đúng `0.93^N` |
 | `verbProps` | Không object Def nào bị mutate — kiểm bằng cách đọc lại stat sau 10 phút chơi |
-| Shotgun 1 mục tiêu | ≤ Snap × 1.0 |
-| Shotgun 3 mục tiêu cụm | ≤ Snap × 2.0 |
+| Shotgun 1 mục tiêu | ≤ Standard × 1.0 |
+| Shotgun 3 mục tiêu cụm | ≤ Standard × 2.0 |
 | Shotgun vs vũ khí mod | `d₀` phân loại đúng — kiểm bằng action E |
 
 **Embrasure & Cover (5.7 & 5.8):**

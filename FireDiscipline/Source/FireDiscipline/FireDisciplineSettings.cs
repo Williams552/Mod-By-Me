@@ -5,8 +5,15 @@ using Verse;
 namespace FireDiscipline
 {
     /// <summary>
-    /// Centralized configuration file for all Fire Discipline modules.
-    /// Single source of truth for all formulas, multipliers, thresholds, and explanation strings.
+    /// File cấu hình trung tâm cho toàn bộ các module trong Fire Discipline.
+    /// 
+    /// [TÍNH NĂNG / FEATURE]: Quản lý tùy chỉnh thông số (Mod Settings) cho 6 module chiến thuật cốt lõi và các tùy chọn mở rộng.
+    /// [TẠI SAO LÀM THẾ / RATIONALE]: Cung cấp một Nguồn sự thật duy nhất (Single Source of Truth) cho tất cả hằng số, công thức, 
+    ///     ngưỡng và chuỗi giải thích; giúp người chơi tự do điều chỉnh độ khó và phong cách chơi theo ý muốn mà không hardcode.
+    /// [ĐIỀU CHỈNH MẶC ĐỊNH / DEFAULTS]: Bật mặc định cho 5 module chính (AimStance, Encumbrance, Suppression, Graze, Shock); 
+    ///     ShotgunAoE và các tùy chọn mở rộng (Rapid Full-Auto, Hit Variance, Cover Stacking) mặc định TẮT.
+    /// [Ý NGHĨA & CƠ CHẾ / MECHANICS]: Lưu trữ và đồng bộ hóa (ExposeData) các tham số với file lưu cấu hình XML của RimWorld, 
+    ///     đảm bảo các Harmony Patch và StatPart đọc được hằng số thời gian thực mà không cần khởi động lại game.
     /// </summary>
     public class FireDisciplineSettings : ModSettings
     {
@@ -108,14 +115,6 @@ namespace FireDiscipline
         public float shellShockRadiusCoefficient = 2.0f;       // Multiplier on sqrt(r)
         public float shellShockRadiusCap = 20f;                // Hard ceiling, about half of max weapon range
 
-        // =========================================================================
-        // SECTION 4a: EMBRASURE INTERACTION (Wave B4)
-        // =========================================================================
-        // Feature is OFF by default pending release decision. Applies an accuracy penalty
-        // when firing through narrow embrasure slits. Cover suppression resistance is handled
-        // automatically by standard cover calculation.
-        public bool enableEmbrasureInteraction = false;
-        public float embrasureAccuracyMultiplier = 0.85f;     // x0.85 accuracy multiplier when firing from behind embrasures
 
         // =========================================================================
         // SECTION 4b: SUPPRESSION ENGINE (Module 5.0)
@@ -139,7 +138,7 @@ namespace FireDiscipline
         public bool enableCoverSuppression = true;
         // The 5.8 design document originally stated 0.40 and floor 0.35,
         // but those values were never implemented or tuned until Wave B3.
-        public float coverSuppressionFactor = 0.85f;
+        public float coverSuppressionFactor = 1.00f;
         public float coverSuppressionFloor = 0.25f;
 
         // Line Cover Stacking (Intermediate cover along ShootLine)
@@ -170,6 +169,7 @@ namespace FireDiscipline
         public float shotgunEdgeDamageMax = 0.55f;            // Edge damage fraction at shooting skill 20
         public float shotgunPrimaryDamageMultiplier = 0.70f;  // Splash Damage Base: 70% of the primary hit's damage
         public float shotgunSplashSuppressionMultiplier = 0.40f; // Splash suppresses at a reduced rate
+        public float shotgunRapidRecoilMultiplier = 2.50f;    // Recoil multiplier power for multi-shot (>2 burst) shotguns in Rapid stance (default 2.5x higher than LMGs)
         public bool shotgunFriendlyFire = true;               // Design 5.5(a): ship both, default ON, read feedback
 
         // =========================================================================
@@ -285,9 +285,6 @@ namespace FireDiscipline
             Scribe_Values.Look(ref shellShockRadiusCoefficient, "shellShockRadiusCoefficient", 2.0f);
             Scribe_Values.Look(ref shellShockRadiusCap, "shellShockRadiusCap", 20f);
 
-            // Embrasure Interaction (Wave B4 - default OFF)
-            Scribe_Values.Look(ref enableEmbrasureInteraction, "enableEmbrasureInteraction", false);
-            Scribe_Values.Look(ref embrasureAccuracyMultiplier, "embrasureAccuracyMultiplier", 0.85f);
 
             // Suppression engine
             Scribe_Values.Look(ref enableSuppressionEngine, "enableSuppressionEngine", true);

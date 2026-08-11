@@ -7,11 +7,15 @@ using Verse;
 namespace FireDiscipline.Suppression
 {
     /// <summary>
-    /// The internal suppression engine: the thing that actually makes the tactical loop work.
-    /// Rapid fire pins a target, the player flanks, Sharpshot finishes. Without this the mod is
-    /// four accuracy presets.
-    ///
-    /// Owns the FD_Suppressed hediff and the full stance matrix + cover suppression calculation.
+    /// Bộ máy tính toán và xử lý cơ chế Áp chế (Suppression Engine) cốt lõi của mod.
+    /// 
+    /// [TÍNH NĂNG / FEATURE]: Module Áp chế & Vật nấp (SuppressionCoreModule) - Quản lý việc tích lũy, tính toán và gắn Hediff FD_Suppressed.
+    /// [TẠI SAO LÀM THẾ / RATIONALE]: Xây dựng vòng lặp chiến thuật thực sự (Tư thế Rapid gây áp chế -> Kẻ địch bị gìm chân/giảm ngắm -> Đồng đội bọc lót/Sharpshot tiêu diệt).
+    ///     Phạt tốc độ di chuyển thay vì khóa cứng ngắm bắn để người chơi vẫn phản công được khi đứng trong Cover.
+    /// [ĐIỀU CHỈNH MẶC ĐỊNH / DEFAULTS]: Tích lũy cơ bản +0.25 severity/viên đạn sượt. Bán kính áp chế 3.5 ô. 
+    ///     Tự động tắt ở lần đầu chạy nếu phát hiện mod áp chế khác (Combat Extended / Suppression Continued).
+    /// [Ý NGHĨA & CƠ CHẾ / MECHANICS]: Tính toán tổng lượng áp chế dựa trên: Tư thế người bắn (Rapid x1.5), Tư thế nạn nhân (Sharpshot x2.0, Prone x0.5),
+    ///     và Vật nấp của nạn nhân (Cover reduction clamp 25%-100%). Gán Hediff FD_Suppressed trực tiếp lên Pawn.
     /// </summary>
     public static class SuppressionEngine
     {

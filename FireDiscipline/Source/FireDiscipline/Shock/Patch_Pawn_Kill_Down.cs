@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using HarmonyLib;
+using FireDiscipline.Core;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -105,6 +106,7 @@ namespace FireDiscipline.Shock
                         hediff.Severity = initialSev;
                         ally.health.AddHediff(hediff);
                     }
+                    hediff.TryGetComp<HediffComp_TimedDecay>()?.Notify_Applied();
 
                     if (map != null && Find.CameraDriver != null)
                     {

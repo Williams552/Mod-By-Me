@@ -45,6 +45,25 @@ namespace FireDiscipline.Core
         }
 
         /// <summary>
+        /// Derived weapon category label for diagnostic reporting (Law 2 compliant).
+        /// </summary>
+        public static string GetWeaponClassificationName(ThingDef weaponDef)
+        {
+            if (weaponDef == null) return "Unknown";
+            if (HasShotgunProfile(weaponDef)) return "Shotgun";
+
+            int burst = weaponDef.Verbs != null && weaponDef.Verbs.Count > 0 ? weaponDef.Verbs[0].burstShotCount : 1;
+            float range = GetWeaponRange(weaponDef);
+
+            if (burst >= 5) return "LMG/Heavy";
+            if (range >= 35f && burst == 1) return "Sniper";
+            if (burst >= 3) return "Rifle/SMG";
+            if (burst == 1) return "Pistol/DMR";
+
+            return "Ranged";
+        }
+
+        /// <summary>
         /// A shotgun is a weapon with a FLAT accuracy curve at short physical range: roughly as
         /// accurate at its maximum range as up close, because its limit is spread rather than
         /// precision. That is the opposite shape from the one that earns a wide d0, which is why

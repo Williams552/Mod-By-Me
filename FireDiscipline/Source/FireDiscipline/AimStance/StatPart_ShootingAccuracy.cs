@@ -8,7 +8,7 @@ namespace FireDiscipline.AimStance
     /// <summary>
     /// StatPart injected into StatDefOf.ShootingAccuracyPawn.
     /// Provides clear, transparent explanation text inside the Pawn's Character Stat Info window,
-    /// detailing how the active Fire Discipline stance and Embrasure cover affect accuracy.
+    /// detailing how the active Fire Discipline stance affects accuracy.
     /// </summary>
     public class StatPart_ShootingAccuracy : StatPart
     {
@@ -25,8 +25,6 @@ namespace FireDiscipline.AimStance
             if (!req.HasThing || !(req.Thing is Pawn pawn) || pawn.Dead) return null;
 
             AimStanceMode stance = AimStanceTracker.GetStance(pawn);
-            bool isEmbrasure = (FireDisciplineMod.Settings?.enableEmbrasureInteraction ?? false)
-                && EmbrasureUtility.IsUsingEmbrasure(pawn);
 
             StringBuilder sb = new StringBuilder();
 
@@ -38,16 +36,10 @@ namespace FireDiscipline.AimStance
             {
                 sb.AppendLine("Fire Discipline Stance (Sharpshot): Long-range precision exponent (x0.80), Close-range penalty (<5c: x0.70)");
             }
-            else if (stance == AimStanceMode.Prone)
+            if (AimStanceTracker.IsDugIn(pawn))
             {
                 float mult = FireDisciplineMod.Settings?.proneAccuracyMultiplier ?? 0.85f;
-                sb.AppendLine($"Fire Discipline Stance (Prone): Shooter accuracy x{mult:F2} (Target size x0.65)");
-            }
-
-            if (isEmbrasure)
-            {
-                float embMult = FireDisciplineMod.Settings?.embrasureAccuracyMultiplier ?? 0.85f;
-                sb.AppendLine($"Fire Discipline Embrasure Cover: Firing accuracy x{embMult:F2}");
+                sb.AppendLine($"Fire Discipline Passive (Dug-In / Prone): Shooter accuracy x{mult:F2} (Target size x0.65)");
             }
 
             return sb.Length > 0 ? sb.ToString().TrimEnd() : null;

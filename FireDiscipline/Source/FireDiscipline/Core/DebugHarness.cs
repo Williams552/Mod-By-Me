@@ -31,7 +31,8 @@ namespace FireDiscipline.Core
         private static readonly int[] distances = new int[] { 3, 12, 25, 40 };
         private static readonly string[] distLabels = new string[] { "Touch (3c)", "Short (12c)", "Medium (25c)", "Long (40c)" };
 
-        [DebugAction("Fire Discipline", "Print HitReport & DPS Matrix", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        // Temporarily hidden from debug menu (superseded by Super-Matrix)
+        // [DebugAction("Fire Discipline", "Print HitReport & DPS Matrix", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         public static void PrintHitReportMatrix()
         {
             Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
@@ -128,7 +129,8 @@ namespace FireDiscipline.Core
             Messages.Message("HitReport & DPS matrix printed to dev console.", MessageTypeDefOf.PositiveEvent, false);
         }
 
-        [DebugAction("Fire Discipline", "Print Incoming Target Hit Matrix (Prone Verification)", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        // Temporarily hidden from debug menu (superseded by Test Prone Target Reduction)
+        // [DebugAction("Fire Discipline", "Print Incoming Target Hit Matrix (Prone Verification)", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         public static void PrintIncomingHitMatrix()
         {
             Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
@@ -141,7 +143,7 @@ namespace FireDiscipline.Core
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("=========================================================================================");
             sb.AppendLine($"[Fire Discipline Debug Harness v3] Incoming Hit Matrix (Enemy Shooting AT {selectedPawn.LabelShort})");
-            sb.AppendLine($"Verifies Prone Target Size reduction (x0.65) empirically across Distances & Shooter Skills.");
+            sb.AppendLine($"Verifies Prone Posture Factor reduction (x0.65) empirically across Distances & Shooter Skills.");
             sb.AppendLine("=========================================================================================");
 
             IntVec3 originalPos = selectedPawn.Position;
@@ -206,6 +208,723 @@ namespace FireDiscipline.Core
             sb.AppendLine("=========================================================================================");
             Log.Message(sb.ToString());
             Messages.Message("Incoming Target Hit Matrix printed to dev console.", MessageTypeDefOf.PositiveEvent, false);
+        }
+
+        private static readonly AccessTools.StructFieldRef<ShotReport, float> targetSizeRef = AccessTools.StructFieldRefAccess<ShotReport, float>("factorFromTargetSize");
+
+        [DebugAction("Fire Discipline", "Test Prone Target Reduction", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void TestPronePostureChannel()
+        {
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            Verb verb = selectedPawn.equipment?.PrimaryEq?.PrimaryVerb;
+            if (verb == null)
+            {
+                Messages.Message("Pawn must have a ranged weapon equipped.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            AimStanceMode originalStance = AimStanceTracker.GetStance(selectedPawn);
+            try
+            {
+                AimStanceTracker.SetStance(selectedPawn, AimStanceMode.Standard);
+                ShotReport reportStanding = ShotReport.HitReportFor(selectedPawn, verb, selectedPawn);
+
+                // Add Dug-In hediff temporarily to test Dug-In target size reduction
+                HediffDef dugInDef = PronePassiveTracker.DugInDef;
+                Hediff addedHediff = null;
+                if (dugInDef != null && selectedPawn.health != null)
+                {
+                    addedHediff = HediffMaker.MakeHediff(dugInDef, selectedPawn);
+                    selectedPawn.health.AddHediff(addedHediff);
+                }
+
+                ShotReport reportProne = ShotReport.HitReportFor(selectedPawn, verb, selectedPawn);
+
+                float sStanding = targetSizeRef != null ? targetSizeRef(ref reportStanding) : 1f;
+                float sProne = targetSizeRef != null ? targetSizeRef(ref reportProne) : 1f;
+
+                if (addedHediff != null && selectedPawn.health != null)
+                {
+                    selectedPawn.health.RemoveHediff(addedHediff);
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("=========================================================================================");
+                sb.AppendLine($"[Fire Discipline Debug Harness] Dug-In (Prone) Target Size Reduction Verification - {selectedPawn.LabelShort}");
+                sb.AppendLine("=========================================================================================");
+                sb.AppendLine($"Mobile target hit chance      : {(reportStanding.TotalEstimatedHitChance * 100f):F1}% (target size: {sStanding:F4})");
+                sb.AppendLine($"Dug-In (Prone) hit chance     : {(reportProne.TotalEstimatedHitChance * 100f):F1}% (target size: {sProne:F4})");
+                sb.AppendLine($"Target Size ratio (Dug-In/Std): {(sProne / (sStanding > 0 ? sStanding : 1f)):F4}");
+                sb.AppendLine("=========================================================================================");
+
+                Log.Message(sb.ToString());
+                Messages.Message($"Dug-In target size factor: {sProne:F4} (printed to dev console)", MessageTypeDefOf.PositiveEvent, false);
+            }
+            finally
+            {
+                AimStanceTracker.SetStance(selectedPawn, originalStance);
+            }
+        }
+
+        private static readonly AccessTools.StructFieldRef<ShotReport, float> coverBlockRef = AccessTools.StructFieldRefAccess<ShotReport, float>("coversOverallBlockChance");
+
+        [DebugAction("Fire Discipline", "Test Cover Bypass & Suppression Degradation", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void TestCoverTactics()
+        {
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            Verb verb = selectedPawn.equipment?.PrimaryEq?.PrimaryVerb;
+            if (verb == null)
+            {
+                Messages.Message("Pawn must have a ranged weapon equipped.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            AimStanceMode originalStance = AimStanceTracker.GetStance(selectedPawn);
+            try
+            {
+                IntVec3 targetCell = selectedPawn.Position + new IntVec3(15, 0, 0);
+
+                AimStanceTracker.SetStance(selectedPawn, AimStanceMode.Standard);
+                ShotReport reportStd = ShotReport.HitReportFor(selectedPawn, verb, new LocalTargetInfo(targetCell));
+
+                AimStanceTracker.SetStance(selectedPawn, AimStanceMode.Sharpshot);
+                ShotReport reportSharp = ShotReport.HitReportFor(selectedPawn, verb, new LocalTargetInfo(targetCell));
+
+                float cStd = coverBlockRef != null ? coverBlockRef(ref reportStd) : 0f;
+                float cSharp = coverBlockRef != null ? coverBlockRef(ref reportSharp) : 0f;
+
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("=========================================================================================");
+                sb.AppendLine($"[Fire Discipline Debug Harness] Cover Bypass & Suppression Tactics Test - {selectedPawn.LabelShort}");
+                sb.AppendLine("=========================================================================================");
+                sb.AppendLine($"Standard Stance Cover Block Chance  : {(cStd * 100f):F1}% (Pass Cover: {((1f - cStd) * 100f):F1}%)");
+                sb.AppendLine($"Sharpshot Stance Cover Block Chance : {(cSharp * 100f):F1}% (Pass Cover: {((1f - cSharp) * 100f):F1}%)");
+                sb.AppendLine($"Sharpshot Cover Bypass Ratio       : {((1f - cSharp) / Mathf.Max(0.01f, (1f - cStd))):F2}x pass chance boost!");
+                sb.AppendLine("=========================================================================================");
+
+                Log.Message(sb.ToString());
+                Messages.Message($"Cover Tactics Test: Standard cover {cStd:P0} vs Sharpshot cover {cSharp:P0} (see dev console)", MessageTypeDefOf.PositiveEvent, false);
+            }
+            finally
+            {
+                AimStanceTracker.SetStance(selectedPawn, originalStance);
+            }
+        }
+
+        private static readonly MethodInfo shotsPerBurstGetter = AccessTools.PropertyGetter(typeof(Verb), "BurstShotCount")
+                                                               ?? AccessTools.PropertyGetter(typeof(Verb), "ShotsPerBurst");
+
+        private static int GetShotsPerBurst(Verb verb)
+        {
+            if (verb == null || shotsPerBurstGetter == null) return 1;
+            return (int)shotsPerBurstGetter.Invoke(verb, null);
+        }
+
+        private static readonly AccessTools.FieldRef<Verb, System.Nullable<int>> debugCachedBurstRef =
+            AccessTools.FieldRefAccess<Verb, System.Nullable<int>>("cachedBurstShotCount");
+
+        private static void ClearVerbBurstCacheForTest(Verb verb)
+        {
+            if (verb != null && debugCachedBurstRef != null)
+            {
+                debugCachedBurstRef(verb) = null;
+            }
+        }
+
+        [DebugAction("Fire Discipline", "Test Rapid Full-Auto Burst & Cooldown", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void TestRapidFullAuto()
+        {
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            Verb verb = selectedPawn.equipment?.PrimaryEq?.PrimaryVerb;
+            ThingDef weaponDef = selectedPawn.equipment?.Primary?.def;
+            if (verb == null || weaponDef == null)
+            {
+                Messages.Message("Pawn must have a ranged weapon equipped.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            AimStanceMode originalStance = AimStanceTracker.GetStance(selectedPawn);
+            try
+            {
+                // Explicitly clear burst cache before testing each stance
+                ClearVerbBurstCacheForTest(verb);
+                AimStanceTracker.SetStance(selectedPawn, AimStanceMode.Standard);
+                ClearVerbBurstCacheForTest(verb);
+                int burstStandard = GetShotsPerBurst(verb);
+                int cooldownStandard = verb.verbProps.AdjustedCooldownTicks(verb, selectedPawn);
+
+                ClearVerbBurstCacheForTest(verb);
+                AimStanceTracker.SetStance(selectedPawn, AimStanceMode.Rapid);
+                ClearVerbBurstCacheForTest(verb);
+                int burstRapid = GetShotsPerBurst(verb);
+                int cooldownRapid = verb.verbProps.AdjustedCooldownTicks(verb, selectedPawn);
+
+                bool isFullAutoActive = FireDisciplineMod.Settings?.enableRapidFullAuto ?? false;
+                int minBurstGate = FireDisciplineMod.Settings?.fullAutoMinBurstCount ?? 5;
+                bool qualifies = verb.verbProps.burstShotCount >= minBurstGate;
+                bool moduleEnabled = Core.PatchRegistry.IsModuleEnabled(AimStance.AimStanceModule.Id);
+                float burstMult = FireDisciplineMod.Settings?.fullAutoBurstMultiplier ?? 1.5f;
+
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("=========================================================================================");
+                sb.AppendLine($"[Fire Discipline Debug Harness] B6 Rapid Full-Auto Verification - {selectedPawn.LabelShort}");
+                sb.AppendLine($"Equipped Weapon: {weaponDef.defName} (Def burstShotCount: {verb.verbProps.burstShotCount})");
+                sb.AppendLine($"Settings: enableRapidFullAuto={isFullAutoActive}, fullAutoMinBurstCount={minBurstGate}, burstMultiplier={burstMult:F2}");
+                sb.AppendLine($"AimStance Module Enabled: {moduleEnabled}");
+                sb.AppendLine($"Qualifies for Full-Auto: {(qualifies ? "YES" : $"NO (burstShotCount {verb.verbProps.burstShotCount} < minBurstGate {minBurstGate})")}");
+                sb.AppendLine($"Verb.caster: {(verb.caster != null ? verb.caster.ToString() : "NULL")}");
+                sb.AppendLine($"GetShooterPawn: {(Patch_Verb_ShotsPerBurst.GetShooterPawn(verb)?.LabelShort ?? "NULL")}");
+                sb.AppendLine("=========================================================================================");
+                sb.AppendLine($"Standard Stance : {burstStandard} shots/burst | Cooldown: {cooldownStandard} ticks ({(cooldownStandard / 60f):F2}s)");
+                sb.AppendLine($"Rapid Stance    : {burstRapid} shots/burst | Cooldown: {cooldownRapid} ticks ({(cooldownRapid / 60f):F2}s)");
+                sb.AppendLine($"Burst Ratio     : {(burstRapid / (float)Mathf.Max(1, burstStandard)):F2}x");
+                sb.AppendLine($"Cooldown Ratio  : {(cooldownRapid / (float)Mathf.Max(1, cooldownStandard)):F2}x");
+
+                if (burstRapid == burstStandard && isFullAutoActive && qualifies && moduleEnabled)
+                {
+                    sb.AppendLine(">>> WARNING: Burst NOT expanding despite all gates passing! <<<");
+                    sb.AppendLine(">>> Possible cause: GetShooterPawn() returning null during property getter <<<");
+                }
+
+                sb.AppendLine("=========================================================================================");
+
+                Log.Message(sb.ToString());
+                Messages.Message($"B6 Full-Auto Test: {burstStandard}->{burstRapid} shots, {cooldownStandard}->{cooldownRapid} ticks (see dev console)", MessageTypeDefOf.PositiveEvent, false);
+            }
+            finally
+            {
+                AimStanceTracker.SetStance(selectedPawn, originalStance);
+            }
+        }
+
+        [DebugAction("Fire Discipline", "Benchmark Shield Inspection Speed", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void BenchmarkShieldInspection()
+        {
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            const int Iterations = 10000;
+            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+
+            float lastFraction = 0f;
+            for (int i = 0; i < Iterations; i++)
+            {
+                lastFraction = ShieldUtility.GetActiveShieldEnergyFraction(selectedPawn);
+            }
+
+            sw.Stop();
+            double totalMs = sw.Elapsed.TotalMilliseconds;
+            double msPerCall = totalMs / Iterations;
+            double nsPerCall = msPerCall * 1000000.0;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"[Fire Discipline Debug Harness] Active Energy Shield Benchmark - {selectedPawn.LabelShort}");
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"Iterations         : {Iterations:N0}");
+            sb.AppendLine($"Total Time         : {totalMs:F4} ms");
+            sb.AppendLine($"Time Per Call      : {msPerCall:F6} ms ({nsPerCall:F1} ns)");
+            sb.AppendLine($"Active Energy Frac : {lastFraction:P1}");
+            sb.AppendLine($"Hot Path Overhead  : {(msPerCall < 0.001 ? "NEGLIGIBLE (<0.001ms per explosion target)" : "EVALUATE")}");
+            sb.AppendLine("=========================================================================================");
+
+            Log.Message(sb.ToString());
+            Messages.Message($"Shield Benchmark: {nsPerCall:F0}ns/call (Energy: {lastFraction:P0}, see dev console)", MessageTypeDefOf.PositiveEvent, false);
+        }
+
+        [DebugAction("Fire Discipline", "Print Hit Variance Live Stats", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintHitVarianceLiveStats()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine("[Fire Discipline Debug Harness] Hit Variance Mitigation Live Stats (Wave B8)");
+            sb.AppendLine("=========================================================================================");
+
+            bool isEnabled = FireDisciplineMod.Settings?.enableHitVariance ?? false;
+            sb.AppendLine($"Module Status: {(isEnabled ? "ENABLED" : "DISABLED (Default)")}");
+            sb.AppendLine("-----------------------------------------------------------------------------------------");
+
+            // 1. Quota Model Metrics
+            long qShots = Variance.HitVarianceState.totalShotsQuota;
+            long qHits = Variance.HitVarianceState.totalHitsQuota;
+            double qSumP = Variance.HitVarianceState.sumPQuota;
+
+            if (qShots > 0)
+            {
+                float actualHitPct = (qHits / (float)qShots) * 100f;
+                float avgPPct = (float)(qSumP / qShots) * 100f;
+                float dev = actualHitPct - avgPPct;
+
+                sb.AppendLine("--- QUOTA MODEL (Single-Shot) ---");
+                sb.AppendLine($"Total Shots    : {qShots:N0}");
+                sb.AppendLine($"Actual Hits    : {qHits:N0} ({actualHitPct:F2}%)");
+                sb.AppendLine($"Average Base P : {avgPPct:F2}%");
+                sb.AppendLine($"DEVIATION      : {(dev >= 0 ? "+" : "")}{dev:F2} pp (Expectation Preservation)");
+            }
+            else
+            {
+                sb.AppendLine("--- QUOTA MODEL (Single-Shot) --- No shots recorded yet.");
+            }
+
+            sb.AppendLine("-----------------------------------------------------------------------------------------");
+
+            // 2. Pity Model Metrics
+            long pShots = Variance.HitVarianceState.totalShotsPity;
+            long pHits = Variance.HitVarianceState.totalHitsPity;
+            double pSumP = Variance.HitVarianceState.sumPPity;
+
+            if (pShots > 0)
+            {
+                float actualHitPct = (pHits / (float)pShots) * 100f;
+                float avgPPct = (float)(pSumP / pShots) * 100f;
+                float dev = actualHitPct - avgPPct;
+
+                sb.AppendLine("--- PITY MODEL (Burst Weapons) ---");
+                sb.AppendLine($"Total Shots    : {pShots:N0}");
+                sb.AppendLine($"Actual Hits    : {pHits:N0} ({actualHitPct:F2}%)");
+                sb.AppendLine($"Average Base P : {avgPPct:F2}%");
+                sb.AppendLine($"DEVIATION      : {(dev >= 0 ? "+" : "")}{dev:F2} pp (Pity Offset Drift)");
+            }
+            else
+            {
+                sb.AppendLine("--- PITY MODEL (Burst Weapons) --- No shots recorded yet.");
+            }
+
+            sb.AppendLine("=========================================================================================");
+
+            Log.Message(sb.ToString());
+            Messages.Message($"Hit Variance Stats: Quota {qShots} shots, Pity {pShots} shots (see dev console)", MessageTypeDefOf.PositiveEvent, false);
+        }
+
+        [DebugAction("Fire Discipline", "Reset Hit Variance Stats", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void ResetHitVarianceStats()
+        {
+            Variance.HitVarianceState.ResetStats();
+            Messages.Message("Hit Variance metrics reset to zero.", MessageTypeDefOf.PositiveEvent, false);
+        }
+
+        [DebugAction("Fire Discipline", "Print Skill & Burst Hit Distribution Matrix", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintSkillAndBurstHitMatrix()
+        {
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            Verb verb = selectedPawn.equipment?.PrimaryEq?.PrimaryVerb;
+            ThingDef weaponDef = selectedPawn.equipment?.Primary?.def;
+            if (verb?.verbProps == null || weaponDef == null)
+            {
+                Messages.Message("Pawn must have a ranged weapon equipped.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            SkillRecord shootingSkill = selectedPawn.skills?.GetSkill(SkillDefOf.Shooting);
+            int originalLevel = shootingSkill?.Level ?? 10;
+            AimStanceMode originalStance = AimStanceTracker.GetStance(selectedPawn);
+
+            int[] testSkills = new int[] { 1, 5, 10, 15, 20 };
+            float[] testDistances = new float[] { 6f, 15f, 25f };
+            int shotsPerBurst = GetShotsPerBurst(verb);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine("[Fire Discipline Debug Harness] Skill Level & Burst Hit Distribution Matrix");
+            sb.AppendLine($"Pawn: {selectedPawn.LabelShort} | Weapon: {weaponDef.defName} (Burst: {shotsPerBurst} shots)");
+            sb.AppendLine($"Settings: B6 Full-Auto={(FireDisciplineMod.Settings?.enableRapidFullAuto ?? false)}, Hit Variance Module={(FireDisciplineMod.Settings?.enableHitVariance ?? false)}");
+            sb.AppendLine("=========================================================================================");
+
+            try
+            {
+                foreach (int skillLvl in testSkills)
+                {
+                    if (shootingSkill != null) shootingSkill.Level = skillLvl;
+
+                    sb.AppendLine($"\n>>> SHOOTING SKILL LEVEL: {skillLvl} <<<");
+                    sb.AppendLine($"{"Stance",-10}|{"Dist",5}|{"Overall%",9}|" + string.Join("", System.Linq.Enumerable.Range(1, shotsPerBurst).Select(i => $"|Shot #{i,2}%")));
+                    sb.AppendLine(new string('-', 30 + (shotsPerBurst * 10)));
+
+                    foreach (AimStanceMode stance in System.Enum.GetValues(typeof(AimStanceMode)))
+                    {
+                        AimStanceTracker.SetStance(selectedPawn, stance);
+
+                        foreach (float dist in testDistances)
+                        {
+                            IntVec3 targetCell = selectedPawn.Position + new IntVec3((int)dist, 0, 0);
+                            LocalTargetInfo target = new LocalTargetInfo(targetCell);
+
+                            int trials = 500;
+                            int[] shotHits = new int[shotsPerBurst];
+                            int totalHits = 0;
+
+                            for (int t = 0; t < trials; t++)
+                            {
+                                for (int i = 0; i < shotsPerBurst; i++)
+                                {
+                                    ShotReport report = ShotReport.HitReportFor(selectedPawn, verb, target);
+                                    float p = Mathf.Clamp01(report.AimOnTargetChance_IgnoringPosture * report.PassCoverChance);
+
+                                    bool hit = Rand.Chance(p);
+                                    if (hit)
+                                    {
+                                        shotHits[i]++;
+                                        totalHits++;
+                                    }
+                                }
+                            }
+
+                            float totalShots = trials * shotsPerBurst;
+                            float overallHitPct = (totalHits / totalShots) * 100f;
+                            string shotBreakdown = string.Join("", System.Linq.Enumerable.Range(0, shotsPerBurst).Select(i => $"|{(shotHits[i] / (float)trials * 100f),7:F1}%"));
+
+                            sb.AppendLine($"{stance,-10}|{dist,4:F0}c|{overallHitPct,8:F1}%{shotBreakdown}");
+                        }
+                    }
+                }
+
+                sb.AppendLine("=========================================================================================");
+                Log.Message(sb.ToString());
+                Messages.Message($"Skill & Burst Hit Distribution Matrix printed to dev console for level 1-20.", MessageTypeDefOf.PositiveEvent, false);
+            }
+            finally
+            {
+                if (shootingSkill != null) shootingSkill.Level = originalLevel;
+                AimStanceTracker.SetStance(selectedPawn, originalStance);
+            }
+        }
+
+        [DebugAction("Fire Discipline", "Print B8 Hit Variance 10-Shot Sequence Matrix", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintB8HitVarianceSequenceMatrix()
+        {
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            var allRanged = DefDatabase<ThingDef>.AllDefsListForReading
+                .Where(d => d.IsRangedWeapon && d.Verbs != null && d.Verbs.Count > 0)
+                .ToList();
+
+            var weapons = allRanged
+                .Where(WeaponClassification.IsPawnRangedWeapon)
+                .OrderBy(d => d.defName)
+                .ToList();
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("==========================================================================================================================================");
+            sb.AppendLine($"[FIRE DISCIPLINE] WAVE B8 HIT VARIANCE 10-SHOT SEQUENCE MATRIX - {selectedPawn.LabelShort}");
+            sb.AppendLine($"Settings: QuotaForSingleShot={(FireDisciplineMod.Settings?.varianceQuotaForSingleShot ?? true)}, PityForBurst={(FireDisciplineMod.Settings?.variancePityForBurst ?? true)}, PityStep={(FireDisciplineMod.Settings?.variancePityStep ?? 0.08f):F2}, PityClamp={(FireDisciplineMod.Settings?.variancePityClamp ?? 0.32f):F2}");
+            sb.AppendLine("==========================================================================================================================================");
+            sb.AppendLine($"{"DefName",-26}|{"Model",-8}|{"Burst",6}|{"Base P%",8}|{"10-Shot Sequence (H=Hit, M=Miss)",-34}|{"Hits",6}|{"Observed%",10}|{"Final State",14}|");
+            sb.AppendLine(new string('-', 122));
+
+            float baseStep = FireDisciplineMod.Settings?.variancePityStep ?? 0.08f;
+            float pityClamp = FireDisciplineMod.Settings?.variancePityClamp ?? 0.32f;
+
+            foreach (ThingDef weaponDef in weapons)
+            {
+                VerbProperties verbProps = weaponDef.Verbs[0];
+                if (verbProps == null) continue;
+
+                if (verbProps.ForcedMissRadius > 0f)
+                {
+                    sb.AppendLine($"{weaponDef.defName,-26}|{"Bypassed",-8}|{verbProps.burstShotCount,6}|{"N/A",8}|{"BYPASSED (ForcedMissRadius > 0)",-34}|{"N/A",6}|{"N/A",10}|{"N/A",14}|");
+                    continue;
+                }
+
+                int burstCount = Mathf.Max(1, verbProps.burstShotCount);
+                string modelName = "Quota";
+
+                float accTouch = weaponDef.GetStatValueAbstract(StatDefOf.AccuracyTouch);
+                float accShort = weaponDef.GetStatValueAbstract(StatDefOf.AccuracyShort);
+                float accMedium = weaponDef.GetStatValueAbstract(StatDefOf.AccuracyMedium);
+                float baseP = Mathf.Clamp01(accMedium > 0 ? accMedium : accShort);
+
+                StringBuilder seq = new StringBuilder();
+                int totalHits = 0;
+
+                float carry = Rand.Value * baseP;
+
+                for (int shot = 1; shot <= 10; shot++)
+                {
+                    bool hit = false;
+                    carry += baseP;
+                    if (carry >= 1.0f - 1e-4f)
+                    {
+                        carry -= 1.0f;
+                        hit = true;
+                    }
+                    else
+                    {
+                        hit = false;
+                    }
+
+                    if (hit) totalHits++;
+                    seq.Append(hit ? "H " : "M ");
+                }
+
+                float observedPct = (totalHits / 10f) * 100f;
+                string finalStateStr = $"Carry={carry:F2}";
+
+                sb.AppendLine($"{weaponDef.defName,-26}|{modelName,-8}|{burstCount,6}|{baseP,7:P1}|{seq.ToString().TrimEnd(),-34}|{totalHits,3}/10|{observedPct,9:F1}%|{finalStateStr,14}|");
+            }
+
+            sb.AppendLine("==========================================================================================================================================");
+
+            string reportText = sb.ToString();
+            Log.Message(reportText);
+
+            try
+            {
+                string docsDir = @"d:\Games\Rimworld\Mod By Me\docs";
+                if (System.IO.Directory.Exists(docsDir))
+                {
+                    string filePath = System.IO.Path.Combine(docsDir, "b8_hit_variance_sequence_report.txt");
+                    System.IO.File.WriteAllText(filePath, reportText);
+                    Messages.Message($"B8 Hit Variance 10-Shot Sequence Matrix exported to docs/b8_hit_variance_sequence_report.txt", MessageTypeDefOf.PositiveEvent, false);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Log.Warning($"[Fire Discipline] Failed to write report file: {ex.Message}");
+            }
+        }
+
+        [DebugAction("Fire Discipline", "Print 100-Shot Simulation Distribution Matrix", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void Print100ShotSimulationMatrix()
+        {
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            var allRanged = DefDatabase<ThingDef>.AllDefsListForReading
+                .Where(d => d.IsRangedWeapon && d.Verbs != null && d.Verbs.Count > 0)
+                .ToList();
+
+            var weapons = allRanged
+                .Where(WeaponClassification.IsPawnRangedWeapon)
+                .OrderBy(d => d.defName)
+                .ToList();
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("==========================================================================================================================================================");
+            sb.AppendLine($"[FIRE DISCIPLINE] WAVE B8 & B9 TACTICAL COVER 100-SHOT SIMULATION MATRIX - {selectedPawn.LabelShort}");
+            sb.AppendLine("Model: Universal Quota (Option B) | Cover Block Levels: 0% (Open), 55% (Sandbag), 70% (Mid Cover), 85% (Heavy Wall)");
+            sb.AppendLine("==========================================================================================================================================================");
+            sb.AppendLine($"{"DefName",-24}|{"CoverType",-14}|{"Block%",7}|{"Pass%",6}|{"Std P%",7}|{"Std Hits",9}|{"Sharp P%",8}|{"Sharp Hits",11}|{"Combo P%",8}|{"Combo Hits",11}|");
+            sb.AppendLine(new string('-', 140));
+
+            float[] coverLevels = new float[] { 0.0f, 0.55f, 0.70f, 0.85f };
+            string[] coverNames = new string[] { "Open (0%)", "Sandbag(55%)", "Mid Cover(70)", "Wall (85%)" };
+
+            float bypassFactor = FireDisciplineMod.Settings?.sharpshotCoverBypassFactor ?? 0.50f;
+            float maxSuppressionPenalty = FireDisciplineMod.Settings?.suppressionCoverDegradationMax ?? 0.40f;
+
+            foreach (ThingDef weaponDef in weapons)
+            {
+                VerbProperties verbProps = weaponDef.Verbs[0];
+                if (verbProps == null) continue;
+
+                if (verbProps.ForcedMissRadius > 0f)
+                {
+                    sb.AppendLine($"{weaponDef.defName,-24}|{"Bypassed",-14}|{"N/A",7}|{"N/A",6}|{"N/A",7}|{"N/A",9}|{"N/A",8}|{"N/A",11}|{"N/A",8}|{"N/A",11}|");
+                    continue;
+                }
+
+                float accTouch = weaponDef.GetStatValueAbstract(StatDefOf.AccuracyTouch);
+                float accShort = weaponDef.GetStatValueAbstract(StatDefOf.AccuracyShort);
+                float accMedium = weaponDef.GetStatValueAbstract(StatDefOf.AccuracyMedium);
+                float aimP = Mathf.Clamp01(accMedium > 0 ? accMedium : accShort);
+
+                for (int i = 0; i < coverLevels.Length; i++)
+                {
+                    float baseCoverBlock = coverLevels[i];
+
+                    // 1. Standard Stance (Unsuppressed)
+                    float passCoverStd = 1f - baseCoverBlock;
+                    float pStd = Mathf.Clamp01(aimP * passCoverStd);
+                    int hitsStd = Simulate100Shots(pStd);
+
+                    // 2. Sharpshot Stance (50% Cover Bypass)
+                    float coverBlockSharp = baseCoverBlock * (1f - bypassFactor);
+                    float passCoverSharp = 1f - coverBlockSharp;
+                    float pSharp = Mathf.Clamp01(aimP * passCoverSharp);
+                    int hitsSharp = Simulate100Shots(pSharp);
+
+                    // 3. Tactical Combo (Sharpshot vs 100% Suppressed Target: 50% Bypass + 40% Degradation)
+                    float coverBlockCombo = baseCoverBlock * (1f - bypassFactor) * (1f - maxSuppressionPenalty);
+                    float passCoverCombo = 1f - coverBlockCombo;
+                    float pCombo = Mathf.Clamp01(aimP * passCoverCombo);
+                    int hitsCombo = Simulate100Shots(pCombo);
+
+                    string defLabel = (i == 0) ? weaponDef.defName : "";
+                    sb.AppendLine($"{defLabel,-24}|{coverNames[i],-14}|{baseCoverBlock,6:P0}|{passCoverStd,5:P0}|{pStd,6:P1}|{hitsStd,7}/100|{pSharp,7:P1}|{hitsSharp,9}/100|{pCombo,7:P1}|{hitsCombo,9}/100|");
+                }
+                sb.AppendLine(new string('-', 140));
+            }
+
+            sb.AppendLine("==========================================================================================================================================================");
+
+            string reportText = sb.ToString();
+            Log.Message(reportText);
+
+            try
+            {
+                string docsDir = @"d:\Games\Rimworld\Mod By Me\docs";
+                if (System.IO.Directory.Exists(docsDir))
+                {
+                    string filePath = System.IO.Path.Combine(docsDir, "b8_100shot_simulation_report.txt");
+                    System.IO.File.WriteAllText(filePath, reportText);
+                    Messages.Message($"100-Shot Cover Simulation Matrix exported to docs/b8_100shot_simulation_report.txt", MessageTypeDefOf.PositiveEvent, false);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Log.Warning($"[Fire Discipline] Failed to write report file: {ex.Message}");
+            }
+        }
+
+        private static int Simulate100Shots(float p)
+        {
+            if (p <= 0f) return 0;
+            if (p >= 1f) return 100;
+
+            int hits = 0;
+            float carry = Rand.Value * p;
+            for (int shot = 1; shot <= 100; shot++)
+            {
+                carry += p;
+                if (carry >= 1.0f - 1e-4f)
+                {
+                    carry -= 1.0f;
+                    hits++;
+                }
+            }
+            return hits;
+        }
+
+        [DebugAction("Fire Discipline", "Print Comprehensive All-Weapons Module Impact Super-Matrix", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintSuperWeaponsModuleMatrix()
+        {
+            var weapons = DefDatabase<ThingDef>.AllDefsListForReading
+                .Where(d => d.IsRangedWeapon && d.Verbs != null && d.Verbs.Count > 0 && d.weaponTags != null && d.weaponTags.Count > 0)
+                .OrderBy(d => d.defName)
+                .ToList();
+
+            if (weapons.Count == 0)
+            {
+                weapons = DefDatabase<ThingDef>.AllDefsListForReading
+                    .Where(d => d.IsRangedWeapon && d.Verbs != null && d.Verbs.Count > 0)
+                    .OrderBy(d => d.defName)
+                    .ToList();
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("==================================================================================================================================================");
+            sb.AppendLine("[FIRE DISCIPLINE SUPER-MATRIX] ALL-WEAPONS MODULE IMPACT & TACTICAL OUTCOME REPORT");
+            sb.AppendLine($"Total Ranged Weapons Scanned: {weapons.Count}");
+            sb.AppendLine($"Settings: B6 Rapid Full-Auto={(FireDisciplineMod.Settings?.enableRapidFullAuto ?? false)}, Hit Variance Module={(FireDisciplineMod.Settings?.enableHitVariance ?? false)}");
+            sb.AppendLine("==================================================================================================================================================");
+            sb.AppendLine($"{"DefName",-26}|{"Class",-10}|{"DefBurst",8}|{"B6Burst",7}|{"BaseDmg",7}|{"BaseCycle",9}|{"BaseDPS",8}|{"RapidDPS",8}|{"FullAutoDPS",11}|{"B8Variance",10}|{"All-ON Ratio",12}|");
+            sb.AppendLine(new string('-', 145));
+
+            int minBurstGate = FireDisciplineMod.Settings?.fullAutoMinBurstCount ?? 5;
+            float fullAutoBurstMult = FireDisciplineMod.Settings?.fullAutoBurstMultiplier ?? 1.50f;
+            float fullAutoCoolMult = FireDisciplineMod.Settings?.fullAutoCooldownMultiplier ?? 1.60f;
+
+            foreach (ThingDef weaponDef in weapons)
+            {
+                VerbProperties verbProps = weaponDef.Verbs[0];
+                if (verbProps == null) continue;
+
+                string weaponClass = WeaponClassification.GetWeaponClassificationName(weaponDef);
+
+                int defBurst = Mathf.Max(1, verbProps.burstShotCount);
+                int b6Burst = (defBurst >= minBurstGate) ? Mathf.Max(defBurst, Mathf.RoundToInt(defBurst * fullAutoBurstMult)) : defBurst;
+
+                float baseDamage = verbProps.defaultProjectile?.projectile?.GetDamageAmount(null) ?? 0f;
+                float baseWarmup = verbProps.warmupTime;
+                float baseCooldown = weaponDef.GetStatValueAbstract(StatDefOf.RangedWeapon_Cooldown);
+                float burstInterval = (verbProps.ticksBetweenBurstShots) / 60f;
+
+                float baseCycleTime = baseWarmup + baseCooldown + ((defBurst - 1) * burstInterval);
+                float baseBurstDmg = defBurst * baseDamage;
+                float baseDPS = baseCycleTime > 0 ? (baseBurstDmg / baseCycleTime) : 0f;
+
+                // Rapid Stance impact: warmup ratio clamp x0.30 - x0.75
+                float rapidWarmup = Mathf.Clamp(baseWarmup * 0.50f, baseWarmup * 0.30f, baseWarmup * 0.75f);
+                float rapidCycleTime = rapidWarmup + baseCooldown + ((defBurst - 1) * burstInterval);
+                float rapidDPS = rapidCycleTime > 0 ? (baseBurstDmg / rapidCycleTime) : 0f;
+
+                // B6 Rapid Full-Auto impact: b6Burst shots + cooldown x1.60
+                float fullAutoCooldown = (defBurst >= minBurstGate) ? (baseCooldown * fullAutoCoolMult) : baseCooldown;
+                float fullAutoCycleTime = rapidWarmup + fullAutoCooldown + ((b6Burst - 1) * burstInterval);
+                float fullAutoBurstDmg = b6Burst * baseDamage;
+                float fullAutoDPS = fullAutoCycleTime > 0 ? (fullAutoBurstDmg / fullAutoCycleTime) : 0f;
+
+                // B8 Hit Variance model
+                string varianceModel = (defBurst == 1) ? "Quota" : (defBurst >= minBurstGate ? "Pity (B6)" : "Pity");
+
+                // Net Tactical Advantage Ratio (Peak Full-Auto DPS vs Vanilla Base DPS)
+                float netRatio = baseDPS > 0 ? (fullAutoDPS / baseDPS) : 1.0f;
+
+                sb.AppendLine($"{weaponDef.defName,-26}|{weaponClass,-10}|{defBurst,8}|{b6Burst,7}|{baseDamage,7:F0}|{baseCycleTime,8:F2}s|{baseDPS,8:F1}|{rapidDPS,8:F1}|{fullAutoDPS,11:F1}|{varianceModel,-10}|{netRatio,11:F2}x|");
+            }
+
+            sb.AppendLine("==================================================================================================================================================");
+
+            string reportText = sb.ToString();
+            Log.Message(reportText);
+
+            // Export report file to workspace docs
+            try
+            {
+                string docsDir = @"d:\Games\Rimworld\Mod By Me\docs";
+                if (System.IO.Directory.Exists(docsDir))
+                {
+                    string filePath = System.IO.Path.Combine(docsDir, "super_weapons_matrix_report.txt");
+                    System.IO.File.WriteAllText(filePath, reportText);
+                    Messages.Message($"Super-Matrix Report exported to docs/super_weapons_matrix_report.txt ({weapons.Count} weapons)", MessageTypeDefOf.PositiveEvent, false);
+                }
+                else
+                {
+                    Messages.Message($"Super-Matrix Report printed to dev console for {weapons.Count} weapons.", MessageTypeDefOf.PositiveEvent, false);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Log.Warning($"[Fire Discipline] Failed to write report file: {ex.Message}");
+                Messages.Message($"Super-Matrix Report printed to dev console for {weapons.Count} weapons.", MessageTypeDefOf.PositiveEvent, false);
+            }
         }
 
         /// <summary>
@@ -355,7 +1074,7 @@ namespace FireDiscipline.Core
             }
 
             AimStanceTracker.SetStance(selectedPawn, AimStanceMode.Standard);
-            
+
             HediffDef suppressionDef = DefDatabase<HediffDef>.GetNamedSilentFail("FD_Suppressed");
             if (suppressionDef != null)
             {
@@ -393,7 +1112,7 @@ namespace FireDiscipline.Core
 
             ThingDef weaponDef = selectedPawn.equipment?.Primary?.def ?? DefDatabase<ThingDef>.GetNamedSilentFail("Gun_BoltActionRifle");
             DamageInfo dinfo = new DamageInfo(DamageDefOf.Bullet, 30f, 0f, -1f, selectedPawn, brain, weaponDef);
-            
+
             float origDmg = dinfo.Amount;
             float mult = FireDisciplineMod.Settings?.grazeDamageMultiplier ?? 0.35f;
 
@@ -460,37 +1179,7 @@ namespace FireDiscipline.Core
             Messages.Message(msg, selectedPawn, MessageTypeDefOf.NeutralEvent, false);
         }
 
-        [DebugAction("Fire Discipline", "Test Embrasure Interaction on Selected Pawn", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
-        public static void TestEmbrasureInteraction()
-        {
-            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
-            if (selectedPawn == null)
-            {
-                Messages.Message("Please select a Pawn first to test Embrasure Interaction.", MessageTypeDefOf.RejectInput, false);
-                return;
-            }
 
-            bool featureOn = FireDisciplineMod.Settings?.enableEmbrasureInteraction ?? false;
-            bool isBehindEmbrasure = EmbrasureUtility.IsUsingEmbrasure(selectedPawn);
-
-            // Detection is reported even when the feature is off, but the multipliers must reflect
-            // what is actually being applied - otherwise the readout claims an effect that is not live.
-            bool applied = featureOn && isBehindEmbrasure;
-            float accMult = applied ? (FireDisciplineMod.Settings?.embrasureAccuracyMultiplier ?? 0.85f) : 1.0f;
-
-            string status = isBehindEmbrasure ? "<color=#00FF00>BEHIND EMBRASURE</color>" : "<color=#FF5555>OPEN GROUND / COVER (NO EMBRASURE)</color>";
-            if (!featureOn) status += " <color=#FFAA00>[FEATURE DISABLED - no modifiers applied]</color>";
-            string msg = $"[Embrasure Test] {selectedPawn.LabelShort} | Status: {status} | Firing Accuracy Mult: x{accMult:F2}";
-
-            if (selectedPawn.Map != null && Find.CameraDriver != null && applied)
-            {
-                MoteMaker.ThrowText(selectedPawn.DrawPos, selectedPawn.Map,
-                    $"Embrasure (Acc x{accMult:F2})", Color.green);
-            }
-
-            Log.Message(msg);
-            Messages.Message(msg, selectedPawn, MessageTypeDefOf.NeutralEvent, false);
-        }
 
         /// <summary>
         /// Debug action E. Audits architecture rule 2 ("derive, never declare") across the live
@@ -704,7 +1393,8 @@ namespace FireDiscipline.Core
         /// "how much spread does Fire Discipline add or remove", not "what is the total spread of a
         /// firefight".
         /// </summary>
-        [DebugAction("Fire Discipline", "Print Damage Distribution (variance)", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        // Temporarily hidden from debug menu (superseded by Skill & Burst Matrix & Super-Matrix)
+        // [DebugAction("Fire Discipline", "Print Damage Distribution (variance)", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         public static void PrintDamageDistribution()
         {
             Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
@@ -914,7 +1604,8 @@ namespace FireDiscipline.Core
         ///
         /// Nothing here touches the game. The mod still uses the Independent model.
         /// </summary>
-        [DebugAction("Fire Discipline", "Compare Variance Models (simulation only)", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        // Temporarily hidden from debug menu (superseded by production Hit Variance module & stats)
+        // [DebugAction("Fire Discipline", "Compare Variance Models (simulation only)", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         public static void CompareVarianceModels()
         {
             Pawn pawn = Find.Selector.SingleSelectedThing as Pawn;
@@ -1228,14 +1919,6 @@ namespace FireDiscipline.Core
         }
 
         /// <summary>
-        /// Debug action G. Lists every ThingDef the embrasure rule accepts, so the detection can be
-        /// checked against a real modlist instead of trusted.
-        ///
-        /// The previous detection matched hundreds of defs - walls, ore, doors - because of a
-        /// defName substring test and an isStuffableAirtight fallback. A list this short is the
-        /// evidence that it no longer does.
-        /// </summary>
-        /// <summary>
         /// Lists every Patch_* class in the mod and whether Harmony actually has it registered.
         ///
         /// This exists because of a specific failure that cost the project weeks: Patch_Projectile_Impact
@@ -1248,7 +1931,7 @@ namespace FireDiscipline.Core
         /// legitimate is not knowing which case you are in.
         /// </summary>
         // ---------------------------------------------------------------------------------------
-        // Regression: "all features off must equal vanilla, and Snap Shot must equal vanilla".
+        // Regression: "all features off must equal vanilla, and Standard Shot must equal vanilla".
         //
         // Design 7.3 puts this before every other test, and it is the one check that catches a whole
         // class of bug at once - a patch or a StatPart running when it should not. It was unreachable
@@ -1266,8 +1949,8 @@ namespace FireDiscipline.Core
         /// Records what the selected pawn's numbers look like RIGHT NOW.
         ///
         /// Run this with every Fire Discipline module switched off and the game restarted: that is
-        /// the vanilla baseline. Stance is forced to Snap Shot during capture and restored after,
-        /// because Snap Shot is defined as the vanilla-equivalent stance.
+        /// the vanilla baseline. Stance is forced to Standard Shot during capture and restored after,
+        /// because Standard Shot is defined as the vanilla-equivalent stance.
         ///
         /// Captures more than hit chance. AimingDelayFactor, MoveSpeed and ShootingAccuracyPawn are
         /// recorded too, because a StatPart leaking while its module is off would never show up in
@@ -1336,7 +2019,7 @@ namespace FireDiscipline.Core
         }
 
         /// <summary>
-        /// Re-samples and diffs against the stored baseline. Any non-zero delta on Snap Shot means a
+        /// Re-samples and diffs against the stored baseline. Any non-zero delta on Standard Shot means a
         /// patch or StatPart is running when it should not be - design 7.3 treats a single digit of
         /// drift as a failure, and so does this.
         /// </summary>
@@ -1422,8 +2105,8 @@ namespace FireDiscipline.Core
             sb.AppendLine($"Pawn   : {pawn.LabelShort} | weapon: {pawn.equipment?.Primary?.def?.defName ?? "none"}");
             sb.AppendLine($"Modules enabled now: {string.Join(", ", PatchRegistry.Modules.Where(m => m.IsEnabled).Select(m => m.ModuleId).ToArray())}");
             sb.AppendLine();
-            sb.AppendLine("Values are graded by whether a module is DESIGNED to change them at Snap Shot.");
-            sb.AppendLine("Hit chances and AimingDelayFactor must never move: Snap Shot is defined as vanilla.");
+            sb.AppendLine("Values are graded by whether a module is DESIGNED to change them at Standard Shot.");
+            sb.AppendLine("Hit chances and AimingDelayFactor must never move: Standard Shot is defined as vanilla.");
             sb.AppendLine("MoveSpeed may move, because Gear Encumbrance exists to change exactly that.");
             sb.AppendLine();
 
@@ -1472,7 +2155,7 @@ namespace FireDiscipline.Core
 
         /// <summary>
         /// Which module, if any, is legitimately allowed to move this value while the pawn is in
-        /// Snap Shot. Returns null when the value must be bit-identical to vanilla.
+        /// Standard Shot. Returns null when the value must be bit-identical to vanilla.
         ///
         /// Without this split the test is useless: it flagged Gear Encumbrance slowing a pawn who
         /// was carrying 22 kg as a regression failure, which is the module doing precisely its job.
@@ -1481,7 +2164,7 @@ namespace FireDiscipline.Core
         /// </summary>
         private static string ExpectedToDifferBecauseOf(string key)
         {
-            // Snap Shot is defined as vanilla-equivalent, so nothing stance-related may move.
+            // Standard Shot is defined as vanilla-equivalent, so nothing stance-related may move.
             if (key.StartsWith("hit.")) return null;
             if (key == "stat.AimingDelayFactor") return null;
             if (key == "stat.ShootingAccuracyPawn") return null;
@@ -1496,7 +2179,7 @@ namespace FireDiscipline.Core
         }
 
         /// <summary>
-        /// Samples the values the regression cares about. Stance is forced to Snap Shot and every
+        /// Samples the values the regression cares about. Stance is forced to Standard Shot and every
         /// mutation is undone in finally, so a throw mid-sweep cannot leave the pawn holding a
         /// fabricated skill level or stance.
         /// </summary>
@@ -1616,41 +2299,7 @@ namespace FireDiscipline.Core
             Messages.Message($"Patch audit: {live}/{patchClasses.Count} registered. See dev console.", MessageTypeDefOf.PositiveEvent, false);
         }
 
-        [DebugAction("Fire Discipline", "Print Embrasure Detection", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
-        public static void PrintEmbrasureDetection()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("=========================================================================================");
-            sb.AppendLine("[Fire Discipline Debug Harness] Embrasure Detection");
-            sb.AppendLine("=========================================================================================");
-            sb.AppendLine("Rule: passability == Impassable AND disableImpassableShotOverConfigError == true");
-            sb.AppendLine($"Feature enabled: {FireDisciplineMod.Settings?.enableEmbrasureInteraction}");
-            sb.AppendLine();
-            sb.AppendLine($"{"ThingDef",-38}|{"fill",7}|{"blockLight",11}|{"source",-24}|");
-            sb.AppendLine(new string('-', 84));
 
-            var matched = DefDatabase<ThingDef>.AllDefsListForReading
-                .Where(d => d.passability == Traversability.Impassable
-                            && d.disableImpassableShotOverConfigError)
-                .OrderByDescending(d => d.fillPercent)
-                .ThenBy(d => d.defName)
-                .ToList();
-
-            foreach (ThingDef def in matched)
-            {
-                string name = def.defName.Length > 37 ? def.defName.Substring(0, 37) : def.defName;
-                string source = def.modContentPack?.Name ?? "Core";
-                if (source.Length > 23) source = source.Substring(0, 23);
-                sb.AppendLine($"{name,-38}|{def.fillPercent,7:P0}|{def.blockLight,11}|{source,-24}|");
-            }
-
-            sb.AppendLine(new string('-', 84));
-            sb.AppendLine($"Total: {matched.Count} defs treated as embrasures.");
-            sb.AppendLine("=========================================================================================");
-
-            Log.Message(sb.ToString());
-            Messages.Message($"Embrasure detection printed ({matched.Count} defs).", MessageTypeDefOf.PositiveEvent, false);
-        }
 
         [DebugAction("Fire Discipline", "Print Cover Values", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         public static void PrintCoverValues()
@@ -1678,7 +2327,7 @@ namespace FireDiscipline.Core
             {
                 float fill = def.fillPercent;
                 float coverPercent = CoverUtility.BaseBlockChance(def);
-                
+
                 FireDisciplineSettings settings = FireDisciplineMod.Settings;
                 float factor = settings?.coverSuppressionFactor ?? 0.85f;
                 float floor = settings?.coverSuppressionFloor ?? 0.25f;
@@ -1687,7 +2336,7 @@ namespace FireDiscipline.Core
                 string defName = def.defName.Length > 34 ? def.defName.Substring(0, 34) : def.defName;
                 bool blockLight = def.blockLight;
                 bool disableShotErr = def.disableImpassableShotOverConfigError;
-                
+
                 sb.AppendLine($"{defName,-35}|{fill,13:P0}|{def.passability,-14}|{coverPercent,13:P0}|{suppMult,10:F2}|{blockLight,12}|{disableShotErr,22}|");
                 rows++;
             }

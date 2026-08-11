@@ -1,0 +1,155 @@
+==========================================================================================================================================
+[FIRE DISCIPLINE] WAVE B8 HIT VARIANCE 10-SHOT SEQUENCE MATRIX - Minla
+Settings: QuotaForSingleShot=True, PityForBurst=True, PityStep=0.08, PityClamp=0.32
+==========================================================================================================================================
+DefName                   |Model   | Burst| Base P%|10-Shot Sequence (H=Hit, M=Miss)  |  Hits| Observed%|   Final State|
+--------------------------------------------------------------------------------------------------------------------------
+Bow_Great                 |Quota   |     1| 75.0 %|M H H H M H H H M H               |  7/10|     70.0%|    Carry=0.51|
+Bow_Great_Unique          |Quota   |     1| 75.0 %|M H H H M H H H M H               |  7/10|     70.0%|    Carry=0.50|
+Bow_Recurve               |Quota   |     1| 65.0 %|M H H M H H M H H M               |  6/10|     60.0%|    Carry=0.65|
+Bow_Short                 |Quota   |     1| 45.0 %|M H M H M H M H M M               |  4/10|     40.0%|    Carry=0.94|
+Flamebow                  |Quota   |     1| 45.0 %|M H M M H M H M H M               |  4/10|     40.0%|    Carry=0.65|
+Gun_AntiArmor_Rocket      |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Gun_AssaultRifle          |Quota   |     3| 65.0 %|M H H M H H M H H M               |  6/10|     60.0%|    Carry=0.69|
+Gun_AssaultRifle_Unique   |Quota   |     3| 65.0 %|H M H H M H M H H M               |  6/10|     60.0%|    Carry=0.94|
+Gun_Autopistol            |Quota   |     1| 40.0 %|M M H M H M M H M H               |  4/10|     40.0%|    Carry=0.09|
+Gun_BeamRepeater          |Quota   |    30| 65.0 %|H M H H M H H M H H               |  7/10|     70.0%|    Carry=0.13|
+Gun_BeamRepeater_Unique   |Quota   |    30| 65.0 %|H M H H M H H M H H               |  7/10|     70.0%|    Carry=0.07|
+Gun_BoltActionRifle       |Quota   |     1| 90.0 %|H H M H H H H H H H               |  9/10|     90.0%|    Carry=0.22|
+Gun_BoltActionRifle_Unique|Quota   |     1| 90.0 %|H H H H H H H H M H               |  9/10|     90.0%|    Carry=0.85|
+Gun_ChainShotgun          |Quota   |     3| 55.0 %|M H M H M H H M H M               |  5/10|     50.0%|    Carry=0.72|
+Gun_ChainShotgun_Unique   |Quota   |     3| 55.0 %|H M H M H M H M H M               |  5/10|     50.0%|    Carry=1.00|
+Gun_ChargeBlasterHeavy    |Quota   |    24| 26.0 %|M M H M M M H M M M               |  2/10|     20.0%|    Carry=0.85|
+Gun_ChargeBlasterHeavyTurret|Quota   |     9| 26.0 %|M M M H M M M H M M               |  2/10|     20.0%|    Carry=0.65|
+Gun_ChargeLance           |Quota   |     1| 85.0 %|H H H H M H H H H H               |  9/10|     90.0%|    Carry=0.23|
+Gun_ChargeLance_Unique    |Quota   |     1| 85.0 %|H H H M H H H H H M               |  8/10|     80.0%|    Carry=0.99|
+Gun_ChargeRifle           |Quota   |     3| 55.0 %|M H M H M H H M H M               |  5/10|     50.0%|    Carry=0.66|
+Gun_ChargeRifle_Unique    |Quota   |     3| 55.0 %|M H M H M H M H M H               |  5/10|     50.0%|    Carry=0.51|
+Gun_DoomsdayRocket        |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Gun_EmpLauncher           |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Gun_HeavySMG              |Quota   |     3| 35.0 %|M M H M M H M M H M               |  3/10|     30.0%|    Carry=0.62|
+Gun_HeavySMG_Unique       |Quota   |     3| 35.0 %|M M H M M H M M H M               |  3/10|     30.0%|    Carry=0.51|
+Gun_HellcatRifle          |Quota   |     3| 65.0 %|H M H H M H H M H H               |  7/10|     70.0%|    Carry=0.06|
+Gun_HellcatRifle_Unique   |Quota   |     3| 65.0 %|M H H M H H M H H M               |  6/10|     60.0%|    Carry=0.70|
+Gun_HellsphereCannon      |Quota   |     1|100.0 %|H H H H H H H H H H               | 10/10|    100.0%|    Carry=0.65|
+Gun_IncendiaryLauncher    |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Gun_InfernoCannon         |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Gun_LMG                   |Quota   |     6| 35.0 %|M H M M H M M H M M               |  3/10|     30.0%|    Carry=0.84|
+Gun_LMG_Unique            |Quota   |     6| 35.0 %|M M H M M H M M H M               |  3/10|     30.0%|    Carry=0.69|
+Gun_MachinePistol         |Quota   |     3| 35.0 %|M M H M M H M M H M               |  3/10|     30.0%|    Carry=0.52|
+Gun_Minigun               |Quota   |    25| 25.0 %|M M M H M M M H M M               |  2/10|     20.0%|    Carry=0.72|
+Gun_Minigun_Unique        |Quota   |    25| 25.0 %|M M M H M M M H M M               |  2/10|     20.0%|    Carry=0.71|
+Gun_MiniShotgun           |Quota   |     1| 70.0 %|M H H M H H H M H H               |  7/10|     70.0%|    Carry=0.16|
+Gun_Needle                |Quota   |     1| 90.0 %|H H H H H M H H H H               |  9/10|     90.0%|    Carry=0.55|
+Gun_NeedleLauncher        |Quota   |     1| 90.0 %|H H H M H H H H H H               |  9/10|     90.0%|    Carry=0.32|
+Gun_PumpShotgun           |Quota   |     1| 77.0 %|H M H H H M H H H M               |  7/10|     70.0%|    Carry=0.95|
+Gun_Revolver              |Quota   |     1| 55.0 %|H M H M H M H M H M               |  5/10|     50.0%|    Carry=0.96|
+Gun_Revolver_Unique       |Quota   |     1| 55.0 %|M H M H M H M H H M               |  5/10|     50.0%|    Carry=0.62|
+Gun_Scattergun            |Quota   |     1| 72.0 %|H M H H M H H H M H               |  7/10|     70.0%|    Carry=0.50|
+Gun_Slugthrower           |Quota   |     1| 40.0 %|M H M M H M H M M H               |  4/10|     40.0%|    Carry=0.25|
+Gun_SmokeLauncher         |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Gun_SniperRifle           |Quota   |     1| 88.0 %|H H H H H H M H H H               |  9/10|     90.0%|    Carry=0.63|
+Gun_SniperRifle_Unique    |Quota   |     1| 88.0 %|H H H M H H H H H H               |  9/10|     90.0%|    Carry=0.17|
+Gun_Spiner                |Quota   |     1| 40.0 %|M H M M H M H M M H               |  4/10|     40.0%|    Carry=0.34|
+Gun_ThumpCannon           |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Gun_ToxbombLauncher       |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Gun_ToxicNeedle           |Quota   |     1| 90.0 %|M H H H H H H H H H               |  9/10|     90.0%|    Carry=0.02|
+Gun_TripleRocket          |Bypassed|     3|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+NerveSpiker               |Quota   |     1| 65.0 %|M H H M H M H H M H               |  6/10|     60.0%|    Carry=0.60|
+Pila                      |Quota   |     1| 50.0 %|M H M H M H M H M H               |  5/10|     50.0%|    Carry=0.39|
+VWE_Bow_Compound          |Quota   |     1| 85.0 %|H H H H H M H H H H               |  9/10|     90.0%|    Carry=0.32|
+VWE_Bow_Compound_Unique   |Quota   |     1| 85.0 %|H H H H H M H H H H               |  9/10|     90.0%|    Carry=0.30|
+VWE_Bow_Crossbow          |Quota   |     1| 65.0 %|H M H H M H H M H M               |  6/10|     60.0%|    Carry=0.97|
+VWE_Bow_Crossbow_Unique   |Quota   |     1| 65.0 %|M H M H H M H H M H               |  6/10|     60.0%|    Carry=0.53|
+VWE_Bow_Long              |Quota   |     1| 80.0 %|H H M H H H H M H H               |  8/10|     80.0%|    Carry=0.48|
+VWE_Bow_Long_Unique       |Quota   |     1| 80.0 %|H H H M H H H H M H               |  8/10|     80.0%|    Carry=0.69|
+VWE_CombatHandgun         |Quota   |     3| 32.0 %|M M H M M M H M M H               |  3/10|     30.0%|    Carry=0.27|
+VWE_FlashGrenade          |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWE_Gun_AntiMaterialRifle |Quota   |     1| 80.0 %|H H M H H H H M H H               |  8/10|     80.0%|    Carry=0.41|
+VWE_Gun_AntiMaterialRifle_Unique|Quota   |     1| 80.0 %|M H H H H M H H H H               |  8/10|     80.0%|    Carry=0.07|
+VWE_Gun_Autocannon        |Quota   |     7| 60.0 %|H M H M H H M H M H               |  6/10|     60.0%|    Carry=0.51|
+VWE_Gun_AutomaticPistol   |Quota   |     3| 30.0 %|M M M H M M H M M H               |  3/10|     30.0%|    Carry=0.08|
+VWE_Gun_AutomaticPistol_Unique|Quota   |     3| 30.0 %|M M H M M H M M M H               |  3/10|     30.0%|    Carry=0.26|
+VWE_Gun_BattleRifle       |Quota   |     2| 75.0 %|M H H H M H H H M H               |  7/10|     70.0%|    Carry=0.64|
+VWE_Gun_BattleRifle_Unique|Quota   |     2| 75.0 %|H H M H H H M H H H               |  8/10|     80.0%|    Carry=0.13|
+VWE_Gun_BullpupDMR        |Quota   |     1| 80.0 %|M H H H H M H H H H               |  8/10|     80.0%|    Carry=0.13|
+VWE_Gun_BullpupDMR_Unique |Quota   |     1| 80.0 %|H H M H H H H M H H               |  8/10|     80.0%|    Carry=0.48|
+VWE_Gun_BullpupRifle      |Quota   |     3| 60.0 %|M H M H H M H M H H               |  6/10|     60.0%|    Carry=0.01|
+VWE_Gun_BullpupRifle_Unique|Quota   |     3| 60.0 %|M H H M H M H H M H               |  6/10|     60.0%|    Carry=0.39|
+VWE_Gun_Carbine           |Quota   |     5| 55.0 %|M H H M H M H M H M               |  5/10|     50.0%|    Carry=0.85|
+VWE_Gun_Carbine_Unique    |Quota   |     5| 55.0 %|M H M H M H H M H M               |  5/10|     50.0%|    Carry=0.71|
+VWE_Gun_ChargeLMG         |Quota   |    24| 26.0 %|M M M H M M M H M M               |  2/10|     20.0%|    Carry=0.67|
+VWE_Gun_ChargeLMG_Unique  |Quota   |    24| 26.0 %|M M M H M M M H M M               |  2/10|     20.0%|    Carry=0.67|
+VWE_Gun_ChargeMinigun     |Quota   |    12| 35.0 %|M M H M H M M H M M               |  3/10|     30.0%|    Carry=0.77|
+VWE_Gun_ChargeMinigun_Unique|Quota   |    12| 35.0 %|M M H M M H M M H M               |  3/10|     30.0%|    Carry=0.65|
+VWE_Gun_ChargePistol      |Quota   |     1| 50.0 %|M H M H M H M H M H               |  5/10|     50.0%|    Carry=0.37|
+VWE_Gun_ChargePistol_Unique|Quota   |     1| 50.0 %|M H M H M H M H M H               |  5/10|     50.0%|    Carry=0.05|
+VWE_Gun_ChargeRocketLauncher|Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWE_Gun_ChargeShotgun     |Quota   |     1| 72.0 %|H M H H H M H H M H               |  7/10|     70.0%|    Carry=0.71|
+VWE_Gun_ChargeShotgun_Unique|Quota   |     1| 72.0 %|M H H M H H H M H H               |  7/10|     70.0%|    Carry=0.27|
+VWE_Gun_ChargeSMG         |Quota   |     4| 40.0 %|M M H M H M M H M H               |  4/10|     40.0%|    Carry=0.06|
+VWE_Gun_ChargeSMG_Unique  |Quota   |     4| 40.0 %|M M H M H M M H M H               |  4/10|     40.0%|    Carry=0.17|
+VWE_Gun_ChargeSniperRifle |Quota   |     1| 85.0 %|M H H H H H M H H H               |  8/10|     80.0%|    Carry=0.53|
+VWE_Gun_ChargeSniperRifle_Unique|Quota   |     1| 85.0 %|H M H H H H H M H H               |  8/10|     80.0%|    Carry=0.68|
+VWE_Gun_CombatHandgun_Unique|Quota   |     3| 32.0 %|M M H M M H M M H M               |  3/10|     30.0%|    Carry=0.44|
+VWE_Gun_DartGun           |Quota   |     1| 82.0 %|H M H H H H H M H H               |  8/10|     80.0%|    Carry=0.56|
+VWE_Gun_Flamethrower      |Quota   |     1| 60.0 %|M H M H H M H M H H               |  6/10|     60.0%|    Carry=0.11|
+VWE_Gun_GaussLance        |Quota   |     1| 80.0 %|H H H M H H H H M H               |  8/10|     80.0%|    Carry=0.72|
+VWE_Gun_GaussLance_Unique |Quota   |     1| 80.0 %|M H H H H M H H H H               |  8/10|     80.0%|    Carry=0.02|
+VWE_Gun_GaussMagnum       |Quota   |     1| 60.0 %|H M H M H H M H M H               |  6/10|     60.0%|    Carry=0.43|
+VWE_Gun_GaussMagnum_Unique|Quota   |     1| 60.0 %|H M H M H H M H M H               |  6/10|     60.0%|    Carry=0.47|
+VWE_Gun_GaussRifle        |Quota   |     3| 55.0 %|M H M H M H M H M H               |  5/10|     50.0%|    Carry=0.51|
+VWE_Gun_GaussRifle_Unique |Quota   |     3| 55.0 %|M H M H H M H M H M               |  5/10|     50.0%|    Carry=0.80|
+VWE_Gun_GrenadeLauncher   |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWE_Gun_HandCannon        |Quota   |     1| 55.0 %|M H M H H M H M H M               |  5/10|     50.0%|    Carry=0.80|
+VWE_Gun_HandCannon_Unique |Quota   |     1| 55.0 %|M H M H M H H M H M               |  5/10|     50.0%|    Carry=0.66|
+VWE_Gun_HandheldMortar    |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWE_Gun_HeavyFlamer       |Quota   |     1| 60.0 %|M H M H H M H M H H               |  6/10|     60.0%|    Carry=0.06|
+VWE_Gun_HMG               |Quota   |     8| 30.0 %|M M M H M M H M M H               |  3/10|     30.0%|    Carry=0.04|
+VWE_Gun_HMG_Unique        |Quota   |     8| 30.0 %|M M H M M H M M M H               |  3/10|     30.0%|    Carry=0.27|
+VWE_Gun_LeverActionRifle  |Quota   |     1| 65.0 %|H M H H M H H M H H               |  7/10|     70.0%|    Carry=0.13|
+VWE_Gun_LeverActionRifle_Unique|Quota   |     1| 65.0 %|M H M H H M H H M H               |  6/10|     60.0%|    Carry=0.53|
+VWE_Gun_LightSMG          |Quota   |     4| 35.0 %|M M H M M H M M H M               |  3/10|     30.0%|    Carry=0.52|
+VWE_Gun_LightSMG_Unique   |Quota   |     4| 35.0 %|M M H M M H M H M M               |  3/10|     30.0%|    Carry=0.73|
+VWE_Gun_MarksmanRifle     |Quota   |     1| 80.0 %|H M H H H H M H H H               |  8/10|     80.0%|    Carry=0.40|
+VWE_Gun_MarksmanRifle_Unique|Quota   |     1| 80.0 %|H H H M H H H H M H               |  8/10|     80.0%|    Carry=0.79|
+VWE_Gun_PDW               |Quota   |     5| 40.0 %|M M H M H M M H M H               |  4/10|     40.0%|    Carry=0.13|
+VWE_Gun_PDW_Unique        |Quota   |     5| 40.0 %|M H M M H M H M M H               |  4/10|     40.0%|    Carry=0.35|
+VWE_Gun_RocketLauncher    |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWE_Gun_RubberBulletPistol|Quota   |     1| 40.0 %|M H M M H M H M M H               |  4/10|     40.0%|    Carry=0.28|
+VWE_Gun_SawedOffShotgun_Unique|Quota   |     2| 55.0 %|M H M H M H M H H M               |  5/10|     50.0%|    Carry=0.59|
+VWE_Gun_SemiAutomaticRifle|Quota   |     1| 82.0 %|H H M H H H H M H H               |  8/10|     80.0%|    Carry=0.60|
+VWE_Gun_SemiAutomaticRifle_Unique|Quota   |     1| 82.0 %|H H H H M H H H H M               |  8/10|     80.0%|    Carry=0.97|
+VWE_Gun_ServiceRifle      |Quota   |     4| 60.0 %|M H H M H M H H M H               |  6/10|     60.0%|    Carry=0.23|
+VWE_Gun_ServiceRifle_Unique|Quota   |     4| 60.0 %|M H M H H M H M H H               |  6/10|     60.0%|    Carry=0.18|
+VWE_Gun_SMG               |Quota   |     5| 30.0 %|M M H M M H M M M H               |  3/10|     30.0%|    Carry=0.21|
+VWE_Gun_SMG_Unique        |Quota   |     5| 30.0 %|M M M H M M H M M H               |  3/10|     30.0%|    Carry=0.04|
+VWE_Gun_SwarmMissileLauncher|Bypassed|    10|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWE_Gun_Taser             |Quota   |     1| 78.0 %|H M H H H M H H H H               |  8/10|     80.0%|    Carry=0.08|
+VWE_Gun_TearGasLauncher   |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWE_Gun_TrenchGun_Unique  |Quota   |     1| 45.0 %|M M H M H M H M H M               |  4/10|     40.0%|    Carry=0.53|
+VWE_Gun_UraniumSlugRifle  |Quota   |     1| 90.0 %|H H H H H H H H M H               |  9/10|     90.0%|    Carry=0.90|
+VWE_SawedOffShotgun       |Quota   |     2| 55.0 %|H M H M H M H M H H               |  6/10|     60.0%|    Carry=0.02|
+VWE_Sling                 |Quota   |     1| 45.0 %|M H M H M M H M H M               |  4/10|     40.0%|    Carry=0.72|
+VWE_SmokeGrenade          |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWE_TearGasGrenade        |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWE_Throwing_Knives       |Quota   |     2| 40.0 %|M M H M H M M H M H               |  4/10|     40.0%|    Carry=0.04|
+VWE_Throwing_Rocks        |Quota   |     1| 15.0 %|M M M M M H M M M M               |  1/10|     10.0%|    Carry=0.63|
+VWE_Throwing_Shards       |Quota   |     1| 47.0 %|M H M H M H M H M M               |  4/10|     40.0%|    Carry=0.96|
+VWE_TrenchGun             |Quota   |     1| 45.0 %|M H M M H M H M H M               |  4/10|     40.0%|    Carry=0.63|
+VWE_Weapon_FireBomb       |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+VWEFT_Gun_Derringer       |Quota   |     1| 41.0 %|M H M M H M H M H M               |  4/10|     40.0%|    Carry=0.46|
+VWEFT_Gun_FrontierPistol  |Quota   |     1| 40.0 %|M H M M H M H M M H               |  4/10|     40.0%|    Carry=0.22|
+VWEFT_Gun_GaussRepeater   |Quota   |     1| 68.0 %|M H H M H H M H H M               |  6/10|     60.0%|    Carry=0.89|
+VWEFT_Gun_GaussRevolver   |Quota   |     1| 65.0 %|H M H H M H M H H M               |  6/10|     60.0%|    Carry=0.91|
+VWEFT_Gun_HandheldGatlingGun|Quota   |    12| 23.0 %|M M M H M M M H M M               |  2/10|     20.0%|    Carry=0.48|
+VWEFT_Gun_HeavyRevolver   |Quota   |     1| 45.0 %|M M H M H M H M H M               |  4/10|     40.0%|    Carry=0.54|
+VWEFT_Gun_LeverActionShotgun|Quota   |     1| 76.0 %|H H M H H H M H H H               |  8/10|     80.0%|    Carry=0.12|
+VWEFT_Gun_RepeatingShotgun|Quota   |     1| 79.0 %|H M H H H H M H H H               |  8/10|     80.0%|    Carry=0.25|
+VWEFT_Gun_RollingBlockRifle|Quota   |     1| 86.0 %|H H H H H M H H H H               |  9/10|     90.0%|    Carry=0.41|
+VWEFT_Gun_VolcanicPistol  |Quota   |     2| 50.0 %|M H M H M H M H M H               |  5/10|     50.0%|    Carry=0.05|
+Weapon_GrenadeEMP         |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Weapon_GrenadeFrag        |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Weapon_GrenadeMolotov     |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+Weapon_GrenadeTox         |Bypassed|     1|     N/A|BYPASSED (ForcedMissRadius > 0)   |   N/A|       N/A|           N/A|
+==========================================================================================================================================

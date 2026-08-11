@@ -6,18 +6,14 @@ using Verse;
 namespace FireDiscipline.ShotgunAoE
 {
     /// <summary>
-    /// The shape of a shotgun's spread, in one place.
-    ///
-    /// Both the damage path and the on-screen danger overlay read from here. If they each computed
-    /// the wedge themselves the overlay would eventually stop matching what actually gets hit, and
-    /// an overlay that lies is worse than no overlay - the player would position around a shape the
-    /// game is not using.
-    ///
-    /// The wedge starts one cell wide at the muzzle and widens to shotgunSpreadWidthEnd at its far
-    /// end, mirroring how vanilla's Biotech Fire Spew is parameterised
-    /// (CompProperties_AbilityFireSpew: range, lineWidthEnd). Defining it by width-at-the-end rather
-    /// than by an angle is what keeps point-blank shots from spraying sideways: an angle-based cone
-    /// opens to roughly 40 degrees at three cells.
+    /// Hình học và thuật toán tính toán vùng lan đạn chùm (Shotgun Cone Spread) duy nhất trong dự án.
+    /// 
+    /// [TÍNH NĂNG / FEATURE]: Module Tỏa Đạn Shotgun (ShotgunAoEModule).
+    /// [TẠI SAO LÀM THẾ / RATIONALE]: Giả lập thực tế độ tỏa chùm pellet của súng shotgun theo hình nêm từ nòng súng tới tầm tối đa; 
+    ///     đảm bảo cả thuật toán tính sát thương lan và thuật toán vẽ giao diện Danger Zone màu đỏ trên màn hình sử dụng chung 1 Nguồn sự thật duy nhất (Single Source of Truth).
+    /// [ĐIỀU CHỈNH MẶC ĐỊNH / DEFAULTS]: Module mặc định TẮT. Độ rộng nêm ở đích = 3.0 ô (`shotgunSpreadWidthEnd`). Mức sát thương vùng lan = 70% sát thương đạn chính.
+    /// [Ý NGHĨA & CƠ CHẾ / MECHANICS]: Tính toán hình nêm (Wedge) bắt đầu từ nòng súng (rộng 1 ô) mở rộng tới tầm bắn tối đa (rộng 3 ô). 
+    ///     Xác định danh sách các ô nằm trong vùng lan (`AffectedCells`), mật độ đạn tỏa và hệ số sát thương rìa dựa trên Shooting Skill của người bắn.
     /// </summary>
     public static class ShotgunSpreadGeometry
     {

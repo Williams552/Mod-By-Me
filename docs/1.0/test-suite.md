@@ -53,7 +53,7 @@ Mod được coi là **hoàn thành và đạt chất lượng** khi thỏa mãn
 - **Thao tác:**
   1. Chọn 1 Pawn cầm súng, bấm **Draft (R)**.
   2. Kiểm tra thanh Gizmo bên dưới màn hình.
-  3. Bấm nhấp vào nút `Stance: Snap Shot` để chuyển sang `Stance: Careful Aim`.
+  3. Bấm nhấp vào nút `Stance: Standard Shot` để chuyển sang `Stance: Careful Aim`.
   4. Ra lệnh cho Pawn bắn vào 1 mục tiêu bất kỳ.
 - **Kỳ vọng:**
   - Nút Gizmo đổi label thành `Stance: Careful Aim`.

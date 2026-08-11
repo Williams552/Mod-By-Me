@@ -110,7 +110,7 @@ Và: `dotnet build` phải **0 warning, 0 error**.
 
 ## 6. Định nghĩa "xong"
 
-1. **Regression pass:** tắt hết feature → restart → ma trận harness khớp **tuyệt đối** với vanilla, mọi ô. Snap Shot được định nghĩa là vanilla.
+1. **Regression pass:** tắt hết feature → restart → ma trận harness khớp **tuyệt đối** với vanilla, mọi ô. Standard Shot được định nghĩa là vanilla.
 2. Chỉ tiêu pass/fail tương ứng ở `1.0/master-design.md` §7.3 đã chạy và đạt.
 3. Có toggle riêng, và **tắt toggle phải vô hiệu hoá ngay giữa phiên** (guard runtime).
 4. Không thêm transpiler mới, không thêm attribute `[HarmonyPatch]` mồ côi.

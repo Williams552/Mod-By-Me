@@ -36,22 +36,16 @@ namespace FireDiscipline.AimStance
                     label = "Stance: Sharpshot";
                     desc = "Long-range precision stance (distance exponent d*0.8, warmup x1.4, resets on suppression).";
                 }
-                else if (currentStance == AimStanceMode.Prone)
-                {
-                    label = "Stance: Prone";
-                    desc = "Bunker/trench posture (Target size x0.65, no movement, suppression x0.5).";
-                }
 
                 string iconPath = "UI/Commands/FireDiscipline/Stance_Standard";
                 if (currentStance == AimStanceMode.Rapid) iconPath = "UI/Commands/FireDiscipline/Stance_Rapid";
                 else if (currentStance == AimStanceMode.Sharpshot) iconPath = "UI/Commands/FireDiscipline/Stance_Sharpshot";
-                else if (currentStance == AimStanceMode.Prone) iconPath = "UI/Commands/FireDiscipline/Stance_Prone";
 
                 Pawn targetPawn = __instance;
                 Command_Action stanceCmd = new Command_Action
                 {
                     defaultLabel = label,
-                    defaultDesc = desc + "\nClick to cycle stance (Standard -> Rapid -> Sharpshot -> Prone).",
+                    defaultDesc = desc + "\nClick to cycle stance (Standard -> Rapid -> Sharpshot).\n<i>Note: Standing still automatically grants Dug-In (Prone) condition.</i>",
                     icon = ContentFinder<Texture2D>.Get(iconPath, true),
                     action = () =>
                     {

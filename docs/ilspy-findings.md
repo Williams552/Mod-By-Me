@@ -110,7 +110,7 @@ Verse.Verb
 
 **`burstShotsLeft` chỉ có nghĩa khi đang trong loạt bắn. Ngoài loạt nó bằng 0.**
 
-Code cũ tính `shotIndex = burstShotCount − burstShotsLeft`, nên ngoài loạt cho ra `shotIndex = burstShotCount` → áp **toàn bộ** phạt giật nòng vĩnh viễn. Đo được: tư thế Rapid ở 3 ô cho 24% trong khi Snap Shot cho 37% — đúng `0.93⁶ = 0.65`.
+Code cũ tính `shotIndex = burstShotCount − burstShotsLeft`, nên ngoài loạt cho ra `shotIndex = burstShotCount` → áp **toàn bộ** phạt giật nòng vĩnh viễn. Đo được: tư thế Rapid ở 3 ô cho 24% trong khi Standard Shot cho 37% — đúng `0.93⁶ = 0.65`.
 
 `ShotReport.HitReportFor` chạy cả khi **rê chuột ngắm**, tức phần lớn thời gian là ngoài loạt.
 

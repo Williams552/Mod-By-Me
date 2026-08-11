@@ -14,7 +14,7 @@ namespace FireDiscipline.AimStance
 
         public string ModuleId => Id;
         public string DisplayName => "Aim Mode & Stances v2";
-        public string Description => "Adds 4 tactical stances (Snap, Rapid, Sharpshot, Prone) with derived formulas, transition costs, and anti-power-creep passive stances.";
+        public string Description => "Adds 4 tactical stances (Standard, Rapid, Sharpshot, Prone) with derived formulas, transition costs, and anti-power-creep passive stances.";
         public bool DefaultEnabled => true;
         public bool IsEnabled { get; set; } = true;
 
@@ -78,6 +78,27 @@ namespace FireDiscipline.AimStance
                 var prefix = typeof(Patch_Pawn_PathFollower).GetMethod(nameof(Patch_Pawn_PathFollower.Prefix), BindingFlags.Static | BindingFlags.Public);
                 harmony.Patch(startPathMethod, prefix: new HarmonyMethod(prefix));
                 Log.Message("[Fire Discipline] Patch_Pawn_PathFollower successfully patched onto StartPath.");
+            }
+
+            var burstShotCountGetter = AccessTools.PropertyGetter(typeof(Verb), "BurstShotCount")
+                                    ?? AccessTools.PropertyGetter(typeof(Verb), "ShotsPerBurst");
+            if (burstShotCountGetter != null)
+            {
+                var postfix = typeof(Patch_Verb_ShotsPerBurst).GetMethod(nameof(Patch_Verb_ShotsPerBurst.Postfix), BindingFlags.Static | BindingFlags.Public);
+                harmony.Patch(burstShotCountGetter, postfix: new HarmonyMethod(postfix));
+                Log.Message($"[Fire Discipline] Patch_Verb_ShotsPerBurst successfully patched onto Verb.{burstShotCountGetter.Name}.");
+            }
+            else
+            {
+                Log.Error("[Fire Discipline] Failed to find Verb.BurstShotCount or Verb.ShotsPerBurst property getter!");
+            }
+
+            var adjustedCooldownMethod = typeof(VerbProperties).GetMethod(nameof(VerbProperties.AdjustedCooldownTicks), BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(Verb), typeof(Pawn) }, null);
+            if (adjustedCooldownMethod != null)
+            {
+                var postfix = typeof(Patch_Verb_AdjustedCooldownTicks).GetMethod(nameof(Patch_Verb_AdjustedCooldownTicks.Postfix), BindingFlags.Static | BindingFlags.Public);
+                harmony.Patch(adjustedCooldownMethod, postfix: new HarmonyMethod(postfix));
+                Log.Message("[Fire Discipline] Patch_Verb_AdjustedCooldownTicks successfully patched onto VerbProperties.AdjustedCooldownTicks.");
             }
 
             Log.Message("[Fire Discipline] AimStance v2 patches successfully registered manually.");

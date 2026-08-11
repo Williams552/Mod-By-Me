@@ -1,0 +1,169 @@
+==================================================================================================================================================
+[FIRE DISCIPLINE SUPER-MATRIX] ALL-WEAPONS MODULE IMPACT & TACTICAL OUTCOME REPORT
+Total Ranged Weapons Scanned: 161
+Settings: B6 Rapid Full-Auto=True, Hit Variance Module=True, Embrasure=False
+==================================================================================================================================================
+DefName                   |Class     |DefBurst|B6Burst|BaseDmg|BaseCycle| BaseDPS|RapidDPS|FullAutoDPS|B8Variance|All-ON Ratio|
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Artillery_AutoMortar      |Sniper    |       1|      1|     50|    5.00s|    10.0|    16.7|       16.7|Quota     |       1.67x|
+Artillery_Mortar          |Sniper    |       1|      1|      0|    5.00s|     0.0|     0.0|        0.0|Quota     |       1.00x|
+Bow_Great                 |Pistol/DMR|       1|      1|     17|    3.50s|     4.9|     6.8|        6.8|Quota     |       1.40x|
+Bow_Great_Unique          |Pistol/DMR|       1|      1|     17|    3.50s|     4.9|     6.8|        6.8|Quota     |       1.40x|
+Bow_Recurve               |Pistol/DMR|       1|      1|     14|    3.10s|     4.5|     5.9|        5.9|Quota     |       1.31x|
+Bow_Short                 |Pistol/DMR|       1|      1|     11|    3.00s|     3.7|     4.7|        4.7|Quota     |       1.29x|
+Flamebow                  |Pistol/DMR|       1|      1|      6|    3.00s|     2.0|     2.6|        2.6|Quota     |       1.29x|
+Gun_AncientArmoredTurret  |Rifle/SMG |       3|      3|      8|    6.53s|     3.7|     3.7|        3.7|Pity      |       1.00x|
+Gun_AssaultRifle          |Rifle/SMG |       3|      3|     11|    3.03s|    10.9|    13.0|       13.0|Pity      |       1.20x|
+Gun_AssaultRifle_Unique   |Rifle/SMG |       3|      3|     11|    3.03s|    10.9|    13.0|       13.0|Pity      |       1.20x|
+Gun_AutocannonTurret      |Rifle/SMG |       3|      3|     27|    4.07s|    19.9|    19.9|       19.9|Pity      |       1.00x|
+Gun_Autopistol            |Pistol/DMR|       1|      1|     10|    1.30s|     7.7|     8.7|        8.7|Quota     |       1.13x|
+Gun_BeamGraser            |LMG/Heavy |       5|      7|      0|    4.17s|     0.0|     0.0|        0.0|Pity (B6) |       1.00x|
+Gun_BeamRepeater          |LMG/Heavy |      30|     45|      5|   11.83s|    12.7|    15.3|       15.9|Pity (B6) |       1.26x|
+Gun_BeamRepeater_Unique   |LMG/Heavy |      30|     45|      5|   11.83s|    12.7|    15.3|       15.9|Pity (B6) |       1.26x|
+Gun_BoltActionRifle       |Sniper    |       1|      1|     18|    3.20s|     5.6|     7.7|        7.7|Quota     |       1.36x|
+Gun_BoltActionRifle_Unique|Sniper    |       1|      1|     18|    3.20s|     5.6|     7.7|        7.7|Quota     |       1.36x|
+Gun_ChainShotgun          |Shotgun   |       3|      3|     18|    2.88s|    18.7|    23.6|       23.6|Pity      |       1.26x|
+Gun_ChainShotgun_Unique   |Shotgun   |       3|      3|     18|    2.88s|    18.7|    23.6|       23.6|Pity      |       1.26x|
+Gun_ChargeBlasterHeavy    |LMG/Heavy |      24|     36|     15|   10.57s|    34.1|    36.2|       35.1|Pity (B6) |       1.03x|
+Gun_ChargeBlasterTurret   |Sniper    |       1|      1|     15|    1.00s|    15.0|    15.0|       15.0|Quota     |       1.00x|
+Gun_ChargeLance           |Pistol/DMR|       1|      1|     30|    4.40s|     6.8|     8.5|        8.5|Quota     |       1.24x|
+Gun_ChargeLance_Unique    |Pistol/DMR|       1|      1|     30|    4.40s|     6.8|     8.5|        8.5|Quota     |       1.24x|
+Gun_ChargeRifle           |Rifle/SMG |       3|      3|     16|    3.40s|    14.1|    16.6|       16.6|Pity      |       1.17x|
+Gun_ChargeRifle_Unique    |Rifle/SMG |       3|      3|     16|    3.40s|    14.1|    16.6|       16.6|Pity      |       1.17x|
+Gun_DoomsdayRocket        |Sniper    |       1|      1|     50|    9.00s|     5.6|     7.4|        7.4|Quota     |       1.33x|
+Gun_EmpLauncher           |Pistol/DMR|       1|      1|     50|    7.00s|     7.1|     9.5|        9.5|Quota     |       1.33x|
+Gun_HeavySMG              |Rifle/SMG |       3|      3|     12|    2.92s|    12.3|    14.6|       14.6|Pity      |       1.18x|
+Gun_HeavySMG_Unique       |Rifle/SMG |       3|      3|     12|    2.92s|    12.3|    14.6|       14.6|Pity      |       1.18x|
+Gun_HellcatRifle          |Rifle/SMG |       3|      3|     10|    3.13s|     9.6|    11.6|       11.6|Pity      |       1.21x|
+Gun_HellcatRifle_Unique   |Rifle/SMG |       3|      3|     10|    3.13s|     9.6|    11.6|       11.6|Pity      |       1.21x|
+Gun_HellsphereCannon      |Pistol/DMR|       1|      1|    800|   13.50s|    59.3|    82.1|       82.1|Quota     |       1.38x|
+Gun_IncendiaryLauncher    |Pistol/DMR|       1|      1|     10|    7.00s|     1.4|     1.9|        1.9|Quota     |       1.33x|
+Gun_Incinerator           |LMG/Heavy |      20|     30|      0|    4.13s|     0.0|     0.0|        0.0|Pity (B6) |       1.00x|
+Gun_InfernoCannon         |Pistol/DMR|       1|      1|     10|    9.65s|     1.0|     1.1|        1.1|Quota     |       1.07x|
+Gun_InfernoCannonTurret   |Sniper    |       1|      1|     10|    9.65s|     1.0|     1.1|        1.1|Quota     |       1.07x|
+Gun_LMG                   |LMG/Heavy |       6|      9|     12|    3.98s|    18.1|    23.4|       24.6|Pity (B6) |       1.36x|
+Gun_LMG_Unique            |LMG/Heavy |       6|      9|     12|    3.98s|    18.1|    23.4|       24.6|Pity (B6) |       1.36x|
+Gun_MachinePistol         |Rifle/SMG |       3|      3|      6|    1.63s|    11.0|    13.0|       13.0|Pity      |       1.18x|
+Gun_MiniFlameblaster      |LMG/Heavy |      10|     15|      0|    4.60s|     0.0|     0.0|        0.0|Pity (B6) |       1.00x|
+Gun_Minigun               |LMG/Heavy |      25|     37|     10|    6.00s|    41.7|    52.6|       55.6|Pity (B6) |       1.34x|
+Gun_Minigun_Unique        |LMG/Heavy |      25|     37|     10|    6.00s|    41.7|    52.6|       55.6|Pity (B6) |       1.34x|
+Gun_MiniShotgun           |Shotgun   |       1|      1|     10|    2.90s|     3.4|     4.3|        4.3|Quota     |       1.26x|
+Gun_MiniTurret            |Ranged    |       2|      2|     12|    4.93s|     4.9|     4.9|        4.9|Pity      |       1.00x|
+Gun_MiniTurretMech        |Sniper    |       1|      1|     12|    5.10s|     2.4|     2.4|        2.4|Quota     |       1.00x|
+Gun_Needle                |Sniper    |       1|      1|     15|    4.60s|     3.3|     4.5|        4.5|Quota     |       1.37x|
+Gun_NeedleLauncher        |Pistol/DMR|       1|      1|     15|    4.60s|     3.3|     4.5|        4.5|Quota     |       1.37x|
+Gun_PumpShotgun           |Shotgun   |       1|      1|     18|    2.15s|     8.4|    10.6|       10.6|Quota     |       1.26x|
+Gun_Revolver              |Pistol/DMR|       1|      1|     12|    1.90s|     6.3|     6.9|        6.9|Quota     |       1.09x|
+Gun_Revolver_Unique       |Pistol/DMR|       1|      1|     12|    1.90s|     6.3|     6.9|        6.9|Quota     |       1.09x|
+Gun_RocketswarmLauncher   |LMG/Heavy |      12|     18|     24|    5.33s|    54.0|    54.0|       51.2|Pity (B6) |       0.95x|
+Gun_Scattergun            |Pistol/DMR|       1|      1|     13|    2.55s|     5.1|     5.7|        5.7|Quota     |       1.12x|
+Gun_Slugthrower           |Pistol/DMR|       1|      1|     12|    4.30s|     2.8|     2.9|        2.9|Quota     |       1.04x|
+Gun_SmokeLauncher         |Pistol/DMR|       1|      1|      0|    8.00s|     0.0|     0.0|        0.0|Quota     |       1.00x|
+Gun_SniperRifle           |Sniper    |       1|      1|     25|    5.00s|     5.0|     7.7|        7.7|Quota     |       1.54x|
+Gun_SniperRifle_Unique    |Sniper    |       1|      1|     25|    5.00s|     5.0|     7.7|        7.7|Quota     |       1.54x|
+Gun_Spiner                |Pistol/DMR|       1|      1|     12|    2.10s|     5.7|     6.2|        6.2|Quota     |       1.08x|
+Gun_TacticalTurret        |Ranged    |       2|      2|     12|    4.93s|     4.9|     4.9|        4.9|Pity      |       1.00x|
+Gun_ThumpCannon           |Pistol/DMR|       1|      1|      9|    5.00s|     1.8|     2.0|        2.0|Quota     |       1.11x|
+Gun_ToxbombLauncher       |Pistol/DMR|       1|      1|      0|    8.00s|     0.0|     0.0|        0.0|Quota     |       1.00x|
+Gun_ToxicNeedle           |Sniper    |       1|      1|     25|    4.45s|     5.6|     7.6|        7.6|Quota     |       1.36x|
+Gun_TripleRocket          |Rifle/SMG |       3|      3|     50|    9.67s|    15.5|    20.2|       20.2|Pity      |       1.30x|
+Gun_TurretFoam            |LMG/Heavy |      41|     61|   9999|    1.43s|286017.9|286017.9|   282379.2|Pity (B6) |       0.99x|
+Gun_TurretSniper          |Sniper    |       1|      1|     55|    3.20s|    17.2|    17.2|       17.2|Quota     |       1.00x|
+NerveSpiker               |Pistol/DMR|       1|      1|     11|    3.10s|     3.5|     4.6|        4.6|Quota     |       1.31x|
+Pila                      |Pistol/DMR|       1|      1|     22|    6.50s|     3.4|     4.9|        4.9|Quota     |       1.44x|
+VWE_Bow_Compound          |Pistol/DMR|       1|      1|     17|    3.25s|     5.2|     6.8|        6.8|Quota     |       1.30x|
+VWE_Bow_Compound_Unique   |Pistol/DMR|       1|      1|     17|    3.25s|     5.2|     6.8|        6.8|Quota     |       1.30x|
+VWE_Bow_Crossbow          |Pistol/DMR|       1|      1|     15|    4.00s|     3.8|     4.6|        4.6|Quota     |       1.23x|
+VWE_Bow_Crossbow_Unique   |Pistol/DMR|       1|      1|     15|    4.00s|     3.8|     4.6|        4.6|Quota     |       1.23x|
+VWE_Bow_Long              |Sniper    |       1|      1|     16|    4.25s|     3.8|     5.3|        5.3|Quota     |       1.42x|
+VWE_Bow_Long_Unique       |Sniper    |       1|      1|     16|    4.25s|     3.8|     5.3|        5.3|Quota     |       1.42x|
+VWE_CombatHandgun         |Rifle/SMG |       3|      3|      8|    2.57s|     9.4|    10.4|       10.4|Pity      |       1.11x|
+VWE_FlashGrenade          |Pistol/DMR|       1|      1|      2|    9.30s|     0.2|     0.3|        0.3|Quota     |       1.23x|
+VWE_Gun_AntiMaterialRifle |Sniper    |       1|      1|     40|    7.00s|     5.7|     8.9|        8.9|Quota     |       1.56x|
+VWE_Gun_AntiMaterialRifle_Unique|Sniper    |       1|      1|     40|    7.00s|     5.7|     8.9|        8.9|Quota     |       1.56x|
+VWE_Gun_Autocannon        |LMG/Heavy |       7|     10|     27|    5.20s|    36.3|    36.3|       33.1|Pity (B6) |       0.91x|
+VWE_Gun_AutomaticPistol   |Rifle/SMG |       3|      3|     10|    1.73s|    17.3|    18.2|       18.2|Pity      |       1.05x|
+VWE_Gun_AutomaticPistol_Unique|Rifle/SMG |       3|      3|     10|    1.73s|    17.3|    18.2|       18.2|Pity      |       1.05x|
+VWE_Gun_BattleRifle       |Ranged    |       2|      2|     15|    3.08s|     9.7|    11.8|       11.8|Pity      |       1.21x|
+VWE_Gun_BattleRifle_Unique|Ranged    |       2|      2|     15|    3.08s|     9.7|    11.8|       11.8|Pity      |       1.21x|
+VWE_Gun_BullpupDMR        |Sniper    |       1|      1|     21|    3.00s|     7.0|     7.2|        7.2|Quota     |       1.03x|
+VWE_Gun_BullpupDMR_Unique |Sniper    |       1|      1|     21|    3.00s|     7.0|     7.2|        7.2|Quota     |       1.03x|
+VWE_Gun_BullpupRifle      |Rifle/SMG |       3|      3|     11|    3.03s|    10.9|    11.2|       11.2|Pity      |       1.03x|
+VWE_Gun_BullpupRifle_Unique|Rifle/SMG |       3|      3|     11|    3.03s|    10.9|    11.2|       11.2|Pity      |       1.03x|
+VWE_Gun_Carbine           |LMG/Heavy |       5|      7|      9|    3.37s|    13.4|    15.7|       14.9|Pity (B6) |       1.12x|
+VWE_Gun_Carbine_Unique    |LMG/Heavy |       5|      7|      9|    3.37s|    13.4|    15.7|       14.9|Pity (B6) |       1.12x|
+VWE_Gun_ChargeLMG         |LMG/Heavy |      24|     36|     14|    5.17s|    65.0|    74.0|       74.8|Pity (B6) |       1.15x|
+VWE_Gun_ChargeLMG_Unique  |LMG/Heavy |      24|     36|     14|    5.17s|    65.0|    74.0|       74.8|Pity (B6) |       1.15x|
+VWE_Gun_ChargeMinigun     |LMG/Heavy |      12|     18|     26|    7.18s|    43.4|    47.6|       47.0|Pity (B6) |       1.08x|
+VWE_Gun_ChargeMinigun_Unique|LMG/Heavy |      12|     18|     26|    7.18s|    43.4|    47.6|       47.0|Pity (B6) |       1.08x|
+VWE_Gun_ChargePistol      |Pistol/DMR|       1|      1|     18|    1.63s|    11.0|    12.4|       12.4|Quota     |       1.13x|
+VWE_Gun_ChargePistol_Unique|Pistol/DMR|       1|      1|     18|    1.63s|    11.0|    12.4|       12.4|Quota     |       1.13x|
+VWE_Gun_ChargeRocketLauncher|Sniper    |       1|      1|     35|    8.50s|     4.1|     5.2|        5.2|Quota     |       1.26x|
+VWE_Gun_ChargeShotgun     |Shotgun   |       1|      1|     26|    1.92s|    13.6|    16.4|       16.4|Quota     |       1.21x|
+VWE_Gun_ChargeShotgun_Unique|Shotgun   |       1|      1|     26|    1.92s|    13.6|    16.4|       16.4|Quota     |       1.21x|
+VWE_Gun_ChargeSMG         |Rifle/SMG |       4|      4|     13|    3.22s|    16.2|    18.6|       18.6|Pity      |       1.15x|
+VWE_Gun_ChargeSMG_Unique  |Rifle/SMG |       4|      4|     13|    3.22s|    16.2|    18.6|       18.6|Pity      |       1.15x|
+VWE_Gun_ChargeSniperRifle |Sniper    |       1|      1|     40|    5.17s|     7.7|    10.4|       10.4|Quota     |       1.35x|
+VWE_Gun_ChargeSniperRifle_Unique|Sniper    |       1|      1|     40|    5.17s|     7.7|    10.4|       10.4|Quota     |       1.35x|
+VWE_Gun_CombatHandgun_Unique|Rifle/SMG |       3|      3|      8|    2.57s|     9.4|    10.4|       10.4|Pity      |       1.11x|
+VWE_Gun_DartGun           |Sniper    |       1|      1|      3|    7.80s|     0.4|     0.5|        0.5|Quota     |       1.29x|
+VWE_Gun_Flamethrower      |Pistol/DMR|       1|      1|     12|    7.08s|     1.7|     1.9|        1.9|Quota     |       1.13x|
+VWE_Gun_GaussLance        |Sniper    |       1|      1|     40|    4.42s|     9.1|    12.5|       12.5|Quota     |       1.38x|
+VWE_Gun_GaussLance_Unique |Sniper    |       1|      1|     40|    4.42s|     9.1|    12.5|       12.5|Quota     |       1.38x|
+VWE_Gun_GaussMagnum       |Pistol/DMR|       1|      1|     16|    2.07s|     7.7|     9.1|        9.1|Quota     |       1.17x|
+VWE_Gun_GaussMagnum_Unique|Pistol/DMR|       1|      1|     16|    2.07s|     7.7|     9.1|        9.1|Quota     |       1.17x|
+VWE_Gun_GaussRifle        |Rifle/SMG |       3|      3|     14|    4.03s|    10.4|    13.8|       13.8|Pity      |       1.33x|
+VWE_Gun_GaussRifle_Unique |Rifle/SMG |       3|      3|     14|    4.03s|    10.4|    13.8|       13.8|Pity      |       1.33x|
+VWE_Gun_GrenadeLauncher   |Pistol/DMR|       1|      1|     50|    7.00s|     7.1|     9.5|        9.5|Quota     |       1.33x|
+VWE_Gun_HandCannon        |Pistol/DMR|       1|      1|     14|    2.17s|     6.5|     7.1|        7.1|Quota     |       1.09x|
+VWE_Gun_HandCannon_Unique |Pistol/DMR|       1|      1|     14|    2.17s|     6.5|     7.1|        7.1|Quota     |       1.09x|
+VWE_Gun_HandheldMortar    |Sniper    |       1|      1|     50|   10.00s|     5.0|     6.1|        6.1|Quota     |       1.21x|
+VWE_Gun_HeavyFlamer       |Pistol/DMR|       1|      1|     12|    9.65s|     1.2|     1.3|        1.3|Quota     |       1.07x|
+VWE_Gun_HMG               |LMG/Heavy |       8|     12|     16|    5.43s|    23.6|    31.2|       33.5|Pity (B6) |       1.42x|
+VWE_Gun_HMG_Unique        |LMG/Heavy |       8|     12|     16|    5.43s|    23.6|    31.2|       33.5|Pity (B6) |       1.42x|
+VWE_Gun_LeverActionRifle  |Pistol/DMR|       1|      1|     11|    1.62s|     6.8|     7.7|        7.7|Quota     |       1.13x|
+VWE_Gun_LeverActionRifle_Unique|Pistol/DMR|       1|      1|     11|    1.62s|     6.8|     7.7|        7.7|Quota     |       1.13x|
+VWE_Gun_LightSMG          |Rifle/SMG |       4|      4|      6|    2.18s|    11.0|    12.7|       12.7|Pity      |       1.15x|
+VWE_Gun_LightSMG_Unique   |Rifle/SMG |       4|      4|      6|    2.18s|    11.0|    12.7|       12.7|Pity      |       1.15x|
+VWE_Gun_MarksmanRifle     |Sniper    |       1|      1|     21|    3.33s|     6.3|     9.3|        9.3|Quota     |       1.48x|
+VWE_Gun_MarksmanRifle_Unique|Sniper    |       1|      1|     21|    3.33s|     6.3|     9.3|        9.3|Quota     |       1.48x|
+VWE_Gun_PDW               |LMG/Heavy |       5|      7|      8|    2.60s|    15.4|    15.9|       14.2|Pity (B6) |       0.93x|
+VWE_Gun_PDW_Unique        |LMG/Heavy |       5|      7|      8|    2.60s|    15.4|    15.9|       14.2|Pity (B6) |       0.93x|
+VWE_Gun_RocketLauncher    |Sniper    |       1|      1|     50|    9.00s|     5.6|     7.4|        7.4|Quota     |       1.33x|
+VWE_Gun_RubberBulletPistol|Pistol/DMR|       1|      1|      6|    1.30s|     4.6|     5.2|        5.2|Quota     |       1.13x|
+VWE_Gun_SawedOffShotgun_Unique|Shotgun   |       2|      2|     18|    2.58s|    13.9|    16.9|       16.9|Pity      |       1.21x|
+VWE_Gun_SemiAutomaticRifle|Pistol/DMR|       1|      1|     12|    2.33s|     5.1|     6.7|        6.7|Quota     |       1.31x|
+VWE_Gun_SemiAutomaticRifle_Unique|Pistol/DMR|       1|      1|     12|    2.33s|     5.1|     6.7|        6.7|Quota     |       1.31x|
+VWE_Gun_ServiceRifle      |Rifle/SMG |       4|      4|     10|    3.30s|    12.1|    14.3|       14.3|Pity      |       1.18x|
+VWE_Gun_ServiceRifle_Unique|Rifle/SMG |       4|      4|     10|    3.30s|    12.1|    14.3|       14.3|Pity      |       1.18x|
+VWE_Gun_SMG               |LMG/Heavy |       5|      7|      8|    3.00s|    13.3|    15.5|       14.7|Pity (B6) |       1.10x|
+VWE_Gun_SMG_Unique        |LMG/Heavy |       5|      7|      8|    3.00s|    13.3|    15.5|       14.7|Pity (B6) |       1.10x|
+VWE_Gun_SwarmMissileLauncher|LMG/Heavy |      10|     15|     12|   12.70s|     9.4|    11.5|       11.8|Pity (B6) |       1.25x|
+VWE_Gun_Taser             |Pistol/DMR|       1|      1|      1|    7.80s|     0.1|     0.1|        0.1|Quota     |       1.08x|
+VWE_Gun_TearGasLauncher   |Pistol/DMR|       1|      1|      0|    8.00s|     0.0|     0.0|        0.0|Quota     |       1.00x|
+VWE_Gun_TrenchGun_Unique  |Shotgun   |       1|      1|     18|    1.20s|    15.0|    20.0|       20.0|Quota     |       1.33x|
+VWE_Gun_UraniumSlugRifle  |Sniper    |       1|      1|     55|    5.00s|    11.0|    15.7|       15.7|Quota     |       1.43x|
+VWE_SawedOffShotgun       |Shotgun   |       2|      2|     18|    2.58s|    13.9|    16.9|       16.9|Pity      |       1.21x|
+VWE_Sling                 |Pistol/DMR|       1|      1|      8|    2.40s|     3.3|     4.6|        4.6|Quota     |       1.39x|
+VWE_SmokeGrenade          |Pistol/DMR|       1|      1|      0|    4.17s|     0.0|     0.0|        0.0|Quota     |       1.00x|
+VWE_TearGasGrenade        |Pistol/DMR|       1|      1|      0|    8.46s|     0.0|     0.0|        0.0|Quota     |       1.00x|
+VWE_Throwing_Knives       |Ranged    |       2|      2|      6|    2.00s|     6.0|     7.4|        7.4|Pity      |       1.23x|
+VWE_Throwing_Rocks        |Pistol/DMR|       1|      1|      5|    1.17s|     4.3|     6.0|        6.0|Quota     |       1.40x|
+VWE_Throwing_Shards       |Pistol/DMR|       1|      1|     10|    3.20s|     3.1|     3.8|        3.8|Quota     |       1.23x|
+VWE_TrenchGun             |Shotgun   |       1|      1|     18|    1.20s|    15.0|    20.0|       20.0|Quota     |       1.33x|
+VWE_Weapon_FireBomb       |Pistol/DMR|       1|      1|     10|    5.16s|     1.9|     2.3|        2.3|Quota     |       1.17x|
+VWEFT_Gun_Derringer       |Pistol/DMR|       1|      1|     10|    1.50s|     6.7|     6.8|        6.8|Quota     |       1.02x|
+VWEFT_Gun_FrontierPistol  |Pistol/DMR|       1|      1|      8|    1.25s|     6.4|     7.4|        7.4|Quota     |       1.16x|
+VWEFT_Gun_GaussRepeater   |Pistol/DMR|       1|      1|     14|    3.40s|     4.1|     5.4|        5.4|Quota     |       1.31x|
+VWEFT_Gun_GaussRevolver   |Pistol/DMR|       1|      1|     16|    2.10s|     7.6|     8.6|        8.6|Quota     |       1.14x|
+VWEFT_Gun_HandheldGatlingGun|LMG/Heavy |      12|     18|      7|    9.07s|     9.3|    11.0|       11.3|Pity (B6) |       1.22x|
+VWEFT_Gun_HeavyRevolver   |Pistol/DMR|       1|      1|     17|    2.00s|     8.5|     9.4|        9.4|Quota     |       1.11x|
+VWEFT_Gun_LeverActionShotgun|Shotgun   |       1|      1|     16|    1.40s|    11.4|    11.6|       11.6|Quota     |       1.02x|
+VWEFT_Gun_RepeatingShotgun|Shotgun   |       1|      1|     20|    2.25s|     8.9|    11.1|       11.1|Quota     |       1.25x|
+VWEFT_Gun_RollingBlockRifle|Sniper    |       1|      1|     21|    4.00s|     5.3|     6.7|        6.7|Quota     |       1.27x|
+VWEFT_Gun_VolcanicPistol  |Ranged    |       2|      2|     10|    2.47s|     8.1|     8.8|        8.8|Pity      |       1.09x|
+Weapon_GrenadeEMP         |Pistol/DMR|       1|      1|     50|    4.16s|    12.0|    14.7|       14.7|Quota     |       1.22x|
+Weapon_GrenadeFrag        |Pistol/DMR|       1|      1|     50|    4.16s|    12.0|    14.7|       14.7|Quota     |       1.22x|
+Weapon_GrenadeMolotov     |Pistol/DMR|       1|      1|     10|    4.16s|     2.4|     2.9|        2.9|Quota     |       1.22x|
+Weapon_GrenadeTox         |Pistol/DMR|       1|      1|      0|    4.16s|     0.0|     0.0|        0.0|Quota     |       1.00x|
+==================================================================================================================================================

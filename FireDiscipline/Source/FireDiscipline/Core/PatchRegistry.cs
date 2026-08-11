@@ -60,6 +60,9 @@ namespace FireDiscipline.Core
             harmonyInstance = new Harmony(HarmonyId);
             Log.Message($"[Fire Discipline] Initializing modules (PackageId: {HarmonyId})...");
 
+            // Core stability patches
+            Patch_FloodFiller_NestedGuard.ApplyPatch(harmonyInstance);
+
             foreach (var module in modules)
             {
                 try
