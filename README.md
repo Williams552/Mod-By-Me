@@ -29,47 +29,51 @@ Everything in Fire Discipline is **derived dynamically** from vanilla stats and 
 Each module can be toggled **ON** or **OFF** independently at any time in **Mod Options**:
 
 #### 🎯 1. Aim Stances & Tactical Postures (`AimStanceModule`)
-Drafted pawns gain access to 4 distinct tactical postures via a clean action gizmo on the command bar:
+Drafted pawns cycle between 3 active tactical stances via a clean UI Gizmo, plus 1 automatic passive condition:
 - **Standard (Baseline):** Standard vanilla firing speed and accuracy. Instant free stance switch.
-- **Rapid Fire:** Fast close-range hipfire. Reduces weapon warmup time, inflicts **+50% suppression** on targets, but suffers accuracy penalties at long range.
-- **Sharpshot (Precision):** Long-range sniper stance ($d \times 0.80$ distance exponent). Suffers **+40% warmup time**, close-range accuracy penalty (<5 cells, -30%), and **+100% suppression vulnerability** (warmup resets if suppressed while aiming).
-- **Prone (Dug-In):** Trench posture. Reduces pawn target size by **35%** ($x0.65$), grants **+50% suppression resistance**, but disables movement. Moving automatically exits Prone with a 45-tick transition delay.
+- **Rapid Fire:** Fast close-range hipfire. Reduces weapon warmup time (30%–75%), inflicts **+50% suppression** on targets, but suffers accuracy penalties at long range. Multi-shot shotguns (>1 burst, e.g., Chain Shotgun) suffer a **2.5x higher recoil penalty** ($0.93^{2.5 \times \text{shotIndex}}$) to prevent point-blank burst damage abuse.
+- **Sharpshot (Precision):** Long-range sniper stance ($d \times 0.80$ distance exponent). Suffers **+40% warmup time**, close-range accuracy penalty (<5 cells, -30%), and **+100% suppression vulnerability** (warmup resets if suppressed while aiming). Bypasses **50% of target cover block chance**. Burst/automatic weapons suffer **2x double recoil penalty** to prevent LMG sniper abuse.
+- **Prone (Dug-In):** **Automatic passive condition** (`FD_DugIn`) granted when standing still in combat. Reduces pawn target size by **35%** ($x0.65$), grants **+50% suppression resistance**. Moving automatically exits Dug-In with a 45-tick transition delay.
+- **AI Enemy Stance Evaluation:** Enemy pawns automatically evaluate target distance and adopt Rapid Fire ($\le 6$c) or Sharpshot ($\ge 30$c) to ensure tactical parity.
 
 #### 🎒 2. Encumbrance & Logistics (`EncumbranceModule`)
 - Dynamically applies a `MoveSpeed` penalty based on carried equipment and inventory mass vs pawn `CarryingCapacity` (worn armor is excluded).
 - Light skirmishers carrying up to 15% capacity suffer 0 penalty. Heavy loadouts scale up to **-35% MoveSpeed**, rewarding light equipment loadouts.
 
 #### 🛡️ 3. Suppression & Cover Dynamics (`SuppressionCoreModule`)
-- **Movement-Focused Suppression:** Built-in lightweight suppression engine (`FD_Suppressed`) that punishes **movement speed** rather than aim locking. Defenders holding cover don't need to run, while attackers are slowed, allowing smaller defending forces to hold chokepoints.
-- **Mechanics:** Accumulates +0.25 severity per near-miss shot (scaled by shooter stance, target stance, and cover). Decays at -0.10 severity/sec after a 120-tick (2s) grace period.
+- **Movement & Firing Suppression:** Built-in lightweight suppression engine (`FD_Suppressed`) that punishes movement speed and ngắm bắn.
+- **Mechanics:** Accumulates +0.25 severity per near-miss shot (3.5-cell radius). Decays at -0.10 severity/sec after a 120-tick (2s) grace period.
 - **Stages:** Shaken (0.5), Wavering (1.0), Ducking (2.0), Cowering (5.5) on a 0–9 severity scale. MoveSpeed multipliers: $\times 0.95 \rightarrow \times 0.80 \rightarrow \times 0.50 \rightarrow \times 0.15$ (absolute floor 0.70 cells/sec).
-- **Cover Integration:** All cover (sandbags, walls, embrasures) reduces incoming suppression by $\text{clamp}(1 - \text{blockChance} \times 0.85, 0.25, 1.0)$. Embrasures provide cover suppression resistance automatically like any wall. An optional setting adds an accuracy penalty when firing through narrow embrasure slits.
+- 🔴 **Pinned State (Severity $\ge$ 7.0):** Pawns under heavy suppression are **completely blocked from firing ranged weapons** (`Verb.Available = false`) until suppression decays.
+- **Cover Integration:** All cover (sandbags, walls, embrasures) reduces incoming suppression proportionally (`coverSuppressionFactor` default 1.00, floor 0.25).
 - **Smart Interfacing:** Automatically detects third-party suppression mods (e.g., *Suppression (Continued)*) or *Combat Extended* on first install and defaults to OFF if detected.
 
 #### 🩹 4. Graze System — Anti-One-Shot Protection (`GrazeModule`)
 - Protects veteran pawns from instant RNG deaths caused by low-skill raiders.
 - Intercepts fatal ranged hits targeting vital organs (*Brain, Head, Eye, Heart, Neck, Spine, Liver*).
-- Downgrades lethal blows into a **Graze Shot** (reducing damage by **65%** and rerouting injuries to non-vital outer limbs). Graze probability is derived dynamically from the shot's actual hit chance, making inherently inaccurate shots more likely to graze rather than using a flat base chance.
+- Downgrades lethal blows into a **Graze Shot** (reducing damage by **65%** and rerouting injuries to non-vital outer limbs). Shots with hit chance $\ge 65\%$ never graze.
 
 #### 💥 5. Combat Shock & Shell Shock (`ShockModule`)
-- **Ally Downed Shock (`FD_CombatShock`):** Nearby allies within 6.0 cells suffer temporary combat shock when a teammate is downed or killed.
-- **Proportional Shell Shock (`FD_ShellShock`):** Explosions generate non-linear concussive shockwaves ($r + 2\sqrt{r}$, capped at 20 cells). Mortar shells (4.9 radius) generate a **9.3-cell concussive wave**, inflicting disorienting Shell Shock with smooth distance falloff.
+- **Ally Downed Shock (`FD_CombatShock`):** Nearby allies within 6.0 cells suffer temporary combat shock (+30% aim delay) when a teammate is downed or killed.
+- **Proportional Shell Shock (`FD_ShellShock`):** Explosions generate non-linear concussive shockwaves ($r_{\text{eff}} = \min(20, r + 2\sqrt{r})$). Mortar shells (4.9 radius) generate a **9.3-cell concussive wave**, inflicting disorienting Shell Shock.
+- 🛡️ **Energy Shield Absorption:** Active energy shields (`CompShield`) absorb up to **85% of shell shock severity** based on remaining shield energy fraction.
 
 #### 🔫 6. Shotgun Cone Spread & Danger Zone (`ShotgunAoEModule` — OFF by default)
-- Simulates realistic pellet spread, creating a cone of splash damage from muzzle to max range (70% primary damage base, density scaled).
-- Includes an on-screen tactical danger zone overlay highlighting friendly pawns in red to prevent accidental teamkills.
+- Simulates realistic pellet spread, creating a cone of splash damage (70% primary damage base).
+- **Outer Limb Protection:** Splash damage strictly targets outer limbs (Arm/Leg/Shoulder), never penetrating vital organs.
+- Includes an on-screen tactical danger zone overlay highlighting friendly pawns in red.
 
 ---
 
 ### 🎛️ Real-Time Mod Options
 
 All parameters can be tuned live in-game under **Options -> Mod Options -> Fire Discipline**:
-- **Sharpshot:** Warmup multiplier, distance exponent, close-range penalty, suppression vulnerability.
-- **Rapid Fire:** Min/max warmup clamps, inflicted suppression multiplier.
+- **Sharpshot:** Warmup multiplier, distance exponent, close-range penalty, suppression vulnerability, cover bypass factor.
+- **Rapid Fire:** Min/max warmup clamps, inflicted suppression multiplier, multi-shot shotgun recoil multiplier ($x2.50$).
 - **Prone Stance:** Target size reduction, accuracy multiplier, suppression resistance.
 - **Graze System:** Hit chance ceiling (default 65%), chance span (default 45%), damage multiplier (default 35%).
 - **Shock System:** Ally shock radius (6.0c), shell shock cap (20) and coefficient (2.0).
-- **Transitions:** Stance transition delay (default 45 ticks).
+- **Suppression & Cover:** Cover suppression factor (0.00–3.00, default 1.00), pinned threshold (7.0).
 
 ---
 
@@ -95,7 +99,7 @@ All parameters can be tuned live in-game under **Options -> Mod Options -> Fire 
 **Fire Discipline** bổ sung một lớp chiến thuật vào hệ thống chiến đấu của RimWorld 1.6. Mod được thiết kế để hoạt động song song với cơ chế combat vanilla, không yêu cầu tạo save mới và không cần patch XML riêng cho các mod vũ khí khác.
 
 Mod được thiết kế xoay quanh 2 mục tiêu cốt lõi:
-1. **Tăng Tính Chiến Thuật:** Cung cấp cho người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để mỗi cuộc chạm súng đòi hỏi di chuyển, bọc lót và phản công chứ không chỉ so chỉ số.
+1. **Tăng Tính Chiến Thuật:** Cung cấp cho người người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để mỗi cuộc chạm súng đòi hỏi di chuyển, bọc lót và phản công chứ không chỉ so chỉ số.
 2. **Giảm Ức Chế Phi Lý:** Loại bỏ các tình huống chết ngẫu nhiên phi lý của RimWorld Vanilla—như Pawn mặc giáp xịn bị đạn rác bắn trúng não chết ngay lập tức, hoặc Pawn đứng ngơ người khi bị pháo kích.
 
 #### ⚙️ Nguyên Tắc Tương Thích Tự Động
@@ -108,34 +112,38 @@ Toàn bộ thông số trong Fire Discipline được **suy ra tự động** t�
 Mỗi module có thể bật/tắt độc lập và tức thì trong **Options -> Mod Options -> Fire Discipline**:
 
 #### 🎯 1. Tư Thế Tác Chiến (`AimStanceModule`)
-Pawn ở trạng thái Draft sở hữu 4 tư thế chiến thuật chuyển đổi linh hoạt qua nút bấm UI:
+Pawn ở trạng thái Draft có thể chuyển đổi giữa 3 tư thế chiến thuật qua nút bấm Gizmo UI, cộng 1 trạng thái thụ động tự động:
 - **Standard (Mặc định):** Tốc độ và độ chính xác Vanilla tiêu chuẩn. Chuyển đổi miễn phí tức thì.
-- **Rapid Fire (Bắn nhanh):** Giảm thời gian ngắm ở cự ly gần, gây **+50% áp chế** lên mục tiêu, nhưng giảm độ chính xác ở khoảng cách xa.
-- **Sharpshot (Bắn tỉa):** Tăng độ chính xác tầm xa (hệ số khoảng cách $d \times 0.80$). Tăng **+40% thời gian ngắm**, giảm độ chính xác cự ly gần (<5 ô, -30%), và **dễ bị áp chế +100%** (nếu bị áp chế khi đang ngắm sẽ bị reset thanh ngắm).
-- **Prone (Nằm sấp/Bunker):** Giảm kích thước mục tiêu đi **35%** ($x0.65$), tăng **+50% kháng áp chế**, nhưng không thể di chuyển. Di chuyển sẽ tự động thoát Prone với độ trễ chuyển đổi 45 tick.
+- **Rapid Fire (Bắn nhanh):** Giảm thời gian ngắm ở cự ly gần (30%–75%), gây **+50% áp chế** lên mục tiêu, nhưng giảm độ chính xác ở khoảng cách xa. Shotgun bắn loạt (>1 viên/loạt, như Chain Shotgun) chịu **phạt giật nòng gấp 2.5 lần LMG** ($0.93^{2.5 \times \text{shotIndex}}$) để tránh lạm dụng dồn sát thương tầm gần.
+- **Sharpshot (Bắn tỉa):** Tăng độ chính xác tầm xa (hệ số khoảng cách $d \times 0.80$). Tăng **+40% thời gian ngắm**, giảm độ chính xác cự ly gần (<5 ô, -30%), **dễ bị áp chế +100%** (nếu bị áp chế khi đang ngắm sẽ bị reset thanh ngắm). Bỏ qua **50% tỷ lệ nấp (`Cover Block Chance`)** của mục tiêu. Vũ khí bắn loạt bị **phạt giật nòng gấp 2 lần** để chống lạm dụng LMG bắn tỉa.
+- **Prone (Nằm sấp/Bunker - `FD_DugIn`):** **Trạng thái thụ động tự động** khi đứng yên cố thủ trong combat. Giảm kích thước mục tiêu đi **35%** ($x0.65$), tăng **+50% kháng áp chế**. Di chuyển sẽ tự động thoát Prone với độ trễ chuyển đổi 45 tick.
+- **Tự Động Chọn Tư Thế Cho AI Kẻ Địch:** NPC tự động chọn Rapid Fire ($\le 6$c) hoặc Sharpshot ($\ge 30$c) dựa trên khoảng cách tới mục tiêu để đảm bảo cân bằng.
 
 #### 🎒 2. Tải Trọng Trang Bị (`EncumbranceModule`)
 - Phạt tốc độ di chuyển (`MoveSpeed`) dựa trên tổng khối lượng vũ khí + đồ trong túi hành trang so với sức chở (`CarryingCapacity`) của Pawn (không tính giáp đang mặc).
 - Mang đồ nhẹ dưới 15% sức chở không bị phạt. Mang nặng tăng dần lên đến **-35% MoveSpeed**, khuyến khích trang bị gọn nhẹ cho lính cơ động.
 
 #### 🛡️ 3. Áp Chế & Vật Cản (`SuppressionCoreModule`)
-- **Áp Chế Trừng Phạt Di Chuyển:** Hệ thống áp chế nhẹ (`FD_Suppressed`) tập trung phạt **tốc độ di chuyển** thay vì khóa ngắm. Bên phòng thủ đứng trong cover không cần di chuyển, trong khi bên tấn công bị làm chậm, giúp lực lượng nhỏ giữ chokepoint hiệu quả.
-- **Cơ chế:** Tích lũy +0.25 độ nghiêm trọng mỗi phát đạn qua gần (nhân với tư thế bắn, tư thế nhận và vật cản). Giảm -0.10/giây sau 120 tick (2 giây) ân hạn.
+- **Áp Chế Trừng Phạt Di Chuyển & Khóa Bắn:** Hệ thống áp chế nhẹ (`FD_Suppressed`) tập trung phạt tốc độ di chuyển và khả năng bắn trả.
+- **Cơ chế:** Tích lũy +0.25 độ nghiêm trọng mỗi phát đạn qua gần (bán kính 3.5 ô). Giảm -0.10/giây sau 120 tick (2 giây) ân hạn.
 - **Các Stage:** Shaken (0.5), Wavering (1.0), Ducking (2.0), Cowering (5.5) trên thang 0–9. Hệ số MoveSpeed: $\times 0.95 \rightarrow \times 0.80 \rightarrow \times 0.50 \rightarrow \times 0.15$ (sàn tuyệt đối 0.70 ô/s).
-- **Tương tác Vật Cản (Cover):** Mọi vật cản (bao cát, tường, lỗ châu mai) giảm áp chế theo $\text{clamp}(1 - \text{blockChance} \times 0.85, 0.25, 1.0)$. Lỗ châu mai (Embrasure) tự động kháng áp chế như tường. Tùy chọn nâng cao cho phép thêm phạt độ chính xác khi bắn qua khe hẹp.
+- 🔴 **Trạng thái Bị Ghim (Pinned State - Severity $\ge$ 7.0):** Pawn bị áp chế nặng sẽ **KHÓA HOÀN TOÀN KHẢ NĂNG BẮN TRẢ** (`Verb.Available = false`) cho đến khi mức áp chế giảm xuống.
+- **Tương tác Vật Cản (Cover):** Mọi vật cản (bao cát, tường, lỗ châu mai) giảm áp chế theo tỷ lệ nấp của vật đó (`coverSuppressionFactor` mặc định 1.00, sàn 0.25).
 - **Tự Động Nhận Diện:** Tự động phát hiện mod áp chế khác (như *Suppression (Continued)*) hoặc *Combat Extended* ở lần cài đầu và tự đặt TẮT để tránh xung đột.
 
 #### 🩹 4. Cơ Chế Graze — Chống Chết Chóc Ngẫu Nhiên (`GrazeModule`)
 - Bảo vệ lính kỳ cựu khỏi những đòn chí mạng ngẫu nhiên từ quân địch skill thấp.
 - Chặn các phát đạn nguy hiểm nhắm vào nội tạng quan trọng (*Não, Đầu, Mắt, Tim, Cổ, Cột sống, Gan*).
-- **Cơ Chế:** Khả năng Graze được suy ra tự động dựa trên tỷ lệ trúng thực tế của viên đạn (đạn càng khó trúng càng dễ sượt). Giảm sát thương đi **65%** và chuyển hướng vết thương ra các chi bên ngoài (*Tay, Chân, Vai*).
+- **Cơ Chế:** Khả năng Graze được suy ra tự động dựa trên tỷ lệ trúng thực tế của viên đạn. Giảm sát thương đi **65%** và chuyển hướng vết thương ra các chi bên ngoài (*Tay, Chân, Vai*). Phát bắn có tỷ lệ trúng $\ge 65\%$ không bao giờ Graze.
 
 #### 💥 5. Shock Đồng Đội & Sóng Xung Kích (`ShockModule`)
-- **Ally Downed Shock (`FD_CombatShock`):** Đồng đội trong phạm vi 6.0 ô bị sốc tinh thần tạm thời khi có lính cùng phe bị gục hoặc chết.
-- **Proportional Shell Shock (`FD_ShellShock`):** Vụ nổ tạo ra sóng xung kích phi tuyến tính ($r + 2\sqrt{r}$, trần tối đa 20 ô). Đạn pháo (4.9 ô) tạo sóng xung kích **9.3 ô**, gây Shell Shock choáng váng giảm dần theo khoảng cách.
+- **Ally Downed Shock (`FD_CombatShock`):** Đồng đội trong phạm vi 6.0 ô bị sốc tinh thần tạm thời (+30% thời gian ngắm) khi có lính cùng phe bị gục hoặc chết.
+- **Proportional Shell Shock (`FD_ShellShock`):** Vụ nổ tạo ra sóng xung kích phi tuyến tính ($r_{\text{eff}} = \min(20, r + 2\sqrt{r})$). Đạn pháo (4.9 ô) tạo sóng xung kích **9.3 ô**, gây Shell Shock choáng váng giảm dần theo khoảng cách.
+- 🛡️ **Khiên Năng Lượng Hấp Thụ Choáng:** Khiên cá nhân (`CompShield`) hấp thụ tới **85% độ sốc xung kích** từ vụ nổ dựa trên tỷ lệ năng lượng khiên còn lại.
 
 #### 🔫 6. Shotgun Spread & Vùng Nguy Hiểm (`ShotgunAoEModule` — Mặc định TẮT)
-- Giả lập độ tỏa đạn shotgun theo hình nêm từ nòng súng ra tầm xa tối đa (70% sát thương gốc, giảm dần theo mật độ).
+- Giả lập độ tỏa đạn shotgun theo hình nêm từ nòng súng ra tầm xa tối đa (70% sát thương gốc).
+- **Bảo Vệ Nội Tạng:** Sát thương lan của Shotgun chỉ gây thương tích ở các chi ngoài (Tay/Chân/Vai), không bao giờ chọc thủng nội tạng.
 - Hiển thị vùng nguy hiểm trên màn hình, đánh dấu đỏ đồng đội nằm trong tầm bắn để tránh bắn nhầm.
 
 ---
@@ -143,12 +151,12 @@ Pawn ở trạng thái Draft sở hữu 4 tư thế chiến thuật chuyển đ�
 ### 🎛️ Tùy Chỉnh Thời Gian Thực
 
 Tất cả thông số có thể điều chỉnh ngay trong game tại **Options -> Mod Options -> Fire Discipline**:
-- **Sharpshot:** Hệ số ngắm, hệ số khoảng cách, phạt cự ly gần, điểm yếu áp chế.
-- **Rapid Fire:** Giới hạn thời gian ngắm (min/max), hệ số gây áp chế.
+- **Sharpshot:** Hệ số ngắm, hệ số khoảng cách, phạt cự ly gần, điểm yếu áp chế, tỷ lệ xuyên nấp.
+- **Rapid Fire:** Giới hạn thời gian ngắm (min/max), hệ số gây áp chế, hệ số phạt giật nòng Shotgun bắn loạt ($x2.50$).
 - **Prone Stance:** Tỷ lệ kích thước mục tiêu, kháng áp chế.
 - **Cơ Chế Graze:** Trần hit-chance (65%), khoảng biên (45%), hệ số giữ sát thương (35%).
 - **Shock Đồng Đội:** Bán kính shock (6.0), giới hạn số ô Shell Shock (20), hệ số Shell Shock (2.0).
-- **Độ Trễ:** Số tick để chuyển đổi tư thế (mặc định 45 tick).
+- **Áp Chế & Vật Cản:** Hệ số giảm áp chế vật nấp (0.00–3.00, mặc định 1.00), ngưỡng bị ghim (7.0).
 
 ---
 
