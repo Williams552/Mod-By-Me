@@ -81,6 +81,18 @@ namespace FireDiscipline.Suppression
             {
                 Log.Error("[Fire Discipline] Failed to find Projectile.Impact - suppression will not run.");
             }
+
+            var availableMethod = AccessTools.Method(typeof(Verb), nameof(Verb.Available));
+            if (availableMethod != null)
+            {
+                var postfix = typeof(Patch_Verb_Available).GetMethod(nameof(Patch_Verb_Available.Postfix), BindingFlags.Static | BindingFlags.Public);
+                harmony.Patch(availableMethod, postfix: new HarmonyMethod(postfix));
+                Log.Message($"[Fire Discipline] Patched {availableMethod.DeclaringType.Name}.{availableMethod.Name} for pinned state.");
+            }
+            else
+            {
+                Log.Error("[Fire Discipline] Failed to find Verb.Available - pinned state will not run.");
+            }
         }
     }
 }

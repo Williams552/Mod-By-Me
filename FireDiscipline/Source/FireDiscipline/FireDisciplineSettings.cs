@@ -26,11 +26,26 @@ namespace FireDiscipline
         public float rapidMaxWarmupRatio = 0.75f;              // Max warmup ratio clamp (x0.75)
         public float rapidSuppressionMultiplier = 1.50f;       // Inflicted suppression multiplier (x1.5)
 
+        // 2.1b Rapid Full-Auto (Wave B6 - default OFF)
+        public bool enableRapidFullAuto = false;               // Full-auto burst expansion for heavy automatics
+        public int fullAutoMinBurstCount = 5;                  // Min burst shot count gate (default 5, excluding AR/SMG)
+        public float fullAutoBurstMultiplier = 1.50f;          // Multiplier for burst shot count in Rapid stance (x1.5)
+        public float fullAutoCooldownMultiplier = 1.60f;       // Cooldown penalty multiplier for Rapid Full-Auto (x1.6)
+
+        // 2.3 Hit Variance Mitigation (Wave B8 - default OFF)
+        public bool enableHitVariance = false;                 // Variance mitigation module toggle
+        public bool varianceQuotaForSingleShot = true;        // Quota-carry model for single-shot weapons
+        public bool variancePityForBurst = true;              // Pity-symmetric model for burst weapons
+        public float variancePityStep = 0.08f;                // Pity step offset per shot (default 0.08)
+        public float variancePityClamp = 0.32f;               // Max pity offset clamp (default 0.32)
+
         // 2.2 Sharpshot Stance
         public float sharpshotWarmupMultiplier = 1.40f;        // Warmup time multiplier (x1.4)
         public float sharpshotDistanceExponentFactor = 0.80f;   // Distance exponent factor (d * 0.80)
         public float sharpshotCloseRangePenalty = 0.70f;        // Under 5 cells accuracy penalty (x0.70)
         public float sharpshotSuppressionVulnerability = 2.00f; // Received suppression multiplier (x2.0)
+        public float sharpshotCoverBypassFactor = 0.50f;        // Bypasses 50% of target cover block chance in Sharpshot stance
+        public float suppressionCoverDegradationMax = 0.40f;    // Max reduction (40%) of target cover block chance when fully suppressed
 
         // 2.3 Prone Stance
         public float proneTargetSizeFactor = 0.65f;            // Target size reduction (x0.65)
@@ -39,7 +54,7 @@ namespace FireDiscipline
         public float proneSuppressionResistance = 0.50f;       // Received suppression multiplier (x0.50)
 
         // 2.4 Transition Costs
-        public int stanceTransitionTicks = 45;                 // 45 ticks (0.75s) delay when switching into non-Snap stance
+        public int stanceTransitionTicks = 45;                 // 45 ticks (0.75s) delay when switching into non-Standard stance
 
         // =========================================================================
         // SECTION 2b: WEAPON CLASSIFICATION (architecture rule 2 - derive, never declare)
@@ -114,6 +129,8 @@ namespace FireDiscipline
         public float suppressionRadius = 3.5f;                // Cells around an impact that feel it
         public float suppressionDecayPerSecond = 0.10f;       // Recovery rate once the shooting stops
         public int suppressionDecayDelayTicks = 120;          // Grace period after the last round lands
+        public bool enablePinnedState = true;
+        public float pinnedSeverityThreshold = 7.0f;
 
         // =========================================================================
         // SECTION 4d: COVER SUPPRESSION (Wave B3)
@@ -211,12 +228,23 @@ namespace FireDiscipline
             Scribe_Values.Look(ref rapidMinWarmupRatio, "rapidMinWarmupRatio", 0.30f);
             Scribe_Values.Look(ref rapidMaxWarmupRatio, "rapidMaxWarmupRatio", 0.75f);
             Scribe_Values.Look(ref rapidSuppressionMultiplier, "rapidSuppressionMultiplier", 1.50f);
+            Scribe_Values.Look(ref enableRapidFullAuto, "enableRapidFullAuto", false);
+            Scribe_Values.Look(ref fullAutoMinBurstCount, "fullAutoMinBurstCount", 5);
+            Scribe_Values.Look(ref fullAutoBurstMultiplier, "fullAutoBurstMultiplier", 1.50f);
+            Scribe_Values.Look(ref fullAutoCooldownMultiplier, "fullAutoCooldownMultiplier", 1.60f);
+            Scribe_Values.Look(ref enableHitVariance, "enableHitVariance", false);
+            Scribe_Values.Look(ref varianceQuotaForSingleShot, "varianceQuotaForSingleShot", true);
+            Scribe_Values.Look(ref variancePityForBurst, "variancePityForBurst", true);
+            Scribe_Values.Look(ref variancePityStep, "variancePityStep", 0.08f);
+            Scribe_Values.Look(ref variancePityClamp, "variancePityClamp", 0.32f);
 
             // Sharpshot
             Scribe_Values.Look(ref sharpshotWarmupMultiplier, "sharpshotWarmupMultiplier", 1.40f);
             Scribe_Values.Look(ref sharpshotDistanceExponentFactor, "sharpshotDistanceExponentFactor", 0.80f);
             Scribe_Values.Look(ref sharpshotCloseRangePenalty, "sharpshotCloseRangePenalty", 0.70f);
             Scribe_Values.Look(ref sharpshotSuppressionVulnerability, "sharpshotSuppressionVulnerability", 2.00f);
+            Scribe_Values.Look(ref sharpshotCoverBypassFactor, "sharpshotCoverBypassFactor", 0.50f);
+            Scribe_Values.Look(ref suppressionCoverDegradationMax, "suppressionCoverDegradationMax", 0.40f);
 
             // Prone
             Scribe_Values.Look(ref proneTargetSizeFactor, "proneTargetSizeFactor", 0.65f);
@@ -260,6 +288,8 @@ namespace FireDiscipline
             Scribe_Values.Look(ref suppressionRadius, "suppressionRadius", 3.5f);
             Scribe_Values.Look(ref suppressionDecayPerSecond, "suppressionDecayPerSecond", 0.10f);
             Scribe_Values.Look(ref suppressionDecayDelayTicks, "suppressionDecayDelayTicks", 120);
+            Scribe_Values.Look(ref enablePinnedState, "enablePinnedState", true);
+            Scribe_Values.Look(ref pinnedSeverityThreshold, "pinnedSeverityThreshold", 7.0f);
 
             // Cover Suppression (Wave B3)
             Scribe_Values.Look(ref enableCoverSuppression, "enableCoverSuppression", true);
