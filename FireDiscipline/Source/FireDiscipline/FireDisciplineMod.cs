@@ -98,8 +98,13 @@ namespace FireDiscipline
             listing.Label($"  Inflicted Suppression Multiplier: <b>x{Settings.rapidSuppressionMultiplier:F2}</b> (Default: x1.50)");
             Settings.rapidSuppressionMultiplier = listing.Slider(Settings.rapidSuppressionMultiplier, 1.00f, 2.50f);
 
-            listing.Label($"  Max Suppressed Target Cover Degradation: <b>-{(Settings.suppressionCoverDegradationMax * 100f):F0}%</b> (Default: -40%)");
-            Settings.suppressionCoverDegradationMax = listing.Slider(Settings.suppressionCoverDegradationMax, 0.10f, 0.70f);
+            listing.CheckboxLabeled("  Enable Suppressed Target Cover Degradation", ref Settings.enableSuppressionCoverDegradation,
+                "Reduces the target's cover block chance when the target is currently under suppression.");
+            if (Settings.enableSuppressionCoverDegradation)
+            {
+                listing.Label($"    Max Suppressed Target Cover Degradation: <b>-{(Settings.suppressionCoverDegradationMax * 100f):F0}%</b> (Default: -40%)");
+                Settings.suppressionCoverDegradationMax = listing.Slider(Settings.suppressionCoverDegradationMax, 0.10f, 0.70f);
+            }
 
             listing.CheckboxLabeled("  Enable Rapid Full-Auto Burst Expansion", ref Settings.enableRapidFullAuto,
                 "Expands burst shot count for heavy automatic weapons (burst >= min gate) in exchange for a cooldown penalty.");

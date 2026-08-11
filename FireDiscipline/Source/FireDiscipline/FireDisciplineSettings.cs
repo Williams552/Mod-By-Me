@@ -45,6 +45,7 @@ namespace FireDiscipline
         public float sharpshotCloseRangePenalty = 0.70f;        // Under 5 cells accuracy penalty (x0.70)
         public float sharpshotSuppressionVulnerability = 2.00f; // Received suppression multiplier (x2.0)
         public float sharpshotCoverBypassFactor = 0.50f;        // Bypasses 50% of target cover block chance in Sharpshot stance
+        public bool enableSuppressionCoverDegradation = true;   // Toggle for suppression cover degradation
         public float suppressionCoverDegradationMax = 0.40f;    // Max reduction (40%) of target cover block chance when fully suppressed
 
         // 2.3 Prone Stance
@@ -250,6 +251,7 @@ namespace FireDiscipline
             Scribe_Values.Look(ref sharpshotCloseRangePenalty, "sharpshotCloseRangePenalty", 0.70f);
             Scribe_Values.Look(ref sharpshotSuppressionVulnerability, "sharpshotSuppressionVulnerability", 2.00f);
             Scribe_Values.Look(ref sharpshotCoverBypassFactor, "sharpshotCoverBypassFactor", 0.50f);
+            Scribe_Values.Look(ref enableSuppressionCoverDegradation, "enableSuppressionCoverDegradation", true);
             Scribe_Values.Look(ref suppressionCoverDegradationMax, "suppressionCoverDegradationMax", 0.40f);
 
             // Prone

@@ -147,8 +147,9 @@ namespace FireDiscipline.AimStance
                         coverBlock *= (1f - bypassFactor);
                     }
 
-                    // Option 2: Suppression Cover Degradation (reduces target cover block chance by up to 40% when suppressed)
-                    if (target.HasThing && target.Thing is Pawn tPawn)
+                    // Option 2: Suppression Cover Degradation (reduces target cover block chance when suppressed)
+                    if ((FireDisciplineMod.Settings?.enableSuppressionCoverDegradation ?? true)
+                        && target.HasThing && target.Thing is Pawn tPawn)
                     {
                         HediffDef suppDef = Suppression.SuppressionEngine.SuppressedDef;
                         if (suppDef != null && tPawn.health?.hediffSet != null)
