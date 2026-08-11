@@ -65,6 +65,20 @@ namespace FireDiscipline.AimStance
                         float penalty = FireDisciplineMod.Settings?.sharpshotCloseRangePenalty ?? 0.70f;
                         factor *= penalty;
                     }
+
+                    // Recoil in Sharpshot: Burst recoil is DOUBLED (2x penalty power -> 0.93^(2*N) per shot)
+                    if (verb != null && verb.verbProps.burstShotCount >= 2 && burstShotsLeftRef != null)
+                    {
+                        int shotsLeft = burstShotsLeftRef(verb);
+                        if (shotsLeft > 0)
+                        {
+                            int shotIndex = Mathf.Max(0, verb.verbProps.burstShotCount - shotsLeft);
+                            if (shotIndex > 0)
+                            {
+                                factor *= Mathf.Pow(RecoilPerShot, shotIndex * 2f);
+                            }
+                        }
+                    }
                 }
                 else if (stance == AimStanceMode.Rapid)
                 {
