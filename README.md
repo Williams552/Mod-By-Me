@@ -41,7 +41,7 @@ Drafted pawns cycle between 3 active tactical stances via a clean UI Gizmo, plus
 - Light skirmishers carrying up to 15% capacity suffer 0 penalty. Heavy loadouts scale up to **-35% MoveSpeed**, rewarding light equipment loadouts.
 
 #### 🛡️ 3. Suppression & Cover Dynamics (`SuppressionCoreModule`)
-- **Movement & Firing Suppression:** Built-in lightweight suppression engine (`FD_Suppressed`) that punishes movement speed and ngắm bắn.
+- **Movement & Firing Suppression:** Built-in lightweight suppression engine (`FD_Suppressed`) that punishes movement speed, aiming delay, and shooting accuracy.
 - **Mechanics:** Accumulates +0.25 severity per near-miss shot (3.5-cell radius). Decays at -0.10 severity/sec after a 120-tick (2s) grace period.
 - **Stages:** Shaken (0.5), Wavering (1.0), Ducking (2.0), Cowering (5.5) on a 0–9 severity scale. MoveSpeed multipliers: $\times 0.95 \rightarrow \times 0.80 \rightarrow \times 0.50 \rightarrow \times 0.15$ (absolute floor 0.70 cells/sec).
 - 🔴 **Pinned State (Severity $\ge$ 7.0):** Pawns under heavy suppression are **completely blocked from firing ranged weapons** (`Verb.Available = false`) until suppression decays.
@@ -99,7 +99,7 @@ All parameters can be tuned live in-game under **Options -> Mod Options -> Fire 
 **Fire Discipline** bổ sung một lớp chiến thuật vào hệ thống chiến đấu của RimWorld 1.6. Mod được thiết kế để hoạt động song song với cơ chế combat vanilla, không yêu cầu tạo save mới và không cần patch XML riêng cho các mod vũ khí khác.
 
 Mod được thiết kế xoay quanh 2 mục tiêu cốt lõi:
-1. **Tăng Tính Chiến Thuật:** Cung cấp cho người người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để mỗi cuộc chạm súng đòi hỏi di chuyển, bọc lót và phản công chứ không chỉ so chỉ số.
+1. **Tăng Tính Chiến Thuật:** Cung cấp cho người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để mỗi cuộc chạm súng đòi hỏi di chuyển, bọc lót và phản công chứ không chỉ so chỉ số.
 2. **Giảm Ức Chế Phi Lý:** Loại bỏ các tình huống chết ngẫu nhiên phi lý của RimWorld Vanilla—như Pawn mặc giáp xịn bị đạn rác bắn trúng não chết ngay lập tức, hoặc Pawn đứng ngơ người khi bị pháo kích.
 
 #### ⚙️ Nguyên Tắc Tương Thích Tự Động
@@ -124,7 +124,7 @@ Pawn ở trạng thái Draft có thể chuyển đổi giữa 3 tư thế chiế
 - Mang đồ nhẹ dưới 15% sức chở không bị phạt. Mang nặng tăng dần lên đến **-35% MoveSpeed**, khuyến khích trang bị gọn nhẹ cho lính cơ động.
 
 #### 🛡️ 3. Áp Chế & Vật Cản (`SuppressionCoreModule`)
-- **Áp Chế Trừng Phạt Di Chuyển & Khóa Bắn:** Hệ thống áp chế nhẹ (`FD_Suppressed`) tập trung phạt tốc độ di chuyển và khả năng bắn trả.
+- **Áp Chế Trừng Phạt Di Chuyển & Khóa Bắn:** Hệ thống áp chế nhẹ (`FD_Suppressed`) tập trung phạt tốc độ di chuyển, thời gian ngắm và độ chính xác ngắm bắn.
 - **Cơ chế:** Tích lũy +0.25 độ nghiêm trọng mỗi phát đạn qua gần (bán kính 3.5 ô). Giảm -0.10/giây sau 120 tick (2 giây) ân hạn.
 - **Các Stage:** Shaken (0.5), Wavering (1.0), Ducking (2.0), Cowering (5.5) trên thang 0–9. Hệ số MoveSpeed: $\times 0.95 \rightarrow \times 0.80 \rightarrow \times 0.50 \rightarrow \times 0.15$ (sàn tuyệt đối 0.70 ô/s).
 - 🔴 **Trạng thái Bị Ghim (Pinned State - Severity $\ge$ 7.0):** Pawn bị áp chế nặng sẽ **KHÓA HOÀN TOÀN KHẢ NĂNG BẮN TRẢ** (`Verb.Available = false`) cho đến khi mức áp chế giảm xuống.
@@ -162,9 +162,9 @@ Tất cả thông số có thể điều chỉnh ngay trong game tại **Options
 
 ### 📦 Tương Thích & Thứ Tự Load
 
-- **Tương thích Save:** Thêm hoặc gỡ khỏi Save mid-game an toàn tuyệt đối.
-- **Vũ khí / Giáp Mod:** Tương thích 100% tự động.
-- **Thứ Tự Load Khuyên Dùng:**
+- **Save Compatibility:** Safe to add or remove mid-playthrough.
+- **Modded Weapons/Armor:** 100% compatible out of the box.
+- **Recommended Load Order:**
   ```text
   Core -> DLCs -> HugsLib
   Yayo's Combat 3 (Continued)
