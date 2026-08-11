@@ -58,14 +58,24 @@ namespace FireDiscipline.Suppression
                 {
                     amount *= settings?.sharpshotSuppressionVulnerability ?? 2.00f;
                 }
-                else if (victimStance == AimStanceMode.Prone)
+                if (AimStanceTracker.IsDugIn(victim))
                 {
                     amount *= settings?.proneSuppressionResistance ?? 0.50f;
                 }
 
                 if ((settings?.enableCoverSuppression ?? true) && shooter != null && victim.Map != null)
                 {
-                    float block = CoverUtility.CalculateOverallBlockChance(victim, shooter.Position, victim.Map);
+                    float vanillaBlock = CoverUtility.CalculateOverallBlockChance(victim, shooter.Position, victim.Map);
+                    float block = vanillaBlock;
+                    if (settings?.enableCoverStacking ?? false)
+                    {
+                        float lineBlock = CoverStackingUtility.LineCoverBlockChance(shooter.Position, victim, victim.Map);
+                        if (lineBlock > 0f)
+                        {
+                            float combined = vanillaBlock + (1f - vanillaBlock) * lineBlock;
+                            block = Mathf.Min(combined, settings.coverStackingCap);
+                        }
+                    }
                     float factor = settings?.coverSuppressionFactor ?? 0.85f;
                     float floor = settings?.coverSuppressionFloor ?? 0.25f;
                     amount *= Mathf.Clamp(1f - block * factor, floor, 1f);

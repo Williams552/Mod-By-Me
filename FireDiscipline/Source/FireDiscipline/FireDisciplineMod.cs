@@ -152,6 +152,22 @@ namespace FireDiscipline
             }
 
             listing.Gap(5f);
+            listing.CheckboxLabeled("Enable Intermediate Line Cover Stacking", ref Settings.enableCoverStacking,
+                "Accumulates cover from non-adjacent obstacles along the line of fire (ShootLine).");
+
+            if (Settings.enableCoverStacking)
+            {
+                listing.Label($"  Line Cover Effectiveness Factor: <b>{Settings.lineCoverFactor:F2}</b> (Default: 0.50)");
+                Settings.lineCoverFactor = listing.Slider(Settings.lineCoverFactor, 0.10f, 1.00f);
+
+                listing.Label($"  Max Total Cover Stacking Cap: <b>{Settings.coverStackingCap:F2}</b> (Default: 0.85)");
+                Settings.coverStackingCap = listing.Slider(Settings.coverStackingCap, 0.50f, 0.95f);
+
+                listing.Label($"  Min Exclusion Distance from Shooter: <b>{Settings.lineCoverMinDistanceFromShooter} cells</b> (Default: 3)");
+                Settings.lineCoverMinDistanceFromShooter = Mathf.RoundToInt(listing.Slider(Settings.lineCoverMinDistanceFromShooter, 1f, 6f));
+            }
+
+            listing.Gap(5f);
             listing.CheckboxLabeled("Enable Pinned State at High Suppression", ref Settings.enablePinnedState,
                 "Pawns under high suppression cannot fire ranged weapons at all until severity decays.");
 

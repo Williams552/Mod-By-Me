@@ -141,6 +141,12 @@ namespace FireDiscipline
         public float coverSuppressionFactor = 0.85f;
         public float coverSuppressionFloor = 0.25f;
 
+        // Line Cover Stacking (Intermediate cover along ShootLine)
+        public bool enableCoverStacking = false;
+        public float lineCoverFactor = 0.50f;
+        public float coverStackingCap = 0.85f;
+        public int lineCoverMinDistanceFromShooter = 3;
+
         // =========================================================================
         // SECTION 4c: SHOTGUN SPREAD (Wave B2)
         // =========================================================================
@@ -295,6 +301,10 @@ namespace FireDiscipline
             Scribe_Values.Look(ref enableCoverSuppression, "enableCoverSuppression", true);
             Scribe_Values.Look(ref coverSuppressionFactor, "coverSuppressionFactor", 0.85f);
             Scribe_Values.Look(ref coverSuppressionFloor, "coverSuppressionFloor", 0.25f);
+            Scribe_Values.Look(ref enableCoverStacking, "enableCoverStacking", false);
+            Scribe_Values.Look(ref lineCoverFactor, "lineCoverFactor", 0.50f);
+            Scribe_Values.Look(ref coverStackingCap, "coverStackingCap", 0.85f);
+            Scribe_Values.Look(ref lineCoverMinDistanceFromShooter, "lineCoverMinDistanceFromShooter", 3);
 
             // Shotgun spread (Wave B2 - module default OFF)
             Scribe_Values.Look(ref shotgunSpreadWidthEnd, "shotgunSpreadWidthEnd", 3.0f);

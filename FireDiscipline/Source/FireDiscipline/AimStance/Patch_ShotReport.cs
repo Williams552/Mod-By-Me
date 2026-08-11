@@ -19,6 +19,7 @@ namespace FireDiscipline.AimStance
     {
         private static readonly AccessTools.StructFieldRef<ShotReport, float> shooterFactorRef = AccessTools.StructFieldRefAccess<ShotReport, float>("factorFromShooterAndDist");
         private static readonly AccessTools.StructFieldRef<ShotReport, float> targetSizeRef = AccessTools.StructFieldRefAccess<ShotReport, float>("factorFromTargetSize");
+        private static readonly AccessTools.StructFieldRef<ShotReport, float> coverBlockRef = AccessTools.StructFieldRefAccess<ShotReport, float>("coversOverallBlockChance");
 
         // Cached field accessor. This used to be a Traverse lookup evaluated on every shot report -
         // the slowest reflection path Harmony offers, sitting in a method that also runs every frame
@@ -79,7 +80,7 @@ namespace FireDiscipline.AimStance
                     // one it reads 0, which made shotIndex equal the full burst length and applied the
                     // whole recoil stack permanently - measured at x0.65 for a 6-round weapon, on every
                     // first shot and on every mouse-over aim preview. Rapid ended up LESS accurate than
-                    // Snap Shot at point blank, which is the opposite of what the stance is for.
+                    // Standard Shot at point blank, which is the opposite of what the stance is for.
                     if (verb != null && verb.verbProps.burstShotCount >= 3 && burstShotsLeftRef != null)
                     {
                         int shotsLeft = burstShotsLeftRef(verb);
@@ -93,9 +94,9 @@ namespace FireDiscipline.AimStance
                         }
                     }
                 }
-                else if (stance == AimStanceMode.Prone)
+                // Automatic Passive Dug-In (Prone) Shooter Accuracy Modifier
+                if (AimStanceTracker.IsDugIn(shooterPawn))
                 {
-                    // Flat accuracy multiplier when shooter is in Prone stance (x0.85)
                     float mult = FireDisciplineMod.Settings?.proneAccuracyMultiplier ?? 0.85f;
                     factor *= mult;
                 }
@@ -109,16 +110,63 @@ namespace FireDiscipline.AimStance
                 shooterFactorRef(ref __result) *= embrasureMult;
             }
 
-            // 3. Target Stance Modifiers
+            // 3. Target Dug-In (Prone) Modifiers
             if (target.HasThing && target.Thing is Pawn targetPawn && targetSizeRef != null)
             {
-                AimStanceMode targetStance = AimStanceTracker.GetStance(targetPawn);
-                if (targetStance == AimStanceMode.Prone)
+                if (AimStanceTracker.IsDugIn(targetPawn))
                 {
                     float mult = FireDisciplineMod.Settings?.proneTargetSizeFactor ?? 0.65f;
                     targetSizeRef(ref __result) *= mult;
                 }
             }
+
+            // 4. Cover Bypass, Cover Degradation & Line Cover Stacking
+            if (coverBlockRef != null)
+            {
+                ref float coverBlock = ref coverBlockRef(ref __result);
+
+                // Option 0: Line Cover Stacking (Intermediate cover along ShootLine)
+                FireDisciplineSettings settings = FireDisciplineMod.Settings;
+                if (settings != null && settings.enableCoverStacking && caster != null && caster.Map != null)
+                {
+                    float lineBlock = CoverStackingUtility.LineCoverBlockChance(caster.Position, target, caster.Map);
+                    if (lineBlock > 0f)
+                    {
+                        float combined = coverBlock + (1f - coverBlock) * lineBlock;
+                        float cap = settings.coverStackingCap;
+                        coverBlock = Mathf.Min(combined, cap);
+                    }
+                }
+
+                if (coverBlock > 0f)
+                {
+                    // Option 1: Sharpshot Cover Bypass (bypasses 50% of target cover block chance)
+                    if (caster is Pawn sPawn && AimStanceTracker.GetStance(sPawn) == AimStanceMode.Sharpshot)
+                    {
+                        float bypassFactor = FireDisciplineMod.Settings?.sharpshotCoverBypassFactor ?? 0.50f;
+                        coverBlock *= (1f - bypassFactor);
+                    }
+
+                    // Option 2: Suppression Cover Degradation (reduces target cover block chance by up to 40% when suppressed)
+                    if (target.HasThing && target.Thing is Pawn tPawn)
+                    {
+                        HediffDef suppDef = Suppression.SuppressionEngine.SuppressedDef;
+                        if (suppDef != null && tPawn.health?.hediffSet != null)
+                        {
+                            var hediff = tPawn.health.hediffSet.GetFirstHediffOfDef(suppDef);
+                            if (hediff != null && hediff.Severity > 0f)
+                            {
+                                float maxPenalty = FireDisciplineMod.Settings?.suppressionCoverDegradationMax ?? 0.40f;
+                                float penalty = Mathf.Clamp01(maxPenalty * hediff.Severity);
+                                coverBlock *= (1f - penalty);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 5. Hit Variance Mitigation Module (Wave B8)
+            Variance.HitVarianceEngine.ProcessHitReport(caster, verb, ref __result);
         }
 
     }

@@ -19,6 +19,8 @@ namespace FireDiscipline.Core
             base.LoadedGame();
             AimStance.AimStanceTracker.ClearCache();
             Shock.Patch_Pawn_Kill_Down.ClearCache();
+            Variance.HitVarianceState.ClearCache();
+            CoverStackingUtility.ClearCache();
         }
 
         public override void StartedNewGame()
@@ -26,6 +28,8 @@ namespace FireDiscipline.Core
             base.StartedNewGame();
             AimStance.AimStanceTracker.ClearCache();
             Shock.Patch_Pawn_Kill_Down.ClearCache();
+            Variance.HitVarianceState.ClearCache();
+            CoverStackingUtility.ClearCache();
         }
 
         public override void GameComponentTick()
@@ -38,6 +42,7 @@ namespace FireDiscipline.Core
                 lastCleanupTick = currentTick;
                 AimStance.AimStanceTracker.CleanupStaleEntries();
                 Shock.Patch_Pawn_Kill_Down.CleanupStaleEntries();
+                Variance.HitVarianceState.CleanupStaleEntries();
             }
         }
     }
