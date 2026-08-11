@@ -86,6 +86,23 @@ namespace FireDiscipline.Core
         {
             if (!IsPawnRangedWeapon(weaponDef)) return false;
 
+            float range = GetWeaponRange(weaponDef);
+
+            // Layer 1: Hybrid Keyword Safety Net (catches Scattergun / Shotgun name collisions like Gun_Scattergun)
+            if (range <= 22f && weaponDef.defName != null)
+            {
+                string defUpper = weaponDef.defName.ToUpperInvariant();
+                string labelUpper = weaponDef.label != null ? weaponDef.label.ToUpperInvariant() : "";
+
+                if (defUpper.Contains("SHOTGUN") || defUpper.Contains("SCATTERGUN") ||
+                    defUpper.Contains("TRENCHGUN") || defUpper.Contains("BUCKSHOT") ||
+                    labelUpper.Contains("SHOTGUN") || labelUpper.Contains("SCATTERGUN"))
+                {
+                    return true;
+                }
+            }
+
+            // Layer 2: Stat Curve Gates (5 dynamic filters for modded alien/custom weapons)
             FireDisciplineSettings settings = FireDisciplineMod.Settings;
 
             float t = weaponDef.GetStatValueAbstract(StatDefOf.AccuracyTouch);
@@ -99,7 +116,6 @@ namespace FireDiscipline.Core
             if (t == s && s == m && m == l) return false;
 
             // 2. Short, but not a shove-it-in-their-face weapon.
-            float range = GetWeaponRange(weaponDef);
             if (range > (settings?.shotgunMaxRange ?? 17f)) return false;
             if (range < (settings?.shotgunMinRange ?? 8f)) return false;
 
@@ -114,6 +130,34 @@ namespace FireDiscipline.Core
             if (t < m) return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Dynamically calculates the distance decay flattener exponent (e) based on weapon category.
+        /// - Shotguns, SMGs, Pistols (Range &lt; 22c or HasShotgunProfile): e = 1.00 (No flattening, preserves close-range role)
+        /// - Sniper / DMR (Range &gt;= 35c &amp; burst &lt; 3): e = sniperDistanceFlattener (0.65 default, heavy flattening for long-range marksmen)
+        /// - Rifles / LMG / AR (Range &gt;= 22c): e = rifleDistanceFlattener (0.85 default, moderate flattening)
+        /// </summary>
+        public static float GetDynamicDistanceFlattener(ThingDef weaponDef)
+        {
+            if (weaponDef == null) return 0.85f;
+
+            // 1. Shotguns, SMGs, Pistols, Short-range weapons: Do NOT flatten distance decay
+            if (HasShotgunProfile(weaponDef)) return 1.00f;
+
+            float range = GetWeaponRange(weaponDef);
+            if (range < 22f) return 1.00f;
+
+            int burst = weaponDef.Verbs != null && weaponDef.Verbs.Count > 0 ? weaponDef.Verbs[0].burstShotCount : 1;
+
+            // 2. Sniper / DMR: High flattener (0.65 default)
+            if (range >= 35f && burst < 3)
+            {
+                return FireDisciplineMod.Settings?.sniperDistanceFlattener ?? 0.65f;
+            }
+
+            // 3. Rifles / LMG / AR: Standard flattener (0.85 default)
+            return FireDisciplineMod.Settings?.rifleDistanceFlattener ?? 0.85f;
         }
 
         /// <summary>

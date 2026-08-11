@@ -64,6 +64,11 @@ namespace FireDiscipline
         // 2.4 Transition Costs
         public int stanceTransitionTicks = 45;                 // 45 ticks (0.75s) delay when switching into non-Standard stance
 
+        // 2.5 Base Accuracy Boost & Distance Decay Flattener
+        public float globalAccuracyMultiplier = 1.20f;        // Base accuracy multiplier (x1.20 default)
+        public float sniperDistanceFlattener = 0.65f;          // Sniper/DMR distance decay flattener exponent (e=0.65)
+        public float rifleDistanceFlattener = 0.85f;           // Rifle/LMG/AR distance decay flattener exponent (e=0.85)
+
         // =========================================================================
         // SECTION 2b: WEAPON CLASSIFICATION (architecture rule 2 - derive, never declare)
         // =========================================================================
@@ -262,6 +267,9 @@ namespace FireDiscipline
 
             // Transitions & Patches
             Scribe_Values.Look(ref stanceTransitionTicks, "stanceTransitionTicks", 45);
+            Scribe_Values.Look(ref globalAccuracyMultiplier, "globalAccuracyMultiplier", 1.20f);
+            Scribe_Values.Look(ref sniperDistanceFlattener, "sniperDistanceFlattener", 0.65f);
+            Scribe_Values.Look(ref rifleDistanceFlattener, "rifleDistanceFlattener", 0.85f);
             Scribe_Values.Look(ref enableHighPrecisionShotReportPatch, "enableHighPrecisionShotReportPatch", true);
             Scribe_Values.Look(ref verboseCombatLogging, "verboseCombatLogging", false);
 

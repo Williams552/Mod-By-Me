@@ -50,6 +50,18 @@ namespace FireDiscipline.AimStance
 
                 ref float factor = ref shooterFactorRef(ref __result);
 
+                // 1a. Global Base Accuracy Boost (x1.20 default) & Category-based Distance Decay Flattener
+                float globalAccMult = FireDisciplineMod.Settings?.globalAccuracyMultiplier ?? 1.20f;
+                factor *= globalAccMult;
+
+                if (factor > 0f && factor < 1f)
+                {
+                    float flattener = WeaponClassification.GetDynamicDistanceFlattener(verb?.EquipmentSource?.def);
+                    if (flattener < 1.0f)
+                    {
+                        factor = Mathf.Pow(factor, flattener);
+                    }
+                }
                 if (stance == AimStanceMode.Sharpshot)
                 {
                     // Long-range exponent bonus (d * 0.80)

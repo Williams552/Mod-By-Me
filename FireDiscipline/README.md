@@ -19,18 +19,18 @@ The mod is engineered around two primary design goals:
 1. **Enhance Tactical Depth:** Give players real squad-level combat choices (Tactical Aim Stances, Movement Suppression, Cover Resistance, Logistics & Encumbrance) so gunfights involve maneuvering, flanking, and counterplay rather than stat-checking.
 2. **Eliminate Unfair Frustration:** Remove immersion-breaking vanilla RimWorld RNG moments—such as high-level armored pawns dying instantly from a random stray bullet to the brain, or pawns standing idly under heavy mortar bombardment.
 
-#### ⚙️ Universal Compatibility Rule
-Everything in Fire Discipline is **derived dynamically** from vanilla stats and Def attributes (e.g., mass, weapon warmup, cover block chance, Def flags). **No hardcoded weapon lists, no string matching, and no per-mod XML patches.** Weapons and armor from any mod work automatically.
+#### ⚙️ Universal Compatibility Rule & Hybrid Weapon Classification
+Everything in Fire Discipline is **derived dynamically** from vanilla stats and Def attributes (e.g., mass, weapon warmup, cover block chance, Def flags). **No hardcoded weapon lists, no string matching, and no per-mod XML patches.** Weapons from any mod work automatically using a 2-layer hybrid classification system (Layer 1: Keyword Safety Net for Scatterguns/Shotguns; Layer 2: 5-gate Stat Curve Analysis).
 
 ---
 
-### 🌟 Key Features (6 Core Tactical Modules)
+### 🌟 Key Features (7 Core Tactical Modules)
 
 Each module can be toggled **ON** or **OFF** independently at any time in **Mod Options**:
 
 #### 🎯 1. Aim Stances & Tactical Postures (`AimStanceModule`)
 Drafted pawns cycle between 3 active tactical stances via a clean UI Gizmo, plus 1 automatic passive condition:
-- **Standard (Baseline):** Standard vanilla firing speed and accuracy. Instant free stance switch.
+- **Standard (Baseline):** Standard vanilla firing speed and accuracy. Instant free stance switch. Includes a **+20% base accuracy boost** (`globalAccuracyMultiplier = 1.20`) and category-based distance decay flattening (Sniper: 0.65 exponent, Rifle/LMG: 0.85 exponent, Shotgun/SMG: 1.00 unchanged to preserve close-quarters roles).
 - **Rapid Fire:** Fast close-range hipfire. Reduces weapon warmup time (30%–75%), inflicts **+50% suppression** on targets, but suffers accuracy penalties at long range. Multi-shot shotguns (>1 burst, e.g., Chain Shotgun) suffer a **2.5x higher recoil penalty** ($0.93^{2.5 \times \text{shotIndex}}$) to prevent point-blank burst damage abuse.
 - **Sharpshot (Precision):** Long-range sniper stance ($d \times 0.80$ distance exponent). Suffers **+40% warmup time**, close-range accuracy penalty (<5 cells, -30%), and **+100% suppression vulnerability** (receives double suppression severity from incoming fire). Bypasses **50% of target cover block chance**. Burst/automatic weapons suffer **2x double recoil penalty** to prevent LMG sniper abuse.
 - **Prone (Dug-In):** **Automatic passive condition** (`FD_DugIn`) granted when standing still in combat. Reduces pawn target size by **35%** ($x0.65$), grants **+50% suppression resistance**. Moving automatically exits Dug-In with a 45-tick transition delay.
@@ -63,17 +63,24 @@ Drafted pawns cycle between 3 active tactical stances via a clean UI Gizmo, plus
 - **Outer Limb Protection:** Splash damage strictly targets outer limbs (Arm/Leg/Shoulder), never penetrating vital organs.
 - Includes an on-screen tactical danger zone overlay highlighting friendly pawns in red.
 
+#### 🎲 7. Hit Variance Mitigation & Quota Engine (`VarianceModule` — OFF by default)
+- Eliminates frustrating RNG miss streaks by enforcing exact theoretical DPS expectations across all ranged weapons.
+- **Unified Quota-Carry Model:** Accumulates true shot hit probability $p$ into a per-pawn carry tracker. Whenever `carry >= 1.0`, the next shot is **guaranteed to hit (100% Force Hit)** and subtracts 1.0 from the accumulator.
+- Automatically bypasses forced-miss weapons (mortars, grenades).
+
 ---
 
 ### 🎛️ Real-Time Mod Options
 
 All parameters can be tuned live in-game under **Options -> Mod Options -> Fire Discipline**:
+- **Accuracy & Distance Decay:** Global Base Accuracy Multiplier (x1.20), Sniper Distance Decay Flattener (0.65), Rifle/LMG Distance Decay Flattener (0.85).
 - **Sharpshot:** Warmup multiplier, distance exponent, close-range penalty, suppression vulnerability, cover bypass factor.
 - **Rapid Fire:** Min/max warmup clamps, inflicted suppression multiplier, multi-shot shotgun recoil multiplier ($x2.50$).
 - **Prone Stance:** Target size reduction, accuracy multiplier, suppression resistance.
 - **Graze System:** Hit chance ceiling (default 65%), chance span (default 45%), damage multiplier (default 35%).
 - **Shock System:** Ally shock radius (6.0c), shell shock cap (20) and coefficient (2.0).
 - **Suppression & Cover:** Cover suppression factor (0.00–3.00, default 1.00), pinned threshold (7.0).
+- **Hit Variance Engine:** Enable Unified Quota-Carry Model for RNG miss mitigation across all weapons.
 
 ---
 
@@ -102,18 +109,18 @@ Mod được thiết kế xoay quanh 2 mục tiêu cốt lõi:
 1. **Tăng Tính Chiến Thuật:** Cung cấp cho người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để mỗi cuộc chạm súng đòi hỏi di chuyển, bọc lót và phản công chứ không chỉ so chỉ số.
 2. **Giảm Ức Chế Phi Lý:** Loại bỏ các tình huống chết ngẫu nhiên phi lý của RimWorld Vanilla—như Pawn mặc giáp xịn bị đạn rác bắn trúng não chết ngay lập tức, hoặc Pawn đứng ngơ người khi bị pháo kích.
 
-#### ⚙️ Nguyên Tắc Tương Thích Tự Động
-Toàn bộ thông số trong Fire Discipline được **suy ra tự động** từ stat vanilla và các cờ Def (khối lượng, thời gian ngắm, tỷ lệ cản của vật cản,...). **Không hardcode danh sách vũ khí, không khớp chuỗi tên mod, không cần file patch XML riêng.** Vũ khí và giáp từ mọi mod khác đều tự động tương thích.
+#### ⚙️ Nguyên Tắc Tương Thích Tự Động & Phân Loại Vũ Khí Phức Hợp
+Toàn bộ thông số trong Fire Discipline được **suy ra tự động** từ stat vanilla và các cờ Def (khối lượng, thời gian ngắm, tỷ lệ cản của vật cản,...). **Không hardcode danh sách vũ khí, không khớp chuỗi tên mod, không cần file patch XML riêng.** Vũ khí từ mọi mod khác đều tự động tương thích nhờ hệ thống phân loại lai 2 tầng (Tầng 1: Lưới an toàn từ khóa Scattergun/Shotgun; Tầng 2: 5 cổng lọc độ phẳng đường cong Stat Curve).
 
 ---
 
-### 🌟 6 Module Chiến Thuật Cốt Lõi
+### 🌟 7 Module Chiến Thuật Cốt Lõi
 
 Mỗi module có thể bật/tắt độc lập và tức thì trong **Options -> Mod Options -> Fire Discipline**:
 
-#### 🎯 1. Tư Thế Tác Chiến (`AimStanceModule`)
+#### 🎯 1. Tư Thế Tác Chiến & Độ Chính Xác (`AimStanceModule`)
 Pawn ở trạng thái Draft có thể chuyển đổi giữa 3 tư thế chiến thuật qua nút bấm Gizmo UI, cộng 1 trạng thái thụ động tự động:
-- **Standard (Mặc định):** Tốc độ và độ chính xác Vanilla tiêu chuẩn. Chuyển đổi miễn phí tức thì.
+- **Standard (Mặc định):** Tốc độ và độ chính xác tiêu chuẩn. Tự động **tăng 20% độ chính xác gốc (`globalAccuracyMultiplier = 1.20`)** và phân cấp làm phẳng dốc tầm xa (Sniper: lũy thừa 0.65, Rifle/LMG: lũy thừa 0.85, Shotgun/SMG: 1.00 giữ nguyên bản chất cận chiến).
 - **Rapid Fire (Bắn nhanh):** Giảm thời gian ngắm ở cự ly gần (30%–75%), gây **+50% áp chế** lên mục tiêu, nhưng giảm độ chính xác ở khoảng cách xa. Shotgun bắn loạt (>1 viên/loạt, như Chain Shotgun) chịu **phạt giật nòng gấp 2.5 lần LMG** ($0.93^{2.5 \times \text{shotIndex}}$) để tránh lạm dụng dồn sát thương tầm gần.
 - **Sharpshot (Bắn tỉa):** Tăng độ chính xác tầm xa (hệ số khoảng cách $d \times 0.80$). Tăng **+40% thời gian ngắm**, giảm độ chính xác cự ly gần (<5 ô, -30%), **dễ bị áp chế +100%** (nhận gấp đôi độ nghiêm trọng áp chế từ đạn sượt qua). Bỏ qua **50% tỷ lệ nấp (`Cover Block Chance`)** của mục tiêu. Vũ khí bắn loạt bị **phạt giật nòng gấp 2 lần** để chống lạm dụng LMG bắn tỉa.
 - **Prone (Nằm sấp/Bunker - `FD_DugIn`):** **Trạng thái thụ động tự động** khi đứng yên cố thủ trong combat. Giảm kích thước mục tiêu đi **35%** ($x0.65$), tăng **+50% kháng áp chế**. Di chuyển sẽ tự động thoát Prone với độ trễ chuyển đổi 45 tick.
@@ -146,17 +153,24 @@ Pawn ở trạng thái Draft có thể chuyển đổi giữa 3 tư thế chiế
 - **Bảo Vệ Nội Tạng:** Sát thương lan của Shotgun chỉ gây thương tích ở các chi ngoài (Tay/Chân/Vai), không bao giờ chọc thủng nội tạng.
 - Hiển thị vùng nguy hiểm trên màn hình, đánh dấu đỏ đồng đội nằm trong tầm bắn để tránh bắn nhầm.
 
+#### 🎲 7. Khống Chế RNG & Tích Lũy Quota Trúng Đạn (`VarianceModule` — Mặc định TẮT)
+- Loại bỏ chuỗi đạn trượt ngẫu nhiên phi lý (RNG miss streaks), bảo đảm tổng DPS thực tế trùng khớp 100% với DPS lý thuyết.
+- **Mô Hình Quota-Carry Đồng Nhất:** Tích lũy xác suất trúng đạn thực tế $p$ vào bộ đếm `carry` của từng Pawn cho đến khi `carry >= 1.0`, phát bắn tiếp theo **ÉP TRÚNG 100% (Force Hit)** và trừ bớt 1.0.
+- Tự động bỏ qua vũ khí có bán kính trượt bắt buộc (súng cối, lựu đạn).
+
 ---
 
 ### 🎛️ Tùy Chỉnh Thời Gian Thực
 
 Tất cả thông số có thể điều chỉnh ngay trong game tại **Options -> Mod Options -> Fire Discipline**:
+- **Độ Chính Xác & Cự Ly:** Hệ số tăng Acc gốc (x1.20), Hệ số làm phẳng tầm xa Sniper/DMR (0.65), Hệ số làm phẳng tầm xa Rifle/LMG/AR (0.85).
 - **Sharpshot:** Hệ số ngắm, hệ số khoảng cách, phạt cự ly gần, điểm yếu áp chế, tỷ lệ xuyên nấp.
 - **Rapid Fire:** Giới hạn thời gian ngắm (min/max), hệ số gây áp chế, hệ số phạt giật nòng Shotgun bắn loạt ($x2.50$).
 - **Prone Stance:** Tỷ lệ kích thước mục tiêu, kháng áp chế.
 - **Cơ Chế Graze:** Trần hit-chance (65%), khoảng biên (45%), hệ số giữ sát thương (35%).
-- **Shock Đồng Đội:** Bán kính shock (6.0), giới hạn số ô Shell Shock (20), hệ số Shell Shock (2.0).
+- **Shock System:** Bán kính shock (6.0), giới hạn số ô Shell Shock (20), hệ số Shell Shock (2.0).
 - **Áp Chế & Vật Cản:** Hệ số giảm áp chế vật nấp (0.00–3.00, mặc định 1.00), ngưỡng bị ghim (7.0).
+- **Hit Variance Engine:** Bật mô hình Quota-Carry đồng nhất để triệt tiêu chuỗi trượt RNG trên mọi vũ khí.
 
 ---
 

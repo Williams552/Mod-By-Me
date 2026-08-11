@@ -136,6 +136,17 @@ namespace FireDiscipline
             listing.Label($"  Received Suppression Resistance: <b>x{Settings.proneSuppressionResistance:F2}</b> (Default: x0.50)");
             Settings.proneSuppressionResistance = listing.Slider(Settings.proneSuppressionResistance, 0.10f, 0.90f);
 
+            // 2d. Base Accuracy Boost & Category Distance Decay Flattener
+            listing.Label("  <b><color=#FFFF55>[Global Base Accuracy Boost & Distance Decay Flattener]</color></b>");
+            listing.Label($"  Global Base Accuracy Multiplier: <b>x{Settings.globalAccuracyMultiplier:F2}</b> (Default: x1.20)");
+            Settings.globalAccuracyMultiplier = listing.Slider(Settings.globalAccuracyMultiplier, 1.00f, 2.00f);
+
+            listing.Label($"  Sniper/DMR Distance Decay Flattener Exponent: <b>{Settings.sniperDistanceFlattener:F2}</b> (Default: 0.65 - heavy long-range flattening)");
+            Settings.sniperDistanceFlattener = listing.Slider(Settings.sniperDistanceFlattener, 0.40f, 1.00f);
+
+            listing.Label($"  Rifle/LMG/AR Distance Decay Flattener Exponent: <b>{Settings.rifleDistanceFlattener:F2}</b> (Default: 0.85 - moderate flattening)");
+            Settings.rifleDistanceFlattener = listing.Slider(Settings.rifleDistanceFlattener, 0.50f, 1.00f);
+
             listing.GapLine(15f);
 
             // =========================================================================
