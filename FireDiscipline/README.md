@@ -32,7 +32,7 @@ Each module can be toggled **ON** or **OFF** independently at any time in **Mod 
 Drafted pawns cycle between 3 active tactical stances via a clean UI Gizmo, plus 1 automatic passive condition:
 - **Standard (Baseline):** Standard vanilla firing speed and accuracy. Instant free stance switch.
 - **Rapid Fire:** Fast close-range hipfire. Reduces weapon warmup time (30%–75%), inflicts **+50% suppression** on targets, but suffers accuracy penalties at long range. Multi-shot shotguns (>1 burst, e.g., Chain Shotgun) suffer a **2.5x higher recoil penalty** ($0.93^{2.5 \times \text{shotIndex}}$) to prevent point-blank burst damage abuse.
-- **Sharpshot (Precision):** Long-range sniper stance ($d \times 0.80$ distance exponent). Suffers **+40% warmup time**, close-range accuracy penalty (<5 cells, -30%), and **+100% suppression vulnerability** (warmup resets if suppressed while aiming). Bypasses **50% of target cover block chance**. Burst/automatic weapons suffer **2x double recoil penalty** to prevent LMG sniper abuse.
+- **Sharpshot (Precision):** Long-range sniper stance ($d \times 0.80$ distance exponent). Suffers **+40% warmup time**, close-range accuracy penalty (<5 cells, -30%), and **+100% suppression vulnerability** (receives double suppression severity from incoming fire). Bypasses **50% of target cover block chance**. Burst/automatic weapons suffer **2x double recoil penalty** to prevent LMG sniper abuse.
 - **Prone (Dug-In):** **Automatic passive condition** (`FD_DugIn`) granted when standing still in combat. Reduces pawn target size by **35%** ($x0.65$), grants **+50% suppression resistance**. Moving automatically exits Dug-In with a 45-tick transition delay.
 - **AI Enemy Stance Evaluation:** Enemy pawns automatically evaluate target distance and adopt Rapid Fire ($\le 6$c) or Sharpshot ($\ge 30$c) to ensure tactical parity.
 
@@ -99,7 +99,7 @@ All parameters can be tuned live in-game under **Options -> Mod Options -> Fire 
 **Fire Discipline** bổ sung một lớp chiến thuật vào hệ thống chiến đấu của RimWorld 1.6. Mod được thiết kế để hoạt động song song với cơ chế combat vanilla, không yêu cầu tạo save mới và không cần patch XML riêng cho các mod vũ khí khác.
 
 Mod được thiết kế xoay quanh 2 mục tiêu cốt lõi:
-1. **Tăng Tính Chiến Thuật:** Cung cấp cho người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để mỗi cuộc chạm súng đòi hỏi di chuyển, bọc lót và phản công chứ không chỉ so chỉ số.
+1. **Tăng Tính Chiến Thuật:** Cung cấp cho người người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để mỗi cuộc chạm súng đòi hỏi di chuyển, bọc lót và phản công chứ không chỉ so chỉ số.
 2. **Giảm Ức Chế Phi Lý:** Loại bỏ các tình huống chết ngẫu nhiên phi lý của RimWorld Vanilla—như Pawn mặc giáp xịn bị đạn rác bắn trúng não chết ngay lập tức, hoặc Pawn đứng ngơ người khi bị pháo kích.
 
 #### ⚙️ Nguyên Tắc Tương Thích Tự Động
@@ -115,7 +115,7 @@ Mỗi module có thể bật/tắt độc lập và tức thì trong **Options -
 Pawn ở trạng thái Draft có thể chuyển đổi giữa 3 tư thế chiến thuật qua nút bấm Gizmo UI, cộng 1 trạng thái thụ động tự động:
 - **Standard (Mặc định):** Tốc độ và độ chính xác Vanilla tiêu chuẩn. Chuyển đổi miễn phí tức thì.
 - **Rapid Fire (Bắn nhanh):** Giảm thời gian ngắm ở cự ly gần (30%–75%), gây **+50% áp chế** lên mục tiêu, nhưng giảm độ chính xác ở khoảng cách xa. Shotgun bắn loạt (>1 viên/loạt, như Chain Shotgun) chịu **phạt giật nòng gấp 2.5 lần LMG** ($0.93^{2.5 \times \text{shotIndex}}$) để tránh lạm dụng dồn sát thương tầm gần.
-- **Sharpshot (Bắn tỉa):** Tăng độ chính xác tầm xa (hệ số khoảng cách $d \times 0.80$). Tăng **+40% thời gian ngắm**, giảm độ chính xác cự ly gần (<5 ô, -30%), **dễ bị áp chế +100%** (nếu bị áp chế khi đang ngắm sẽ bị reset thanh ngắm). Bỏ qua **50% tỷ lệ nấp (`Cover Block Chance`)** của mục tiêu. Vũ khí bắn loạt bị **phạt giật nòng gấp 2 lần** để chống lạm dụng LMG bắn tỉa.
+- **Sharpshot (Bắn tỉa):** Tăng độ chính xác tầm xa (hệ số khoảng cách $d \times 0.80$). Tăng **+40% thời gian ngắm**, giảm độ chính xác cự ly gần (<5 ô, -30%), **dễ bị áp chế +100%** (nhận gấp đôi độ nghiêm trọng áp chế từ đạn sượt qua). Bỏ qua **50% tỷ lệ nấp (`Cover Block Chance`)** của mục tiêu. Vũ khí bắn loạt bị **phạt giật nòng gấp 2 lần** để chống lạm dụng LMG bắn tỉa.
 - **Prone (Nằm sấp/Bunker - `FD_DugIn`):** **Trạng thái thụ động tự động** khi đứng yên cố thủ trong combat. Giảm kích thước mục tiêu đi **35%** ($x0.65$), tăng **+50% kháng áp chế**. Di chuyển sẽ tự động thoát Prone với độ trễ chuyển đổi 45 tick.
 - **Tự Động Chọn Tư Thế Cho AI Kẻ Địch:** NPC tự động chọn Rapid Fire ($\le 6$c) hoặc Sharpshot ($\ge 30$c) dựa trên khoảng cách tới mục tiêu để đảm bảo cân bằng.
 

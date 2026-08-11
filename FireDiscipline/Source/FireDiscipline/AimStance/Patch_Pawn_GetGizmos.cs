@@ -34,7 +34,7 @@ namespace FireDiscipline.AimStance
                 else if (currentStance == AimStanceMode.Sharpshot)
                 {
                     label = "Stance: Sharpshot";
-                    desc = "Long-range precision stance (distance exponent d*0.8, warmup x1.4, resets on suppression).";
+                    desc = "Long-range precision stance (distance exponent d*0.8, warmup x1.4, 50% cover bypass).";
                 }
 
                 string iconPath = "UI/Commands/FireDiscipline/Stance_Standard";
