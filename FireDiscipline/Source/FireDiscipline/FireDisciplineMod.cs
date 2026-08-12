@@ -125,13 +125,25 @@ namespace FireDiscipline
 
             listing.Gap(10f);
 
-            // 2c. Passive Dug-In (Prone)
-            listing.Label("  <b><color=#55FF55>[Passive Dug-In (Prone) Condition]</color></b> <i>(Auto-activates when stationary & stacks with stances)</i>");
+            // 2c. Passive Dug-In (Prone) & Heavy Weapon Stationarity
+            listing.Label("  <b><color=#55FF55>[Passive Dug-In (Prone) & Heavy Weapon Stationarity]</color></b> <i>(Activates after standing still & stacks with stances)</i>");
+            listing.Label($"  Stationary Entry Delay: <b>{Settings.dugInEntryTicks} ticks</b> ({(Settings.dugInEntryTicks / 60f):F1}s, Default: 90 ticks / 1.5s)");
+            Settings.dugInEntryTicks = Mathf.RoundToInt(listing.Slider(Settings.dugInEntryTicks, 30f, 300f));
+
             listing.Label($"  Target Size Reduction Factor: <b>x{Settings.proneTargetSizeFactor:F2}</b> (Default: x0.65)");
             Settings.proneTargetSizeFactor = listing.Slider(Settings.proneTargetSizeFactor, 0.30f, 0.95f);
 
-            listing.Label($"  Shooter Accuracy Multiplier: <b>x{Settings.proneAccuracyMultiplier:F2}</b> (Default: x0.85)");
-            Settings.proneAccuracyMultiplier = listing.Slider(Settings.proneAccuracyMultiplier, 0.50f, 1.00f);
+            listing.Label($"  Dug-In Shooter Firing Speed Boost (Aiming Delay): <b>x{Settings.proneWarmupMultiplier:F2}</b> (Default: x0.80 - 20% faster aim)");
+            Settings.proneWarmupMultiplier = listing.Slider(Settings.proneWarmupMultiplier, 0.50f, 1.00f);
+
+            listing.Label($"  Dug-In Shooter Accuracy Multiplier: <b>x{Settings.proneAccuracyMultiplier:F2}</b> (Default: x1.10)");
+            Settings.proneAccuracyMultiplier = listing.Slider(Settings.proneAccuracyMultiplier, 1.00f, 1.50f);
+
+            listing.Label($"  Dug-In Heavy Weapon Recoil Multiplier: <b>x{Settings.dugInHeavyRecoilMultiplier:F2}</b> (Default: x0.40 - 60% recoil reduction)");
+            Settings.dugInHeavyRecoilMultiplier = listing.Slider(Settings.dugInHeavyRecoilMultiplier, 0.10f, 1.00f);
+
+            listing.Label($"  Heavy Weapon (burst >= 5) Suppression Bonus: <b>x{Settings.heavyWeaponSuppressionMultiplier:F2}</b> (Default: x2.00 - +100% suppression)");
+            Settings.heavyWeaponSuppressionMultiplier = listing.Slider(Settings.heavyWeaponSuppressionMultiplier, 1.00f, 3.50f);
 
             listing.Label($"  Received Suppression Resistance: <b>x{Settings.proneSuppressionResistance:F2}</b> (Default: x0.50)");
             Settings.proneSuppressionResistance = listing.Slider(Settings.proneSuppressionResistance, 0.10f, 0.90f);

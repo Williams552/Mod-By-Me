@@ -50,9 +50,19 @@ namespace FireDiscipline.Suppression
             FireDisciplineSettings settings = FireDisciplineMod.Settings;
             float amount = settings?.suppressionBaseAmount ?? 0.25f;
 
-            if (shooter != null && AimStanceTracker.GetStance(shooter) == AimStanceMode.Rapid)
+            if (shooter != null)
             {
-                amount *= settings?.rapidSuppressionMultiplier ?? 1.50f;
+                if (AimStanceTracker.GetStance(shooter) == AimStanceMode.Rapid)
+                {
+                    amount *= settings?.rapidSuppressionMultiplier ?? 1.50f;
+                }
+
+                // Heavy Weapon Suppression Bonus (+100% bonus suppression for heavy automatics with burst >= 5)
+                Verb verb = shooter.equipment?.PrimaryEq?.PrimaryVerb;
+                if (verb != null && verb.verbProps != null && verb.verbProps.burstShotCount >= 5)
+                {
+                    amount *= settings?.heavyWeaponSuppressionMultiplier ?? 2.00f;
+                }
             }
 
             if (victim != null)

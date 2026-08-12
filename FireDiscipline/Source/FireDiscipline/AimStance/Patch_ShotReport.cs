@@ -123,18 +123,24 @@ namespace FireDiscipline.AimStance
                                 {
                                     recoilPower = FireDisciplineMod.Settings?.shotgunRapidRecoilMultiplier ?? 2.50f;
                                 }
+                                else if (AimStanceTracker.IsDugIn(shooterPawn) && verb.verbProps.burstShotCount >= 5)
+                                {
+                                    // 60% recoil penalty reduction for Heavy Automatics (burst >= 5) when stationary & Dug-In
+                                    recoilPower = FireDisciplineMod.Settings?.dugInHeavyRecoilMultiplier ?? 0.40f;
+                                }
                                 factor *= Mathf.Pow(RecoilPerShot, shotIndex * recoilPower);
                             }
                         }
                     }
                 }
-                // Automatic Passive Dug-In (Prone) Shooter Accuracy Modifier
+                // Automatic Passive Dug-In (Prone) Shooter Accuracy Boost (no longer penalises shooter)
                 if (AimStanceTracker.IsDugIn(shooterPawn))
                 {
-                    float mult = FireDisciplineMod.Settings?.proneAccuracyMultiplier ?? 0.85f;
+                    float mult = FireDisciplineMod.Settings?.proneAccuracyMultiplier ?? 1.10f;
                     factor *= mult;
                 }
             }
+
 
 
             // 3. Target Dug-In (Prone) Modifiers

@@ -47,6 +47,13 @@ namespace FireDiscipline.AimStance
                 float mult = FireDisciplineMod.Settings?.sharpshotWarmupMultiplier ?? 1.4f;
                 val *= mult;
             }
+
+            // Passive Dug-In (Prone) Aiming Delay Reduction (increases fire rate when prepared & stationary)
+            if (AimStanceTracker.IsDugIn(pawn))
+            {
+                float proneWarmupMult = FireDisciplineMod.Settings?.proneWarmupMultiplier ?? 0.80f;
+                val *= proneWarmupMult;
+            }
         }
 
         public override string ExplanationPart(StatRequest req)
@@ -71,6 +78,11 @@ namespace FireDiscipline.AimStance
                 {
                     float mult = FireDisciplineMod.Settings?.sharpshotWarmupMultiplier ?? 1.4f;
                     return $"Fire Discipline Sharpshot Stance: x{mult:F2}";
+                }
+                if (AimStanceTracker.IsDugIn(pawn))
+                {
+                    float proneWarmupMult = FireDisciplineMod.Settings?.proneWarmupMultiplier ?? 0.80f;
+                    return $"Fire Discipline Dug-In Firing Speed: x{proneWarmupMult:F2}";
                 }
             }
             return null;

@@ -16,7 +16,7 @@
 **Fire Discipline** adds a tactical combat layer to RimWorld 1.6. It is designed to work alongside vanilla combat mechanics without requiring a new save file or custom XML patches for modded weapons.
 
 The mod is engineered around two primary design goals:
-1. **Enhance Tactical Depth:** Give players real squad-level combat choices (Tactical Aim Stances, Movement Suppression, Cover Resistance, Logistics & Encumbrance) so gunfights involve maneuvering, flanking, and counterplay rather than stat-checking.
+1. **Enhance Tactical Depth ("Strong Defense, Weak Offense"):** Give players real squad-level combat choices (Tactical Aim Stances, Stationary Dug-In Heavy Firepower, Movement Suppression, Cover Resistance, Logistics & Encumbrance) so gunfights reward prepared defensive positions and tactical maneuvering over aggressive rushing.
 2. **Eliminate Unfair Frustration:** Remove immersion-breaking vanilla RimWorld RNG moments—such as high-level armored pawns dying instantly from a random stray bullet to the brain, or pawns standing idly under heavy mortar bombardment.
 
 #### ⚙️ Universal Compatibility Rule & Hybrid Weapon Classification
@@ -28,12 +28,15 @@ Everything in Fire Discipline is **derived dynamically** from vanilla stats and 
 
 Each module can be toggled **ON** or **OFF** independently at any time in **Mod Options**:
 
-#### 🎯 1. Aim Stances & Tactical Postures (`AimStanceModule`)
+#### 🎯 1. Aim Stances & Dug-In Heavy Firepower (`AimStanceModule`)
 Drafted pawns cycle between 3 active tactical stances via a clean UI Gizmo, plus 1 automatic passive condition:
 - **Standard (Baseline):** Standard vanilla firing speed and accuracy. Instant free stance switch. Includes a **+20% base accuracy boost** (`globalAccuracyMultiplier = 1.20`) and category-based distance decay flattening (Sniper: 0.65 exponent, Rifle/LMG: 0.85 exponent, Shotgun/SMG: 1.00 unchanged to preserve close-quarters roles).
 - **Rapid Fire:** Fast close-range hipfire. Reduces weapon warmup time (30%–75%), inflicts **+50% suppression** on targets, but suffers accuracy penalties at long range. Multi-shot shotguns (>1 burst, e.g., Chain Shotgun) suffer a **2.5x higher recoil penalty** ($0.93^{2.5 \times \text{shotIndex}}$) to prevent point-blank burst damage abuse.
 - **Sharpshot (Precision):** Long-range sniper stance ($d \times 0.80$ distance exponent). Suffers **+40% warmup time**, close-range accuracy penalty (<5 cells, -30%), and **+100% suppression vulnerability** (receives double suppression severity from incoming fire). Bypasses **50% of target cover block chance**. Burst/automatic weapons suffer **2x double recoil penalty** to prevent LMG sniper abuse.
-- **Prone (Dug-In):** **Automatic passive condition** (`FD_DugIn`) granted when standing still in combat. Reduces pawn target size by **35%** ($x0.65$), grants **+50% suppression resistance**. Moving automatically exits Dug-In with a 45-tick transition delay.
+- **Dug-In / Prone (`FD_DugIn` — "Strong Defense, Weak Offense"):** **Automatic passive condition** granted when standing still in combat for at least **1.5 seconds (90 ticks entry delay)**. 
+  - **+20% Firing Speed Boost:** Reduces aiming delay by 20% (`proneWarmupMultiplier = 0.80`).
+  - **-60% Recoil Penalty for Heavy Automatics:** LMGs/HMGs/Miniguns ($\text{burst} \ge 5$) gain a 60% recoil reduction when Dug-In (`dugInHeavyRecoilMultiplier = 0.40`), firing laser-tight defensive bursts! Running and gunning on the move retains full recoil penalties.
+  - **Defense:** Reduces pawn target size by **35%** ($x0.65$), grants **+50% suppression resistance**. Moving instantly exits Dug-In.
 - **AI Enemy Stance Evaluation:** Enemy pawns automatically evaluate target distance and adopt Rapid Fire ($\le 6$c) or Sharpshot ($\ge 30$c) to ensure tactical parity.
 
 #### 🎒 2. Encumbrance & Logistics (`EncumbranceModule`)
@@ -42,6 +45,7 @@ Drafted pawns cycle between 3 active tactical stances via a clean UI Gizmo, plus
 
 #### 🛡️ 3. Suppression & Cover Dynamics (`SuppressionCoreModule`)
 - **Movement & Firing Suppression:** Built-in lightweight suppression engine (`FD_Suppressed`) that punishes movement speed, aiming delay, and shooting accuracy.
+- **Heavy Weapon Suppression Bonus (+100%):** Heavy automatic weapons ($\text{burst} \ge 5$, LMG/HMG/Minigun) inflict **double suppression severity** (`heavyWeaponSuppressionMultiplier = 2.00`), instantly pinning down charging tribal hordes before they close into range!
 - **Mechanics:** Accumulates +0.25 severity per near-miss shot (3.5-cell radius). Decays at -0.10 severity/sec after a 120-tick (2s) grace period.
 - **Stages:** Shaken (0.5), Wavering (1.0), Ducking (2.0), Cowering (5.5) on a 0–9 severity scale. MoveSpeed multipliers: $\times 0.95 \rightarrow \times 0.80 \rightarrow \times 0.50 \rightarrow \times 0.15$ (absolute floor 0.70 cells/sec).
 - 🔴 **Pinned State (Severity $\ge$ 7.0):** Pawns under heavy suppression are **completely blocked from firing ranged weapons** (`Verb.Available = false`) until suppression decays.
@@ -74,28 +78,11 @@ Drafted pawns cycle between 3 active tactical stances via a clean UI Gizmo, plus
 
 All parameters can be tuned live in-game under **Options -> Mod Options -> Fire Discipline**:
 - **Accuracy & Distance Decay:** Global Base Accuracy Multiplier (x1.20), Sniper Distance Decay Flattener (0.65), Rifle/LMG Distance Decay Flattener (0.85).
+- **Dug-In & Heavy Weapons:** Entry Delay (90 ticks / 1.5s), Firing Speed Boost (x0.80), Heavy Recoil Reduction (x0.40 / -60%), Heavy Weapon Suppression Bonus (x2.00 / +100%).
 - **Sharpshot:** Warmup multiplier, distance exponent, close-range penalty, suppression vulnerability, cover bypass factor.
 - **Rapid Fire:** Min/max warmup clamps, inflicted suppression multiplier, multi-shot shotgun recoil multiplier ($x2.50$).
-- **Prone Stance:** Target size reduction, accuracy multiplier, suppression resistance.
 - **Graze System:** Hit chance ceiling (default 65%), chance span (default 45%), damage multiplier (default 35%).
-- **Shock System:** Ally shock radius (6.0c), shell shock cap (20) and coefficient (2.0).
 - **Suppression & Cover:** Cover suppression factor (0.00–3.00, default 1.00), pinned threshold (7.0).
-- **Hit Variance Engine:** Enable Unified Quota-Carry Model for RNG miss mitigation across all weapons.
-
----
-
-### 📦 Compatibility & Load Order
-
-- **Save Compatibility:** Safe to add or remove mid-playthrough.
-- **Modded Weapons/Armor:** 100% compatible out of the box.
-- **Recommended Load Order:**
-  ```text
-  Core -> DLCs -> HugsLib
-  Yayo's Combat 3 (Continued)
-  Suppression (Continued)
-  Fire Discipline                  <-- Load Fire Discipline here
-  Simple Sidearms / Run and Gun / Achtung!
-  ```
 
 ---
 
@@ -106,7 +93,7 @@ All parameters can be tuned live in-game under **Options -> Mod Options -> Fire 
 **Fire Discipline** bổ sung một lớp chiến thuật vào hệ thống chiến đấu của RimWorld 1.6. Mod được thiết kế để hoạt động song song với cơ chế combat vanilla, không yêu cầu tạo save mới và không cần patch XML riêng cho các mod vũ khí khác.
 
 Mod được thiết kế xoay quanh 2 mục tiêu cốt lõi:
-1. **Tăng Tính Chiến Thuật:** Cung cấp cho người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để mỗi cuộc chạm súng đòi hỏi di chuyển, bọc lót và phản công chứ không chỉ so chỉ số.
+1. **Tăng Tính Chiến Thuật ("Thủ Mạnh, Công Yếu"):** Cung cấp cho người chơi các công cụ quản lý tiểu đội thực sự (Tư thế ngắm bắn, Hỏa lực súng nặng khi cố thủ, Áp chế di chuyển, Kháng áp chế từ vật cản, Tải trọng trang bị) để thưởng cho các vị trí phòng thủ chuẩn bị trước và di chuyển bọc lót thay vì càn quét vô não.
 2. **Giảm Ức Chế Phi Lý:** Loại bỏ các tình huống chết ngẫu nhiên phi lý của RimWorld Vanilla—như Pawn mặc giáp xịn bị đạn rác bắn trúng não chết ngay lập tức, hoặc Pawn đứng ngơ người khi bị pháo kích.
 
 #### ⚙️ Nguyên Tắc Tương Thích Tự Động & Phân Loại Vũ Khí Phức Hợp
@@ -118,12 +105,15 @@ Toàn bộ thông số trong Fire Discipline được **suy ra tự động** t�
 
 Mỗi module có thể bật/tắt độc lập và tức thì trong **Options -> Mod Options -> Fire Discipline**:
 
-#### 🎯 1. Tư Thế Tác Chiến & Độ Chính Xác (`AimStanceModule`)
+#### 🎯 1. Tư Thế Tác Chiến & Hỏa Lực Cố Thủ HMG (`AimStanceModule`)
 Pawn ở trạng thái Draft có thể chuyển đổi giữa 3 tư thế chiến thuật qua nút bấm Gizmo UI, cộng 1 trạng thái thụ động tự động:
 - **Standard (Mặc định):** Tốc độ và độ chính xác tiêu chuẩn. Tự động **tăng 20% độ chính xác gốc (`globalAccuracyMultiplier = 1.20`)** và phân cấp làm phẳng dốc tầm xa (Sniper: lũy thừa 0.65, Rifle/LMG: lũy thừa 0.85, Shotgun/SMG: 1.00 giữ nguyên bản chất cận chiến).
 - **Rapid Fire (Bắn nhanh):** Giảm thời gian ngắm ở cự ly gần (30%–75%), gây **+50% áp chế** lên mục tiêu, nhưng giảm độ chính xác ở khoảng cách xa. Shotgun bắn loạt (>1 viên/loạt, như Chain Shotgun) chịu **phạt giật nòng gấp 2.5 lần LMG** ($0.93^{2.5 \times \text{shotIndex}}$) để tránh lạm dụng dồn sát thương tầm gần.
 - **Sharpshot (Bắn tỉa):** Tăng độ chính xác tầm xa (hệ số khoảng cách $d \times 0.80$). Tăng **+40% thời gian ngắm**, giảm độ chính xác cự ly gần (<5 ô, -30%), **dễ bị áp chế +100%** (nhận gấp đôi độ nghiêm trọng áp chế từ đạn sượt qua). Bỏ qua **50% tỷ lệ nấp (`Cover Block Chance`)** của mục tiêu. Vũ khí bắn loạt bị **phạt giật nòng gấp 2 lần** để chống lạm dụng LMG bắn tỉa.
-- **Prone (Nằm sấp/Bunker - `FD_DugIn`):** **Trạng thái thụ động tự động** khi đứng yên cố thủ trong combat. Giảm kích thước mục tiêu đi **35%** ($x0.65$), tăng **+50% kháng áp chế**. Di chuyển sẽ tự động thoát Prone với độ trễ chuyển đổi 45 tick.
+- **Dug-In / Prone (`FD_DugIn` — Triết lý "Thủ Mạnh, Công Yếu"):** **Trạng thái thụ động tự động** khi đứng yên cố thủ trong combat tối thiểu **1.5 giây (90 ticks entry delay)**.
+  - **Tăng 20% Tốc độ bắn:** Giảm thời gian ngắm Aiming Delay còn 80% (`proneWarmupMultiplier = 0.80`).
+  - **Giảm 60% Phạt Giật Nòng Súng Hạng Nặng:** LMG/HMG/Minigun ($\text{burst} \ge 5$) khi cố thủ Dug-In được triệt tiêu 60% giật nòng (`dugInHeavyRecoilMultiplier = 0.40`), xả loạt đạn dồn thẳng vào 1 điểm. Khi di chuyển/chạy bắn vẫn bị phạt giật nòng $0.93^{\text{shotIndex}}$ như gốc.
+  - **Phòng thủ:** Giảm kích thước mục tiêu đi **35%** ($x0.65$), tăng **+50% kháng áp chế**. Di chuyển sẽ tự động thoát Dug-In.
 - **Tự Động Chọn Tư Thế Cho AI Kẻ Địch:** NPC tự động chọn Rapid Fire ($\le 6$c) hoặc Sharpshot ($\ge 30$c) dựa trên khoảng cách tới mục tiêu để đảm bảo cân bằng.
 
 #### 🎒 2. Tải Trọng Trang Bị (`EncumbranceModule`)
@@ -132,6 +122,7 @@ Pawn ở trạng thái Draft có thể chuyển đổi giữa 3 tư thế chiế
 
 #### 🛡️ 3. Áp Chế & Vật Cản (`SuppressionCoreModule`)
 - **Áp Chế Trừng Phạt Di Chuyển & Khóa Bắn:** Hệ thống áp chế nhẹ (`FD_Suppressed`) tập trung phạt tốc độ di chuyển, thời gian ngắm và độ chính xác ngắm bắn.
+- **Thưởng +100% Áp Chế Súng Hạng Nặng:** Súng tự động hạng nặng ($\text{burst} \ge 5$, HMG/LMG/Minigun) gây **gấp đôi độ nghiêm trọng áp chế** (`heavyWeaponSuppressionMultiplier = 2.00`), ép đợt càn bầy người vào trạng thái Ducking/Cowering từ cự ly 25–30 ô!
 - **Cơ chế:** Tích lũy +0.25 độ nghiêm trọng mỗi phát đạn qua gần (bán kính 3.5 ô). Giảm -0.10/giây sau 120 tick (2 giây) ân hạn.
 - **Các Stage:** Shaken (0.5), Wavering (1.0), Ducking (2.0), Cowering (5.5) trên thang 0–9. Hệ số MoveSpeed: $\times 0.95 \rightarrow \times 0.80 \rightarrow \times 0.50 \rightarrow \times 0.15$ (sàn tuyệt đối 0.70 ô/s).
 - 🔴 **Trạng thái Bị Ghim (Pinned State - Severity $\ge$ 7.0):** Pawn bị áp chế nặng sẽ **KHÓA HOÀN TOÀN KHẢ NĂNG BẮN TRẢ** (`Verb.Available = false`) cho đến khi mức áp chế giảm xuống.
@@ -164,28 +155,11 @@ Pawn ở trạng thái Draft có thể chuyển đổi giữa 3 tư thế chiế
 
 Tất cả thông số có thể điều chỉnh ngay trong game tại **Options -> Mod Options -> Fire Discipline**:
 - **Độ Chính Xác & Cự Ly:** Hệ số tăng Acc gốc (x1.20), Hệ số làm phẳng tầm xa Sniper/DMR (0.65), Hệ số làm phẳng tầm xa Rifle/LMG/AR (0.85).
+- **Cố Thủ Dug-In & Súng Hạng Nặng:** Đô trễ cố thủ (90 ticks / 1.5s), Thưởng tốc độ bắn Dug-In (x0.80), Giảm giật nòng súng nặng khi Dug-In (x0.40 / -60%), Thưởng áp chế súng hạng nặng (x2.00 / +100%).
 - **Sharpshot:** Hệ số ngắm, hệ số khoảng cách, phạt cự ly gần, điểm yếu áp chế, tỷ lệ xuyên nấp.
 - **Rapid Fire:** Giới hạn thời gian ngắm (min/max), hệ số gây áp chế, hệ số phạt giật nòng Shotgun bắn loạt ($x2.50$).
-- **Prone Stance:** Tỷ lệ kích thước mục tiêu, kháng áp chế.
-- **Cơ Chế Graze:** Trần hit-chance (65%), khoảng biên (45%), hệ số giữ sát thương (35%).
-- **Shock System:** Bán kính shock (6.0), giới hạn số ô Shell Shock (20), hệ số Shell Shock (2.0).
+- **Graze System:** Trần hit-chance (65%), khoảng biên (45%), hệ số giữ sát thương (35%).
 - **Áp Chế & Vật Cản:** Hệ số giảm áp chế vật nấp (0.00–3.00, mặc định 1.00), ngưỡng bị ghim (7.0).
-- **Hit Variance Engine:** Bật mô hình Quota-Carry đồng nhất để triệt tiêu chuỗi trượt RNG trên mọi vũ khí.
-
----
-
-### 📦 Tương Thích & Thứ Tự Load
-
-- **Save Compatibility:** Safe to add or remove mid-playthrough.
-- **Modded Weapons/Armor:** 100% compatible out of the box.
-- **Recommended Load Order:**
-  ```text
-  Core -> DLCs -> HugsLib
-  Yayo's Combat 3 (Continued)
-  Suppression (Continued)
-  Fire Discipline                  <-- Load Fire Discipline ở đây
-  Simple Sidearms / Run and Gun / Achtung!
-  ```
 
 ---
 

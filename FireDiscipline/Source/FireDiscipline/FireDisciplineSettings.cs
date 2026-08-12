@@ -55,11 +55,15 @@ namespace FireDiscipline
         public bool enableSuppressionCoverDegradation = true;   // Toggle for suppression cover degradation
         public float suppressionCoverDegradationMax = 0.40f;    // Max reduction (40%) of target cover block chance when fully suppressed
 
-        // 2.3 Prone Stance
+        // 2.3 Prone Stance & Dug-In Mechanics
         public float proneTargetSizeFactor = 0.65f;            // Target size reduction (x0.65)
         public float proneMoveSpeedMultiplier = 0.60f;          // Move speed multiplier (-40% speed / x0.60)
-        public float proneAccuracyMultiplier = 0.85f;           // Accuracy multiplier (x0.85)
+        public float proneAccuracyMultiplier = 1.10f;           // Shooter accuracy boost when Dug-In (x1.10)
+        public float proneWarmupMultiplier = 0.80f;             // Firing speed boost / Aiming delay reduction when Dug-In (x0.80)
         public float proneSuppressionResistance = 0.50f;       // Received suppression multiplier (x0.50)
+        public int dugInEntryTicks = 90;                        // Stationary ticks required to enter Dug-In state (default 90 ticks / 1.5s)
+        public float dugInHeavyRecoilMultiplier = 0.40f;        // Recoil penalty multiplier for heavy automatics when Dug-In (x0.40 / -60% recoil)
+        public float heavyWeaponSuppressionMultiplier = 2.00f;  // Suppression multiplier for heavy automatics (burst >= 5) (x2.00 / +100% bonus)
 
         // 2.4 Transition Costs
         public int stanceTransitionTicks = 45;                 // 45 ticks (0.75s) delay when switching into non-Standard stance
@@ -259,11 +263,15 @@ namespace FireDiscipline
             Scribe_Values.Look(ref enableSuppressionCoverDegradation, "enableSuppressionCoverDegradation", true);
             Scribe_Values.Look(ref suppressionCoverDegradationMax, "suppressionCoverDegradationMax", 0.40f);
 
-            // Prone
+            // Prone & Dug-In Mechanics
             Scribe_Values.Look(ref proneTargetSizeFactor, "proneTargetSizeFactor", 0.65f);
             Scribe_Values.Look(ref proneMoveSpeedMultiplier, "proneMoveSpeedMultiplier", 0.60f);
-            Scribe_Values.Look(ref proneAccuracyMultiplier, "proneAccuracyMultiplier", 0.85f);
+            Scribe_Values.Look(ref proneAccuracyMultiplier, "proneAccuracyMultiplier", 1.10f);
+            Scribe_Values.Look(ref proneWarmupMultiplier, "proneWarmupMultiplier", 0.80f);
             Scribe_Values.Look(ref proneSuppressionResistance, "proneSuppressionResistance", 0.50f);
+            Scribe_Values.Look(ref dugInEntryTicks, "dugInEntryTicks", 90);
+            Scribe_Values.Look(ref dugInHeavyRecoilMultiplier, "dugInHeavyRecoilMultiplier", 0.40f);
+            Scribe_Values.Look(ref heavyWeaponSuppressionMultiplier, "heavyWeaponSuppressionMultiplier", 2.00f);
 
             // Transitions & Patches
             Scribe_Values.Look(ref stanceTransitionTicks, "stanceTransitionTicks", 45);
