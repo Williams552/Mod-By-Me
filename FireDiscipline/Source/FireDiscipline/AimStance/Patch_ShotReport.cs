@@ -194,24 +194,8 @@ namespace FireDiscipline.AimStance
                         float bypassFactor = FireDisciplineMod.Settings?.sharpshotCoverBypassFactor ?? 0.50f;
                         coverBlock *= (1f - bypassFactor);
                     }
-
-                    // Option 2: Suppression Cover Degradation (reduces target cover block chance when suppressed)
-                    if ((FireDisciplineMod.Settings?.enableSuppressionCoverDegradation ?? true)
-                        && target.HasThing && target.Thing is Pawn tPawn)
-                    {
-                        HediffDef suppDef = Suppression.SuppressionEngine.SuppressedDef;
-                        if (suppDef != null && tPawn.health?.hediffSet != null)
-                        {
-                            var hediff = tPawn.health.hediffSet.GetFirstHediffOfDef(suppDef);
-                            if (hediff != null && hediff.Severity > 0f)
-                            {
-                                float maxPenalty = FireDisciplineMod.Settings?.suppressionCoverDegradationMax ?? 0.40f;
-                                float penalty = Mathf.Clamp01(maxPenalty * hediff.Severity);
-                                coverBlock *= (1f - penalty);
-                            }
-                        }
-                    }
                 }
+
             }
 
             // 5. Hit Variance Mitigation Module (Wave B8)

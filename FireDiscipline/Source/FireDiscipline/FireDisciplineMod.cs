@@ -98,15 +98,9 @@ namespace FireDiscipline
             listing.Label($"  Inflicted Suppression Multiplier: <b>x{Settings.rapidSuppressionMultiplier:F2}</b> (Default: x1.50)");
             Settings.rapidSuppressionMultiplier = listing.Slider(Settings.rapidSuppressionMultiplier, 1.00f, 2.50f);
 
-            listing.CheckboxLabeled("  Enable Suppressed Target Cover Degradation", ref Settings.enableSuppressionCoverDegradation,
-                "Reduces the target's cover block chance when the target is currently under suppression.");
-            if (Settings.enableSuppressionCoverDegradation)
-            {
-                listing.Label($"    Max Suppressed Target Cover Degradation: <b>-{(Settings.suppressionCoverDegradationMax * 100f):F0}%</b> (Default: -40%)");
-                Settings.suppressionCoverDegradationMax = listing.Slider(Settings.suppressionCoverDegradationMax, 0.10f, 0.70f);
-            }
             listing.Label($"  Multi-Shot Shotgun (>1 burst) Rapid Recoil Multiplier: <b>x{Settings.shotgunRapidRecoilMultiplier:F2}</b> (Default: x2.50 power - 2.5x higher than LMG)");
             Settings.shotgunRapidRecoilMultiplier = listing.Slider(Settings.shotgunRapidRecoilMultiplier, 1.00f, 5.00f);
+
 
             listing.Gap(5f);
             listing.CheckboxLabeled("  Enable Rapid Full-Auto Expansion for Heavy Automatics", ref Settings.enableRapidFullAuto,

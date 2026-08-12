@@ -747,7 +747,6 @@ namespace FireDiscipline.Core
             string[] coverNames = new string[] { "Open (0%)", "Sandbag(55%)", "Mid Cover(70)", "Wall (85%)" };
 
             float bypassFactor = FireDisciplineMod.Settings?.sharpshotCoverBypassFactor ?? 0.50f;
-            float maxSuppressionPenalty = FireDisciplineMod.Settings?.suppressionCoverDegradationMax ?? 0.40f;
 
             foreach (ThingDef weaponDef in weapons)
             {
@@ -780,9 +779,10 @@ namespace FireDiscipline.Core
                     float pSharp = Mathf.Clamp01(aimP * passCoverSharp);
                     int hitsSharp = Simulate100Shots(pSharp);
 
-                    // 3. Tactical Combo (Sharpshot vs 100% Suppressed Target: 50% Bypass + 40% Degradation)
-                    float coverBlockCombo = baseCoverBlock * (1f - bypassFactor) * (1f - maxSuppressionPenalty);
+                    // 3. Tactical Combo (Sharpshot vs Target with 50% Cover Bypass)
+                    float coverBlockCombo = baseCoverBlock * (1f - bypassFactor);
                     float passCoverCombo = 1f - coverBlockCombo;
+
                     float pCombo = Mathf.Clamp01(aimP * passCoverCombo);
                     int hitsCombo = Simulate100Shots(pCombo);
 
