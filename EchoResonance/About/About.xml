@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Echo Resonance</name>
+  <packageId>william.echoresonance</packageId>
+  <author>William</author>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Echo Resonance adds a long-term colony progression system driven by the Archotech Resonator.
+
+FEATURES
+- Echo Pool: Accumulate Echo points naturally as your colony thrives (skill progression, raids repelled, research, masterwork crafting, rituals, quadrum survival).
+- Archotech Resonator: The single core structure of your colony that generates and anchors Echo points. Protect it at all costs! If destroyed, unspent Echo is lost.
+- Attunement Pylons: Expand up to 4 pylons around the Resonator to boost Echo generation speed up to x3.0.
+- Tiered Perk System: Unlock powerful, game-changing perks across 4 branches (Flesh, Mind, Livelihood, Combat) without hard slot caps.
+- Escalating Costs & Specialization Discounts: Multi-perk pawns cost exponentially more Echo, but perks matching a pawn's existing branch gain a 25% specialization discount.
+</description>
+</ModMetaData>

@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Base Hediff Template for Echo Perks -->
+  <HediffDef Name="ER_PerkHediffBase" Abstract="True">
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.4, 0.8, 1.0)</defaultLabelColor>
+    <isBad>false</isBad>
+    <initialSeverity>1.0</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <comps>
+      <li Class="HediffCompProperties_DisappearsOnDeath" />
+    </comps>
+  </HediffDef>
+
+  <!-- ==================== 🫀 NHÁNH NHỤC THÂN (FLESH) ==================== -->
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_IronStomach</defName>
+    <label>iron stomach</label>
+    <description>Immune to food poisoning and raw food mood debuffs.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <FoodPoisonChance>0</FoodPoisonChance>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_LightSleeper</defName>
+    <label>light sleeper</label>
+    <description>Rest depletes 40% slower.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <RestFallRateFactor>0.6</RestFallRateFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_ThickSkin</defName>
+    <label>thick skin</label>
+    <description>Comfortable temperature range expanded by ±25°C.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <ComfyTemperatureMin>-25</ComfyTemperatureMin>
+          <ComfyTemperatureMax>25</ComfyTemperatureMax>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_LightFeet</defName>
+    <label>light feet</label>
+    <description>Movement speed +35% and ignores terrain movement penalties.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <MoveSpeed>1.35</MoveSpeed>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_Tireless</defName>
+    <label>tireless</label>
+    <description>Rest depletes 70% slower; only requires 3 hours of sleep.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <RestFallRateFactor>0.3</RestFallRateFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_QuickBlood</defName>
+    <label>quick blood</label>
+    <description>Injury healing speed x5 and immunity to infections.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <InjuryHealingFactor>5.0</InjuryHealingFactor>
+          <ImmunityGainSpeed>2.0</ImmunityGainSpeed>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_CleanLungs</defName>
+    <label>clean lungs</label>
+    <description>Complete immunity to toxic environment, fallout, and asthma.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <ToxicEnvironmentResistance>1.0</ToxicEnvironmentResistance>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_ArchotechBlood</defName>
+    <label>archotech blood</label>
+    <description>Regenerates missing limbs over time and halts aging completely.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <InjuryHealingFactor>10.0</InjuryHealingFactor>
+        </statFactors>
+        <statOffsets>
+          <ToxicEnvironmentResistance>1.0</ToxicEnvironmentResistance>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_ImperfectImmortality</defName>
+    <label>imperfect immortality</label>
+    <description>Cannot die from fatal injuries; enters a 3-day recovery trance instead.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <PainShockThreshold>0.50</PainShockThreshold>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+
+  <!-- ==================== 🧠 NHÁNH TÂM TRÍ (MIND) ==================== -->
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SteadyMind</defName>
+    <label>steady mind</label>
+    <description>Mental break threshold reduced by 50%.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <MentalBreakThreshold>0.5</MentalBreakThreshold>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_Carefree</defName>
+    <label>carefree</label>
+    <description>Immune to corpse, blood, dark, and cramped room mood penalties.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <MentalBreakThreshold>0.5</MentalBreakThreshold>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_ClearMemory</defName>
+    <label>clear memory</label>
+    <description>Skill learning speed +60% and skills never decay.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <GlobalLearningFactor>0.60</GlobalLearningFactor>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_WarmVoice</defName>
+    <label>warm voice</label>
+    <description>Social impact x2.0, recruitment difficulty -50%, trade prices +30%.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <SocialImpact>2.0</SocialImpact>
+        </statFactors>
+        <statOffsets>
+          <TradePriceImprovement>0.30</TradePriceImprovement>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SharpMind</defName>
+    <label>sharp mind</label>
+    <description>Research speed x2.2.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <ResearchSpeed>2.2</ResearchSpeed>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_GuidingLight</defName>
+    <label>guiding light</label>
+    <description>Inspires nearby allies with +8 mood aura and +15% work speed.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <SocialImpact>0.30</SocialImpact>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_ImmovableMind</defName>
+    <label>immovable mind</label>
+    <description>Never suffers mental breaks; mood is locked at 35% minimum.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <MentalBreakThreshold>0.10</MentalBreakThreshold>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_RadiantWill</defName>
+    <label>radiant will</label>
+    <description>Reduces colony-wide mental break threshold by 40%.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <MentalBreakThreshold>0.60</MentalBreakThreshold>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+
+  <!-- ==================== 🔨 NHÁNH SINH KẾ (LIVELIHOOD) ==================== -->
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SteadyHands</defName>
+    <label>steady hands</label>
+    <description>Never crafts Awful/Poor items; crafting speed +20%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <GeneralLaborSpeed>0.20</GeneralLaborSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_WarmHands</defName>
+    <label>warm hands</label>
+    <description>Surgery fail chance -80%, tend quality +25%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <MedicalSurgerySuccessChance>0.80</MedicalSurgerySuccessChance>
+          <MedicalTendQuality>0.25</MedicalTendQuality>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_GreenThumb</defName>
+    <label>green thumb</label>
+    <description>Plant work speed +60%; planted crops immune to blight.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <PlantWorkSpeed>0.60</PlantWorkSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_GaiaTouch</defName>
+    <label>gaeas touch</label>
+    <description>Plant work speed +150%, crop yield +50%. Debuff: Shooting accuracy -50%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <PlantWorkSpeed>1.50</PlantWorkSpeed>
+          <PlantYield>0.50</PlantYield>
+          <ShootingAccuracyPawn>-0.50</ShootingAccuracyPawn>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_AncestralHands</defName>
+    <label>ancestral hands</label>
+    <description>Minimum craft quality Excellent, +25% chance for Legendary.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <GeneralLaborSpeed>0.40</GeneralLaborSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SoilWhisperer</defName>
+    <label>soil whisperer</label>
+    <description>Crops in 15-cell radius grow 50% faster; harvests yield +40%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <PlantWorkSpeed>0.50</PlantWorkSpeed>
+          <PlantYield>0.30</PlantYield>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_AnimalWhisperer</defName>
+    <label>animal whisperer</label>
+    <description>Taming chance x3, animals never revert to wild.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <TameAnimalChance>3.0</TameAnimalChance>
+          <TrainAnimalChance>3.0</TrainAnimalChance>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SlowPace</defName>
+    <label>steady rhythm</label>
+    <description>Global work speed x2.5.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <WorkSpeedGlobal>2.5</WorkSpeedGlobal>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_MasterOfAll</defName>
+    <label>master of all trades</label>
+    <description>All skills treated as Level 20 for work speed and quality.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <WorkSpeedGlobal>1.5</WorkSpeedGlobal>
+        </statFactors>
+        <statOffsets>
+          <GeneralLaborSpeed>0.50</GeneralLaborSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+
+  <!-- ==================== ⚔️ NHÁNH CHIẾN TRẬN (COMBAT) ==================== -->
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_QuickReflexes</defName>
+    <label>quick reflexes</label>
+    <description>Aiming time -25%, melee dodge +20%, reload speed +50%.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <RangedCooldownFactor>0.75</RangedCooldownFactor>
+        </statFactors>
+        <statOffsets>
+          <MeleeDodgeChance>20</MeleeDodgeChance>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_Steadfast</defName>
+    <label>steadfast</label>
+    <description>Immune to suppression; pain shock threshold +30%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <PainShockThreshold>0.30</PainShockThreshold>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SteadyShooter</defName>
+    <label>steady shooter</label>
+    <description>Zero friendly fire chance; shooting accuracy +15%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <ShootingAccuracyPawn>0.15</ShootingAccuracyPawn>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_HawkEye</defName>
+    <label>hawk eye</label>
+    <description>Maximum shooting accuracy at all distances; aiming time -40%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <ShootingAccuracyPawn>0.50</ShootingAccuracyPawn>
+        </statOffsets>
+        <statFactors>
+          <RangedCooldownFactor>0.60</RangedCooldownFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SteelBody</defName>
+    <label>steel body</label>
+    <description>Blunt &amp; Sharp armor +60%; immune to suppression and stagger.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <ArmorRating_Blunt>0.60</ArmorRating_Blunt>
+          <ArmorRating_Sharp>0.60</ArmorRating_Sharp>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_GlassCannon</defName>
+    <label>glass cannon</label>
+    <description>Ranged damage +60%, aiming time -30%. Debuff: Takes +100% incoming damage.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <RangedCooldownFactor>0.70</RangedCooldownFactor>
+          <IncomingDamageFactor>2.0</IncomingDamageFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_BerserkerMode</defName>
+    <label>juggernaut berserker</label>
+    <description>Melee DPS +120%, armor +40%. Debuff: Incapable of Intellectual &amp; Social.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <MeleeDPS>1.20</MeleeDPS>
+          <ArmorRating_Blunt>0.40</ArmorRating_Blunt>
+          <ArmorRating_Sharp>0.40</ArmorRating_Sharp>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_BlinkStep</defName>
+    <label>blink step</label>
+    <description>Teleport to any revealed cell on the map (1 day cooldown); move speed +1.0.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <MoveSpeed>1.0</MoveSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SuppressingGaze</defName>
+    <label>suppressing gaze</label>
+    <description>Enemies in 12-cell radius suffer continuous suppression and -30% accuracy.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <MeleeDodgeChance>15</MeleeDodgeChance>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+</Defs>

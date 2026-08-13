@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Catalyst Item: Resonance Focus -->
+  <ThingDef ParentName="ResourceBase">
+    <defName>ER_ResonanceFocus</defName>
+    <label>resonance focus crystal</label>
+    <description>A highly tuned crystal lattice used as a physical catalyst to channel colony memories. Consumed when unlocking Tier 2 Pawn Perks at the Archotech Resonator.</description>
+    <graphicData>
+      <texPath>Things/Item/Special/PsychicAmplifier</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <resourceReadoutPriority>Middle</resourceReadoutPriority>
+    <stackLimit>25</stackLimit>
+    <useHitPoints>true</useHitPoints>
+    <statBases>
+      <MaxHitPoints>80</MaxHitPoints>
+      <MarketValue>350</MarketValue>
+      <Mass>0.5</Mass>
+      <Flammability>0.0</Flammability>
+    </statBases>
+    <thingCategories>
+      <li>Items</li>
+    </thingCategories>
+    <tradeTags>
+      <li>ExoticMisc</li>
+    </tradeTags>
+  </ThingDef>
+
+  <!-- Recipe to craft Resonance Focus at Fabrication Bench -->
+  <RecipeDef>
+    <defName>ER_MakeResonanceFocus</defName>
+    <label>make resonance focus crystal</label>
+    <description>Synthesize a Resonance Focus crystal from plasteel, gold, and advanced components.</description>
+    <jobString>Synthesizing resonance focus crystal.</jobString>
+    <workAmount>6000</workAmount>
+    <workSpeedStat>WorkSpeedGlobal</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Machining</soundWorking>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Plasteel</li>
+          </thingDefs>
+        </filter>
+        <count>30</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Gold</li>
+          </thingDefs>
+        </filter>
+        <count>15</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>ComponentSpacer</li>
+          </thingDefs>
+        </filter>
+        <count>2</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>Plasteel</li>
+        <li>Gold</li>
+        <li>ComponentSpacer</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ER_ResonanceFocus>1</ER_ResonanceFocus>
+    </products>
+    <recipeUsers>
+      <li>FabricationBench</li>
+    </recipeUsers>
+    <skillRequirements>
+      <Crafting>8</Crafting>
+    </skillRequirements>
+    <researchPrerequisite>EchoAttunement</researchPrerequisite>
+  </RecipeDef>
+
+</Defs>

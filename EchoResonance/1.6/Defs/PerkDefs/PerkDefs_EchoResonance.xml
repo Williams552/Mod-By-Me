@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- ==================== 🫀 NHÁNH NHỤC THÂN (FLESH) ==================== -->
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_IronStomach</defName>
+    <label>Dạ Dày Sắt</label>
+    <description>Miễn nhiễm ngộ độc thực phẩm; không bị tụt mood do ăn thức ăn thô hoặc nguyên liệu tươi.</description>
+    <tier>1</tier>
+    <branch>Flesh</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_IronStomach</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_LightSleeper</defName>
+    <label>Giấc Ngủ Nông</label>
+    <description>Tốc độ tụt Rest giảm 40%, pawn ít cần ngủ hơn.</description>
+    <tier>1</tier>
+    <branch>Flesh</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_LightSleeper</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_ThickSkin</defName>
+    <label>Da Dày</label>
+    <description>Miễn nhiễm mọi mood penalty về nhiệt độ; dải nhiệt an toàn mở rộng ±25°C.</description>
+    <tier>1</tier>
+    <branch>Flesh</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_ThickSkin</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_LightFeet</defName>
+    <label>Chân Nhẹ</label>
+    <description>Tốc độ di chuyển +35%; không bị chậm do địa hình xấu (bùn, tuyết, đầm lầy).</description>
+    <tier>1</tier>
+    <branch>Flesh</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_LightFeet</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_Tireless</defName>
+    <label>Không Biết Mệt</label>
+    <description>Tốc độ tụt Rest giảm 70%; chỉ cần ngủ 3 giờ là đầy bình năng lượng.</description>
+    <tier>2</tier>
+    <branch>Flesh</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_Tireless</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_QuickBlood</defName>
+    <label>Máu Nhanh</label>
+    <description>Tốc độ hồi phục vết thương x5; miễn nhiễm với các loại nhiễm trùng.</description>
+    <tier>2</tier>
+    <branch>Flesh</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_QuickBlood</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_CleanLungs</defName>
+    <label>Phổi Sạch</label>
+    <description>Miễn nhiễm với toxic fallout, khí độc, bụi phổi và bệnh hô hấp mãn tính.</description>
+    <tier>2</tier>
+    <branch>Flesh</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_CleanLungs</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_ArchotechBlood</defName>
+    <label>Máu Archotech</label>
+    <description>Chi thể bị mất tự mọc lại sau 15 ngày; xóa sạch bệnh mãn tính; dừng lão hóa vĩnh viễn.</description>
+    <tier>3</tier>
+    <branch>Flesh</branch>
+    <baseCost>150</baseCost>
+    <hediffDef>ER_Hediff_ArchotechBlood</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_ImperfectImmortality</defName>
+    <label>Bất Tử Kém Chất Lượng</label>
+    <description>Không thể chết do sát thương thường. Khi nhận đòn chí mạng sẽ gục đập và tự hồi phục sau 3 ngày.</description>
+    <tier>3</tier>
+    <branch>Flesh</branch>
+    <baseCost>150</baseCost>
+    <hediffDef>ER_Hediff_ImperfectImmortality</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+
+  <!-- ==================== 🧠 NHÁNH TÂM TRÍ (MIND) ==================== -->
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_SteadyMind</defName>
+    <label>Tâm Vững</label>
+    <description>Ngưỡng Mental Break giảm 50%.</description>
+    <tier>1</tier>
+    <branch>Mind</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_SteadyMind</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_Carefree</defName>
+    <label>Vô Ưu</label>
+    <description>Miễn nhiễm mood penalty từ xác chết, máu, phòng xấu, bóng tối, chật chội.</description>
+    <tier>1</tier>
+    <branch>Mind</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_Carefree</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_ClearMemory</defName>
+    <label>Trí Nhớ Sáng</label>
+    <description>Tốc độ học skill +60%; điểm skill không bao giờ bị tuột (decay).</description>
+    <tier>1</tier>
+    <branch>Mind</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_ClearMemory</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_WarmVoice</defName>
+    <label>Giọng Nói Ấm</label>
+    <description>Social impact x2.0; độ khó thu phục tù binh -50%; giá giao dịch +30%.</description>
+    <tier>2</tier>
+    <branch>Mind</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_WarmVoice</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_SharpMind</defName>
+    <label>Tư Duy Sắc</label>
+    <description>Tốc độ nghiên cứu x2.2.</description>
+    <tier>2</tier>
+    <branch>Mind</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_SharpMind</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_GuidingLight</defName>
+    <label>Kẻ Dẫn Đường</label>
+    <description>Đồng đội xung quanh bán kính 10 ô được +8 mood và +15% tốc độ làm việc.</description>
+    <tier>2</tier>
+    <branch>Mind</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_GuidingLight</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_ImmovableMind</defName>
+    <label>Tâm Bất Động</label>
+    <description>Không bao giờ bị Mental Break. Mood luôn được giữ tối thiểu ở mức 35%.</description>
+    <tier>3</tier>
+    <branch>Mind</branch>
+    <baseCost>150</baseCost>
+    <hediffDef>ER_Hediff_ImmovableMind</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_RadiantWill</defName>
+    <label>Ý Chí Lan Tỏa</label>
+    <description>Toàn thuộc địa giảm 40% ngưỡng mental break; miễn nhiễm mood penalty khi người thân qua đời.</description>
+    <tier>3</tier>
+    <branch>Mind</branch>
+    <baseCost>150</baseCost>
+    <hediffDef>ER_Hediff_RadiantWill</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+
+  <!-- ==================== 🔨 NHÁNH SINH KẾ (LIVELIHOOD) ==================== -->
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_SteadyHands</defName>
+    <label>Tay Vững</label>
+    <description>Không bao giờ chế ra đồ phẩm chất Awful/Poor; tốc độ chế tạo +20%.</description>
+    <tier>1</tier>
+    <branch>Livelihood</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_SteadyHands</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_WarmHands</defName>
+    <label>Bàn Tay Ấm</label>
+    <description>Tỷ lệ phẫu thuật thất bại giảm 80%; chất lượng băng bó (tend quality) +25%.</description>
+    <tier>1</tier>
+    <branch>Livelihood</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_WarmHands</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_GreenThumb</defName>
+    <label>Ngón Xanh</label>
+    <description>Tốc độ trồng trọt +60%; ruộng do pawn này trồng miễn nhiễm dịch bệnh cây (blight).</description>
+    <tier>1</tier>
+    <branch>Livelihood</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_GreenThumb</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_GaiaTouch</defName>
+    <label>Nông Dân Đại Địa</label>
+    <description>[Trade-off] Buff: Tốc độ trồng trọt +150%, sản lượng thu hoạch +50%. Debuff: Tỷ lệ bắn chính xác -50%.</description>
+    <tier>1</tier>
+    <branch>Livelihood</branch>
+    <baseCost>20</baseCost>
+    <isTradeOff>true</isTradeOff>
+    <hediffDef>ER_Hediff_GaiaTouch</hediffDef>
+    <tradeOffDescription>Giảm 50% độ chính xác khi bắn súng.</tradeOffDescription>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_AncestralHands</defName>
+    <label>Bàn Tay Tổ</label>
+    <description>Mọi trang bị/đồ dùng chế ra đạt tối thiểu phẩm chất Excellent; +25% cơ hội đạt Legendary.</description>
+    <tier>2</tier>
+    <branch>Livelihood</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_AncestralHands</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_SoilWhisperer</defName>
+    <label>Lời Của Đất</label>
+    <description>Cây trồng trong bán kính 15 ô lớn nhanh hơn +50%; sản lượng +40%.</description>
+    <tier>2</tier>
+    <branch>Livelihood</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_SoilWhisperer</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_AnimalWhisperer</defName>
+    <label>Người Thì Thầm</label>
+    <description>Tỷ lệ thuần hóa x3; thú nuôi không bao giờ trở lại hoang dã; thú hoang không chủ động tấn công.</description>
+    <tier>2</tier>
+    <branch>Livelihood</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_AnimalWhisperer</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_SlowPace</defName>
+    <label>Nhịp Chậm</label>
+    <description>Toàn bộ tốc độ làm việc (Global Work Speed) x2.5.</description>
+    <tier>3</tier>
+    <branch>Livelihood</branch>
+    <baseCost>150</baseCost>
+    <hediffDef>ER_Hediff_SlowPace</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_MasterOfAll</defName>
+    <label>Bậc Thầy Vạn Nghề</label>
+    <description>Mọi skill được tính như Level 20 cho mục đích tốc độ làm việc và phẩm chất sản phẩm.</description>
+    <tier>3</tier>
+    <branch>Livelihood</branch>
+    <baseCost>150</baseCost>
+    <hediffDef>ER_Hediff_MasterOfAll</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+
+  <!-- ==================== ⚔️ NHÁNH CHIẾN TRẬN (COMBAT) ==================== -->
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_QuickReflexes</defName>
+    <label>Phản Xạ Nhanh</label>
+    <description>Thời gian ngắm súng -25%; né cận chiến +20%; tốc độ nạp đạn +50%.</description>
+    <tier>1</tier>
+    <branch>Combat</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_QuickReflexes</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_Steadfast</defName>
+    <label>Gan Lì</label>
+    <description>Miễn nhiễm bắn áp chế (suppression); ngưỡng chịu đau Pain Shock Threshold +30%.</description>
+    <tier>1</tier>
+    <branch>Combat</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_Steadfast</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_SteadyShooter</defName>
+    <label>Tay Súng Bền</label>
+    <description>Không bao giờ bắn trúng đồng đội (Friendly Fire = 0); độ chính xác +15%.</description>
+    <tier>1</tier>
+    <branch>Combat</branch>
+    <baseCost>20</baseCost>
+    <hediffDef>ER_Hediff_SteadyShooter</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_HawkEye</defName>
+    <label>Mắt Diều Hâu</label>
+    <description>Độ chính xác tối đa ở mọi khoảng cách; thời gian ngắm súng -40%.</description>
+    <tier>2</tier>
+    <branch>Combat</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_HawkEye</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_SteelBody</defName>
+    <label>Thân Thép</label>
+    <description>Giáp Blunt &amp; Sharp +60%; miễn nhiễm áp chế và không bị choáng (stagger) khi trúng đạn.</description>
+    <tier>2</tier>
+    <branch>Combat</branch>
+    <baseCost>60</baseCost>
+    <hediffDef>ER_Hediff_SteelBody</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_GlassCannon</defName>
+    <label>Sát Thủ Thủy Tinh</label>
+    <description>[Trade-off] Buff: Sát thương tầm xa +60%, thời gian ngắm -30%. Debuff: Nhận sát thương vào bản thân +100%.</description>
+    <tier>2</tier>
+    <branch>Combat</branch>
+    <baseCost>60</baseCost>
+    <isTradeOff>true</isTradeOff>
+    <hediffDef>ER_Hediff_GlassCannon</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+    <tradeOffDescription>Nhận gấp đôi sát thương từ đạn và đòn đánh của kẻ địch.</tradeOffDescription>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_BerserkerMode</defName>
+    <label>Cuồng Thể</label>
+    <description>[Trade-off] Buff: Cận chiến Melee DPS +120%, Giáp +40%. Debuff: Vĩnh viễn không thể Nghiên cứu &amp; Xã hội.</description>
+    <tier>2</tier>
+    <branch>Combat</branch>
+    <baseCost>60</baseCost>
+    <isTradeOff>true</isTradeOff>
+    <hediffDef>ER_Hediff_BerserkerMode</hediffDef>
+    <catalystItemDef>ER_ResonanceFocus</catalystItemDef>
+    <tradeOffDescription>Vĩnh viễn không thể làm công việc Nghiên cứu và Xã hội.</tradeOffDescription>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_BlinkStep</defName>
+    <label>Bước Nhòe</label>
+    <description>Dịch chuyển tức thời tới bất kỳ ô nào đã khám phá trên bản đồ (cooldown 1 ngày); tốc độ di chuyển +1.0.</description>
+    <tier>3</tier>
+    <branch>Combat</branch>
+    <baseCost>150</baseCost>
+    <hediffDef>ER_Hediff_BlinkStep</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+  <EchoResonance.Perks.PerkDef>
+    <defName>ER_Perk_SuppressingGaze</defName>
+    <label>Ánh Nhìn Đè Nén</label>
+    <description>Kẻ địch trong bán kính 12 ô bị gây áp chế liên tục và giảm 30% độ chính xác.</description>
+    <tier>3</tier>
+    <branch>Combat</branch>
+    <baseCost>150</baseCost>
+    <hediffDef>ER_Hediff_SuppressingGaze</hediffDef>
+  </EchoResonance.Perks.PerkDef>
+
+</Defs>
