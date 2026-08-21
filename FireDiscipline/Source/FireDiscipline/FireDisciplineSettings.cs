@@ -139,12 +139,45 @@ namespace FireDiscipline
         public bool enablePinnedState = true;
         public float pinnedSeverityThreshold = 7.0f;
 
+        // Derived Suppression Resistance (Task A3)
+        public bool enableDerivedSuppressionResistance = true;
+        public float basePainShockThreshold = 0.80f;
+        public float minPainSuppressionFactor = 0.25f;
+        public float maxPainSuppressionFactor = 2.00f;
+        public float baseMentalBreakThreshold = 0.35f;
+        public float minMentalSuppressionFactor = 0.50f;
+        public float maxMentalSuppressionFactor = 1.50f;
+        public int skillLevelForMaxResistance = 20;
+        public float maxSkillSuppressionMultiplier = 0.75f;
+        public float staggerSuppressionFactor = 1.50f;
+
+        // Suppression Stage Marker (Task B1)
+        public bool enableSuppressionMarker = false;
+        public float suppressionMarkerMinSeverity = 1.00f;
+        public float suppressionMarkerScale = 1.00f;
+
+        // Evacuate Downed Ally (Task B3)
+        public bool enableEvacuation = false;
+        public bool evacuationRequiresLowerSuppression = true;
+        public float evacuationMaxDistance = 30.0f;
+
+        // No-Fire Zone (Giai đoạn 2)
+        // Mặc định TẮT: vùng cấm chỉ ràng buộc vũ khí nổ. Turret súng máy bắn một viên vào đúng ô nó
+        // ngắm, nên bắt nó im lặng vì mục tiêu đứng gần vùng cấm là chặn oan.
+        public bool noFireZoneAllTurrets = false;
+
         // =========================================================================
         // SECTION 4d: COVER SUPPRESSION (Wave B3)
         // =========================================================================
         public bool enableCoverSuppression = true;
         // The 5.8 design document originally stated 0.40 and floor 0.35,
         // but those values were never implemented or tuned until Wave B3.
+        //
+        // 1.00 is the retuned value and the single source of truth. 0.85 was the earlier
+        // tuning-pass value; it lingered in the Scribe_Values.Look default and in the runtime
+        // fallbacks after the retune, so a fresh install got 1.00 while an upgrading save got
+        // 0.85. Keep this field, the Scribe default below, the SuppressionEngine and
+        // DebugHarness fallbacks, and the "Default:" label in the settings window identical.
         public float coverSuppressionFactor = 1.00f;
         public float coverSuppressionFloor = 0.25f;
 
@@ -308,9 +341,34 @@ namespace FireDiscipline
             Scribe_Values.Look(ref enablePinnedState, "enablePinnedState", true);
             Scribe_Values.Look(ref pinnedSeverityThreshold, "pinnedSeverityThreshold", 7.0f);
 
+            // Derived Suppression Resistance (Task A3)
+            Scribe_Values.Look(ref enableDerivedSuppressionResistance, "enableDerivedSuppressionResistance", true);
+            Scribe_Values.Look(ref basePainShockThreshold, "basePainShockThreshold", 0.80f);
+            Scribe_Values.Look(ref minPainSuppressionFactor, "minPainSuppressionFactor", 0.25f);
+            Scribe_Values.Look(ref maxPainSuppressionFactor, "maxPainSuppressionFactor", 2.00f);
+            Scribe_Values.Look(ref baseMentalBreakThreshold, "baseMentalBreakThreshold", 0.35f);
+            Scribe_Values.Look(ref minMentalSuppressionFactor, "minMentalSuppressionFactor", 0.50f);
+            Scribe_Values.Look(ref maxMentalSuppressionFactor, "maxMentalSuppressionFactor", 1.50f);
+            Scribe_Values.Look(ref skillLevelForMaxResistance, "skillLevelForMaxResistance", 20);
+            Scribe_Values.Look(ref maxSkillSuppressionMultiplier, "maxSkillSuppressionMultiplier", 0.75f);
+            Scribe_Values.Look(ref staggerSuppressionFactor, "staggerSuppressionFactor", 1.50f);
+
+            // Suppression Stage Marker (Task B1)
+            Scribe_Values.Look(ref enableSuppressionMarker, "enableSuppressionMarker", false);
+            Scribe_Values.Look(ref suppressionMarkerMinSeverity, "suppressionMarkerMinSeverity", 1.00f);
+            Scribe_Values.Look(ref suppressionMarkerScale, "suppressionMarkerScale", 1.00f);
+
+            // Evacuate Downed Ally (Task B3)
+            Scribe_Values.Look(ref enableEvacuation, "enableEvacuation", false);
+            Scribe_Values.Look(ref evacuationRequiresLowerSuppression, "evacuationRequiresLowerSuppression", true);
+            Scribe_Values.Look(ref evacuationMaxDistance, "evacuationMaxDistance", 30.0f);
+
+            // No-Fire Zone (Giai đoạn 2)
+            Scribe_Values.Look(ref noFireZoneAllTurrets, "noFireZoneAllTurrets", false);
+
             // Cover Suppression (Wave B3)
             Scribe_Values.Look(ref enableCoverSuppression, "enableCoverSuppression", true);
-            Scribe_Values.Look(ref coverSuppressionFactor, "coverSuppressionFactor", 0.85f);
+            Scribe_Values.Look(ref coverSuppressionFactor, "coverSuppressionFactor", 1.00f);
             Scribe_Values.Look(ref coverSuppressionFloor, "coverSuppressionFloor", 0.25f);
             Scribe_Values.Look(ref enableCoverStacking, "enableCoverStacking", false);
             Scribe_Values.Look(ref lineCoverFactor, "lineCoverFactor", 0.50f);
@@ -323,6 +381,7 @@ namespace FireDiscipline
             Scribe_Values.Look(ref shotgunEdgeDamageMax, "shotgunEdgeDamageMax", 0.55f);
             Scribe_Values.Look(ref shotgunPrimaryDamageMultiplier, "shotgunPrimaryDamageMultiplier", 0.70f);
             Scribe_Values.Look(ref shotgunSplashSuppressionMultiplier, "shotgunSplashSuppressionMultiplier", 0.40f);
+            Scribe_Values.Look(ref shotgunRapidRecoilMultiplier, "shotgunRapidRecoilMultiplier", 2.50f);
             Scribe_Values.Look(ref shotgunFriendlyFire, "shotgunFriendlyFire", true);
 
             // Suppression Move Speed Penalties

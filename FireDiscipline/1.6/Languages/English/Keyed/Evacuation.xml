@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <FD_Evacuate_OptionLabel>Evacuate {0}</FD_Evacuate_OptionLabel>
+  <FD_Evacuate_DisabledOptionLabel>Evacuate {0} ({1})</FD_Evacuate_DisabledOptionLabel>
+  <FD_Evacuate_HostileTarget>hostile target</FD_Evacuate_HostileTarget>
+  <FD_Evacuate_AlreadyCarrying>already carrying something</FD_Evacuate_AlreadyCarrying>
+  <FD_Evacuate_IncapableOfManipulation>incapable of manipulation required for evacuation</FD_Evacuate_IncapableOfManipulation>
+  <FD_Evacuate_CannotReachOrReserve>cannot reach or reserve target</FD_Evacuate_CannotReachOrReserve>
+  <FD_Evacuate_CarrierMustBeLowerSuppression>carrier must be at least one suppression stage lower</FD_Evacuate_CarrierMustBeLowerSuppression>
+  <FD_Evacuate_DestinationUnreachable>destination unreachable</FD_Evacuate_DestinationUnreachable>
+  <FD_Evacuate_TargetNotDowned>target is not downed</FD_Evacuate_TargetNotDowned>
+</LanguageData>

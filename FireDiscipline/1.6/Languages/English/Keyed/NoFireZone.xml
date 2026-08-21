@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <FD_Designator_NoFireZoneExpand>Expand no-fire zone</FD_Designator_NoFireZoneExpand>
+  <FD_Designator_NoFireZoneExpandDesc>Mark cells that your turrets must not pick as an automatic target. You can still force-target anything inside the zone by hand - the zone only restrains the turret's own target search.</FD_Designator_NoFireZoneExpandDesc>
+  <FD_Designator_NoFireZoneClear>Clear no-fire zone</FD_Designator_NoFireZoneClear>
+  <FD_Designator_NoFireZoneClearDesc>Remove cells from the no-fire zone.</FD_Designator_NoFireZoneClearDesc>
+
+  <FD_NoFireZone_ObeyGizmo>Obey no-fire zone</FD_NoFireZone_ObeyGizmo>
+  <FD_NoFireZone_ObeyGizmoDesc>While on, this turret will not pick an automatic target whose blast could reach the no-fire zone. Turn it off to let this one turret fire into the zone anyway - useful when you want a single gun covering a breach. Force-targeting by hand works either way.</FD_NoFireZone_ObeyGizmoDesc>
+
+  <FD_NoFireZone_FirstBlockMessage>A turret held its fire: its shells could land inside your no-fire zone. It will engage targets outside the zone normally, and you can still force-target by hand.</FD_NoFireZone_FirstBlockMessage>
+</LanguageData>

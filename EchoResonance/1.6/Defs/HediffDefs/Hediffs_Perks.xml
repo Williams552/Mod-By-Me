@@ -13,7 +13,7 @@
     </comps>
   </HediffDef>
 
-  <!-- ==================== 🫀 NHÁNH NHỤC THÂN (FLESH) ==================== -->
+  <!-- ==================== 🫀 NHÁNH NHỤC THÂN (FLESH - 11 HEDIFFS) ==================== -->
 
   <HediffDef ParentName="ER_PerkHediffBase">
     <defName>ER_Hediff_IronStomach</defName>
@@ -42,6 +42,19 @@
   </HediffDef>
 
   <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_TenderFlesh</defName>
+    <label>tender flesh</label>
+    <description>Injury healing speed x2; infection chance reduced by half.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <InjuryHealingFactor>2.0</InjuryHealingFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
     <defName>ER_Hediff_ThickSkin</defName>
     <label>thick skin</label>
     <description>Comfortable temperature range expanded by ±25°C.</description>
@@ -64,6 +77,20 @@
         <statFactors>
           <MoveSpeed>1.35</MoveSpeed>
         </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_MuscleGrowth</defName>
+    <label>muscle growth</label>
+    <description>Melee damage +30%, carrying capacity +60%, carrying speed +25%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <MeleeDPS>0.30</MeleeDPS>
+          <CarryingCapacity>60</CarryingCapacity>
+        </statOffsets>
       </li>
     </stages>
   </HediffDef>
@@ -138,7 +165,7 @@
   </HediffDef>
 
 
-  <!-- ==================== 🧠 NHÁNH TÂM TRÍ (MIND) ==================== -->
+  <!-- ==================== 🧠 NHÁNH TÂM TRÍ (MIND - 10 HEDIFFS) ==================== -->
 
   <HediffDef ParentName="ER_PerkHediffBase">
     <defName>ER_Hediff_SteadyMind</defName>
@@ -175,6 +202,33 @@
         <statOffsets>
           <GlobalLearningFactor>0.60</GlobalLearningFactor>
         </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SilverTongue</defName>
+    <label>silver tongue</label>
+    <description>Social impact +40%, negotiation +25%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <SocialImpact>0.40</SocialImpact>
+          <NegotiationAbility>0.25</NegotiationAbility>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_CalmMind</defName>
+    <label>calm mind</label>
+    <description>Mental break threshold reduced by 80%.</description>
+    <stages>
+      <li>
+        <statFactors>
+          <MentalBreakThreshold>0.20</MentalBreakThreshold>
+        </statFactors>
       </li>
     </stages>
   </HediffDef>
@@ -248,7 +302,7 @@
   </HediffDef>
 
 
-  <!-- ==================== 🔨 NHÁNH SINH KẾ (LIVELIHOOD) ==================== -->
+  <!-- ==================== 🔨 NHÁNH SINH KẾ (LIVELIHOOD - 10 HEDIFFS) ==================== -->
 
   <HediffDef ParentName="ER_PerkHediffBase">
     <defName>ER_Hediff_SteadyHands</defName>
@@ -264,6 +318,33 @@
   </HediffDef>
 
   <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_GreenThumb</defName>
+    <label>green thumb</label>
+    <description>Plant work speed +60%; planted crops immune to blight.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <PlantWorkSpeed>0.60</PlantWorkSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_AnimalFriend</defName>
+    <label>animal friend</label>
+    <description>Taming chance +80%; training speed x2.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <TameAnimalChance>0.80</TameAnimalChance>
+          <TrainAnimalChance>1.00</TrainAnimalChance>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
     <defName>ER_Hediff_WarmHands</defName>
     <label>warm hands</label>
     <description>Surgery fail chance -80%, tend quality +25%.</description>
@@ -272,19 +353,6 @@
         <statOffsets>
           <MedicalSurgerySuccessChance>0.80</MedicalSurgerySuccessChance>
           <MedicalTendQuality>0.25</MedicalTendQuality>
-        </statOffsets>
-      </li>
-    </stages>
-  </HediffDef>
-
-  <HediffDef ParentName="ER_PerkHediffBase">
-    <defName>ER_Hediff_GreenThumb</defName>
-    <label>green thumb</label>
-    <description>Plant work speed +60%; planted crops immune to blight.</description>
-    <stages>
-      <li>
-        <statOffsets>
-          <PlantWorkSpeed>0.60</PlantWorkSpeed>
         </statOffsets>
       </li>
     </stages>
@@ -360,6 +428,63 @@
   </HediffDef>
 
   <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_WoodCutter</defName>
+    <label>lumberjack mastery</label>
+    <description>Plant cutting and tree chopping speed +150%, harvest yield +20%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <PlantWorkSpeed>1.50</PlantWorkSpeed>
+          <PlantYield>0.20</PlantYield>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_MineDigger</defName>
+    <label>master miner</label>
+    <description>Mining speed +150%, mining yield +40%, deep drilling speed +60%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <MiningSpeed>1.50</MiningSpeed>
+          <MiningYield>0.40</MiningYield>
+          <DeepDrillingSpeed>0.60</DeepDrillingSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_FastBuilder</defName>
+    <label>speed builder</label>
+    <description>Construction speed +150%, smoothing speed +100%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <ConstructionSpeed>1.50</ConstructionSpeed>
+          <SmoothingSpeed>1.00</SmoothingSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_UltimateWorkforce</defName>
+    <label>transcendent labor</label>
+    <description>Global work speed +500% (x6.0) across all labor, mining, planting, and crafting jobs.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <WorkSpeedGlobal>5.00</WorkSpeedGlobal>
+          <GeneralLaborSpeed>1.50</GeneralLaborSpeed>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
     <defName>ER_Hediff_MasterOfAll</defName>
     <label>master of all trades</label>
     <description>All skills treated as Level 20 for work speed and quality.</description>
@@ -376,7 +501,7 @@
   </HediffDef>
 
 
-  <!-- ==================== ⚔️ NHÁNH CHIẾN TRẬN (COMBAT) ==================== -->
+  <!-- ==================== ⚔️ NHÁNH CHIẾN TRẬN (COMBAT - 12 HEDIFFS) ==================== -->
 
   <HediffDef ParentName="ER_PerkHediffBase">
     <defName>ER_Hediff_QuickReflexes</defName>
@@ -445,6 +570,20 @@
         <statOffsets>
           <ArmorRating_Blunt>0.60</ArmorRating_Blunt>
           <ArmorRating_Sharp>0.60</ArmorRating_Sharp>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ER_PerkHediffBase">
+    <defName>ER_Hediff_SuperMelee</defName>
+    <label>super melee</label>
+    <description>Melee DPS +80%, melee dodge +40%.</description>
+    <stages>
+      <li>
+        <statOffsets>
+          <MeleeDPS>0.80</MeleeDPS>
+          <MeleeDodgeChance>40</MeleeDodgeChance>
         </statOffsets>
       </li>
     </stages>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <Matrilineal_Settings_Category>Matrilineal Gene</Matrilineal_Settings_Category>
+  <Matrilineal_Settings_ForceFemale_Label>Force 100% Female Births</Matrilineal_Settings_ForceFemale_Label>
+  <Matrilineal_Settings_ForceFemale_Desc>When enabled, all children conceived from a carrier of this gene will always be born female.</Matrilineal_Settings_ForceFemale_Desc>
+  <Matrilineal_Settings_InheritXenotype_Label>Inherit Mother's Xenotype &amp; Endogenes</Matrilineal_Settings_InheritXenotype_Label>
+  <Matrilineal_Settings_InheritXenotype_Desc>When enabled, daughters directly inherit their genetic mother's Xenotype and endogene pool instead of creating a random hybrid.</Matrilineal_Settings_InheritXenotype_Desc>
+  <Matrilineal_Settings_Notification_Label>Matrilineal Birth Notifications</Matrilineal_Settings_Notification_Label>
+  <Matrilineal_Settings_Notification_Desc>Shows a special notification message when a matrilineal daughter is born.</Matrilineal_Settings_Notification_Desc>
+  <Matrilineal_Settings_ResetDefaults>Reset to Defaults</Matrilineal_Settings_ResetDefaults>
+  <Matrilineal_Message_DaughterBorn>A matrilineal daughter ({BABY}) has been born to {MOTHER}, preserving the matriarchal lineage!</Matrilineal_Message_DaughterBorn>
+</LanguageData>

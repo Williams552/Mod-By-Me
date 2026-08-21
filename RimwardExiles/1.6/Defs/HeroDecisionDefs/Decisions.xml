@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Decision: Cứu vãn khẩn cấp khi Loyalty xuống mức nguy cấp (10-24) -->
+  <RimwardExiles.Core.HeroDecisionDef>
+    <defName>RWX_Decision_EmergencySalvation</defName>
+    <label>Nguy cơ tan vỡ liên minh</label>
+    <letterLabel>Khủng hoảng niềm tin</letterLabel>
+    <letterText>Lòng trung thành của các đồng minh đang suy giảm nghiêm trọng. Họ cảm thấy thuộc địa không còn chia sẻ chung tầm nhìn và đang cân nhắc dứt áo ra đi. Bạn có sẵn sàng đầu tư tài nguyên để tái lập cam kết?</letterText>
+    <baseWeight>2.0</baseWeight>
+    <minRefireDays>30</minRefireDays>
+    <options>
+      <li>
+        <label>Cung ứng nguồn lực tái thiết niềm tin (1000 Bạc)</label>
+        <description>Tài trợ trang bị và nâng cấp điều kiện sống đặc biệt cho các Hero để khẳng định thiện chí tuyệt đối.</description>
+        <silverCost>1000</silverCost>
+        <delta>
+          <li><axis>RWX_Loyalty</axis><amount>35</amount></li>
+        </delta>
+        <createsMemory>true</createsMemory>
+        <memoryDecayable>true</memoryDecayable>
+        <memoryHalfLifeDays>40</memoryHalfLifeDays>
+      </li>
+      <li>
+        <label>Tổ chức phiên điều trần và lắng nghe tâm nguyện</label>
+        <description>Dành thời gian đối thoại trực tiếp, hứa hẹn thay đổi phương hướng trong tương lai.</description>
+        <delta>
+          <li><axis>RWX_Order</axis><amount>15</amount></li>
+          <li><axis>RWX_Loyalty</axis><amount>15</amount></li>
+        </delta>
+        <createsMemory>true</createsMemory>
+        <memoryDecayable>true</memoryDecayable>
+        <memoryHalfLifeDays>20</memoryHalfLifeDays>
+      </li>
+      <li>
+        <label>Mặc kệ, kẻ nào muốn đi cứ việc đi</label>
+        <description>Không nhượng bộ bất kỳ ai. Kỷ luật của thuộc địa là tối thượng.</description>
+        <delta>
+          <li><axis>RWX_Loyalty</axis><amount>-20</amount></li>
+          <li><axis>RWX_Mercy</axis><amount>-15</amount></li>
+        </delta>
+        <createsMemory>true</createsMemory>
+        <memoryDecayable>true</memoryDecayable>
+        <memoryHalfLifeDays>30</memoryHalfLifeDays>
+      </li>
+    </options>
+  </RimwardExiles.Core.HeroDecisionDef>
+
+  <!-- Decision Mẫu 2: Khai thác khoáng thạch cổ (Xung đột Thép vs Thuần khiết) -->
+  <RimwardExiles.Core.HeroDecisionDef>
+    <defName>RWX_Decision_AncientQuarry</defName>
+    <label>Khai thác mỏ Archotech</label>
+    <letterLabel>Phát hiện di tích Archotech</letterLabel>
+    <letterText>Đội trinh sát phát hiện một di tích khai khoáng cổ đại chứa nhiều linh kiện máy móc tối tân nhưng được coi là thánh địa nguyên sinh bất khả xâm phạm.</letterText>
+    <baseWeight>1.0</baseWeight>
+    <minRefireDays>20</minRefireDays>
+    <options>
+      <li>
+        <label>Khai khoáng triệt để bằng máy móc hạng nặng</label>
+        <description>Thu hoạch tối đa linh kiện plasteel và bionic.</description>
+        <delta>
+          <li><axis>RWX_SteelPath</axis><amount>25</amount></li>
+          <li><axis>RWX_Purity</axis><amount>-20</amount></li>
+        </delta>
+        <createsMemory>true</createsMemory>
+        <memoryDecayable>true</memoryDecayable>
+      </li>
+      <li>
+        <label>Bảo tồn nguyên vẹn thánh địa</label>
+        <description>Tôn trọng sự thuần khiết tự nhiên, chỉ cử người tới thiền định.</description>
+        <delta>
+          <li><axis>RWX_Purity</axis><amount>25</amount></li>
+          <li><axis>RWX_SteelPath</axis><amount>-15</amount></li>
+        </delta>
+        <createsMemory>true</createsMemory>
+        <memoryDecayable>true</memoryDecayable>
+      </li>
+      <!-- Option "Giữ tất cả" tuân thủ N2: Khả thi nhưng đắt -->
+      <li>
+        <label>Sử dụng phương pháp khai thác vi phẫu không xâm lấn (600 Bạc)</label>
+        <description>Đầu tư bạc và công nghệ cao để thu hồi dữ liệu mà không hủy hoại tính thuần khiết của di tích.</description>
+        <silverCost>600</silverCost>
+        <delta>
+          <li><axis>RWX_SteelPath</axis><amount>12</amount></li>
+          <li><axis>RWX_Purity</axis><amount>10</amount></li>
+        </delta>
+        <createsMemory>true</createsMemory>
+        <memoryDecayable>true</memoryDecayable>
+      </li>
+    </options>
+  </RimwardExiles.Core.HeroDecisionDef>
+
+</Defs>

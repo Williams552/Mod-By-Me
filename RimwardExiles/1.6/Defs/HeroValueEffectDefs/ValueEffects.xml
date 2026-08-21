@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- ==================== HIỆU ỨNG TRỤC THÂN THỂ (K2) ==================== -->
+
+  <!-- Purity: Thuần khiết -->
+  <RimwardExiles.Core.HeroValueEffectDef>
+    <defName>RWX_Effect_Purity</defName>
+    <axis>RWX_Purity</axis>
+    <effects>
+      <li><source>BodyPart_Steel</source><perUnit>-8</perUnit></li>
+      <li><source>BodyPart_Flesh</source><perUnit>-11</perUnit></li>
+      <li><source>Gene_Implanted</source><perUnit>-14</perUnit></li>
+      <li><source>BodyPart_Intact</source><perUnit>5</perUnit></li>
+      <li><source>ColonyEnhancement</source><perUnit>-5</perUnit><cap>-25</cap></li>
+      <li><source>PsylinkLevel</source><perUnit>5</perUnit></li>
+    </effects>
+  </RimwardExiles.Core.HeroValueEffectDef>
+
+  <!-- SteelPath: Con đường thép -->
+  <RimwardExiles.Core.HeroValueEffectDef>
+    <defName>RWX_Effect_SteelPath</defName>
+    <axis>RWX_SteelPath</axis>
+    <effects>
+      <li><source>BodyPart_Steel</source><perUnit>6</perUnit></li>
+      <li><source>BodyPart_Flesh</source><perUnit>-3</perUnit></li>
+      <li><source>Gene_Implanted</source><perUnit>-2</perUnit></li>
+      <li><source>BodyPart_Intact</source><perUnit>-2</perUnit></li>
+      <li><source>BodyPart_Missing</source><perUnit>-5</perUnit></li>
+      <li><source>ColonyEnhancement</source><perUnit>3</perUnit><cap>15</cap></li>
+    </effects>
+  </RimwardExiles.Core.HeroValueEffectDef>
+
+  <!-- FleshPath: Con đường thịt -->
+  <RimwardExiles.Core.HeroValueEffectDef>
+    <defName>RWX_Effect_FleshPath</defName>
+    <axis>RWX_FleshPath</axis>
+    <effects>
+      <li><source>BodyPart_Flesh</source><perUnit>6</perUnit></li>
+      <li><source>BodyPart_Steel</source><perUnit>-4</perUnit></li>
+      <li><source>Gene_Implanted</source><perUnit>2</perUnit></li>
+      <li><source>BodyPart_Intact</source><perUnit>-2</perUnit></li>
+      <li><source>BodyPart_Missing</source><perUnit>-5</perUnit></li>
+      <li><source>ColonyEnhancement</source><perUnit>3</perUnit><cap>15</cap></li>
+    </effects>
+  </RimwardExiles.Core.HeroValueEffectDef>
+
+  <!-- BloodPath: Con đường huyết thống -->
+  <RimwardExiles.Core.HeroValueEffectDef>
+    <defName>RWX_Effect_BloodPath</defName>
+    <axis>RWX_BloodPath</axis>
+    <effects>
+      <li><source>Gene_Implanted</source><perUnit>7</perUnit></li>
+      <li><source>Gene_Inherited</source><perUnit>3</perUnit></li>
+      <li><source>BodyPart_Flesh</source><perUnit>2</perUnit></li>
+      <li><source>BodyPart_Steel</source><perUnit>-2</perUnit></li>
+      <li><source>BodyPart_Intact</source><perUnit>-3</perUnit></li>
+      <li><source>GrowthVat_InUse</source><perUnit>4</perUnit><cap>16</cap></li>
+      <li><source>ColonyXenotypeDiversity</source><perUnit>3</perUnit><cap>15</cap></li>
+    </effects>
+  </RimwardExiles.Core.HeroValueEffectDef>
+
+</Defs>

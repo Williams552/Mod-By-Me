@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Rimward Exiles</name>
+  <packageId>william.rimwardexiles</packageId>
+  <author>William</author>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+    <li>
+      <packageId>ludeon.rimworld.royalty</packageId>
+      <displayName>Royalty</displayName>
+    </li>
+    <li>
+      <packageId>ludeon.rimworld.ideology</packageId>
+      <displayName>Ideology</displayName>
+    </li>
+    <li>
+      <packageId>ludeon.rimworld.biotech</packageId>
+      <displayName>Biotech</displayName>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>ludeon.rimworld</li>
+    <li>ludeon.rimworld.royalty</li>
+    <li>ludeon.rimworld.ideology</li>
+    <li>ludeon.rimworld.biotech</li>
+  </loadAfter>
+  <description>Một hệ thống nhân vật độc đáo cho RimWorld 1.6: chuỗi custom quest chiêu mộ các Hero Pawn có cốt truyện riêng, kết hợp hệ thống Lòng Trung Thành (Dynamic Loyalty System) mô phỏng niềm tin cá nhân, ký ức và mâu thuẫn giữa các thành viên.
+
+"Người chơi luôn có thể chiêu mộ được Hero — nhưng thử thách thực sự là giữ họ ở lại."
+
+ĐẶC ĐIỂM CHÍNH:
+- Hero Pawns độc bản: Tuyển mộ nhân vật thông qua các chuỗi quest 3 tầng với những đánh đổi đầy kịch tính.
+- Hệ thống Loyalty Động: Lòng trung thành trôi dần dựa trên tâm trạng, quan hệ xã hội, trạng thái thân thể, ký ức và mâu thuẫn nội tâm.
+- 10 Trục Giá Trị: 6 trục xã hội (Loyalty, Mercy, Order, Ambition, Kinship, Splendor) và 4 trục thân thể loại trừ nhau (Steel, Flesh, Blood, Purity).
+- Minh Bạch Tuyệt Đối: Giao diện ITab chuyên biệt phân tích chi tiết mọi nguyên nhân tác động đến lòng trung thành.
+- Ký Ức &amp; Mâu Thuẫn Nội Tâm: Hero ghi nhớ các hành động của người chơi và trải qua giằng xé nội tâm khi lý tưởng bị thử thách.</description>
+</ModMetaData>

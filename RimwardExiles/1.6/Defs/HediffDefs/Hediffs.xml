@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Hediff: Giằng xé nội tâm do Tension -->
+  <HediffDef>
+    <defName>RWX_Hediff_Conflicted</defName>
+    <label>giằng xé nội tâm</label>
+    <description>Nhân vật đang trải qua cuộc khủng hoảng tư tưởng gay gắt khi hành động của thuộc địa va chạm trực diện với hai lý tưởng đối lập trong thâm tâm.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <isBad>true</isBad>
+    <stages>
+      <li>
+        <label>bối rối</label>
+        <painOffset>0.05</painOffset>
+      </li>
+    </stages>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>360000</disappearsAfterTicks> <!-- 6 ngày in-game -->
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+  </HediffDef>
+
+</Defs>

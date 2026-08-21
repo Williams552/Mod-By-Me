@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Matrilineal Gene</name>
+  <packageId>william.matrilinealgene</packageId>
+  <author>William</author>
+  <supportedVersions>
+    <li>1.5</li>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>Ludeon.RimWorld.Biotech</packageId>
+      <displayName>Biotech</displayName>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>Ludeon.RimWorld</li>
+    <li>Ludeon.RimWorld.Biotech</li>
+  </loadAfter>
+  <description>Adds a specialized matrilineal reproduction gene to RimWorld Biotech.
+
+Carriers of this gene (or partners of carriers) will only give birth to female offspring. Furthermore, daughters born from a matrilineal lineage directly inherit their mother's full genetic makeup, Xenotype definition, and custom xenotype identity, preserving pure matriarchal lineages across generations.
+
+FEATURES:
+- All-Female Births: 100% guarantee of female children for natural births and Growth Vats.
+- Matrilineal Xenotype Inheritance: Daughters inherit their genetic mother's Xenotype and Endogenes instead of dissolving into random hybrids.
+- Biotech Integration: Fully extractable, combinable in Genepacks, and usable in custom Xenotypes.
+- Full Localization: English and Vietnamese translations included.
+  </description>
+</ModMetaData>

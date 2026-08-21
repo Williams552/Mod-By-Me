@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Sự kiện: Đồng đội tử trận -->
+  <RimwardExiles.Core.HeroReactionDef>
+    <defName>RWX_React_ColonistDied</defName>
+    <label>Đồng đội hy sinh</label>
+    <triggers>
+      <li><action>ColonistDied</action></li>
+    </triggers>
+    <delta>
+      <li><axis>RWX_Mercy</axis><amount>-8</amount></li>
+      <li><axis>RWX_Order</axis><amount>-6</amount></li>
+      <li><axis>RWX_Loyalty</axis><amount>-5</amount></li>
+    </delta>
+    <memoryHalfLifeDays>20</memoryHalfLifeDays>
+    <memoryDecayable>true</memoryDecayable>
+    <memoryLabel>Đồng đội tử trận</memoryLabel>
+  </RimwardExiles.Core.HeroReactionDef>
+
+  <!-- Sự kiện: Lắp đặt cơ thể bionic -->
+  <RimwardExiles.Core.HeroReactionDef>
+    <defName>RWX_React_BionicInstall</defName>
+    <label>Cải tạo bionic</label>
+    <triggers>
+      <li><action>BionicInstall_Performed</action></li>
+    </triggers>
+    <delta>
+      <li><axis>RWX_SteelPath</axis><amount>15</amount></li>
+      <li><axis>RWX_Purity</axis><amount>-20</amount></li>
+      <li><axis>RWX_FleshPath</axis><amount>-8</amount></li>
+    </delta>
+    <memoryHalfLifeDays>15</memoryHalfLifeDays>
+    <memoryDecayable>true</memoryDecayable>
+    <memoryLabel>Cấy ghép cơ khí cho thành viên</memoryLabel>
+  </RimwardExiles.Core.HeroReactionDef>
+
+  <!-- Sự kiện: Rút gen từ tù binh (GeneExtraction) -->
+  <RimwardExiles.Core.HeroReactionDef>
+    <defName>RWX_React_GeneExtraction</defName>
+    <label>Trích xuất gen tù binh</label>
+    <triggers>
+      <li><action>GeneExtraction_Performed</action></li>
+    </triggers>
+    <delta>
+      <li><axis>RWX_Mercy</axis><amount>-20</amount></li>
+      <li><axis>RWX_Order</axis><amount>-5</amount></li>
+      <li><axis>RWX_BloodPath</axis><amount>8</amount></li>
+      <li><axis>RWX_Purity</axis><amount>-25</amount></li>
+    </delta>
+    <memoryHalfLifeDays>60</memoryHalfLifeDays>
+    <memoryDecayable>true</memoryDecayable>
+    <memoryLabel>Trích xuất gen cưỡng bức tù binh</memoryLabel>
+  </RimwardExiles.Core.HeroReactionDef>
+
+</Defs>

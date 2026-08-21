@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PresetManifest>
+  <presets>
+    <preset>
+      <fileName>hero_steel_kall</fileName>
+      <name>Kall (Thống chế Cơ khí)</name>
+      <creed>RWX_Creed_SteelArchon</creed>
+      <createdWith>
+        <li>ludeon.rimworld.royalty</li>
+        <li>ludeon.rimworld.ideology</li>
+        <li>ludeon.rimworld.biotech</li>
+      </createdWith>
+    </preset>
+    <preset>
+      <fileName>hero_flesh_selene</fileName>
+      <name>Selene (Dược sư Biến dị)</name>
+      <creed>RWX_Creed_Biomancer</creed>
+      <createdWith>
+        <li>ludeon.rimworld.royalty</li>
+        <li>ludeon.rimworld.ideology</li>
+        <li>ludeon.rimworld.biotech</li>
+      </createdWith>
+    </preset>
+    <preset>
+      <fileName>hero_purity_aurelius</fileName>
+      <name>Aurelius (Hiệp sĩ Thuần khiết)</name>
+      <creed>RWX_Creed_PureAristocrat</creed>
+      <createdWith>
+        <li>ludeon.rimworld.royalty</li>
+        <li>ludeon.rimworld.ideology</li>
+        <li>ludeon.rimworld.biotech</li>
+      </createdWith>
+    </preset>
+  </presets>
+</PresetManifest>

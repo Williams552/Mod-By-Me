@@ -38,8 +38,9 @@ namespace FireDiscipline.AimStance
             }
             if (AimStanceTracker.IsDugIn(pawn))
             {
-                float mult = FireDisciplineMod.Settings?.proneAccuracyMultiplier ?? 0.85f;
-                sb.AppendLine($"Fire Discipline Passive (Dug-In / Prone): Shooter accuracy x{mult:F2} (Target size x0.65)");
+                float mult = FireDisciplineMod.Settings?.proneAccuracyMultiplier ?? 1.10f;
+                float sizeMult = FireDisciplineMod.Settings?.proneTargetSizeFactor ?? 0.65f;
+                sb.AppendLine($"Fire Discipline Passive (Dug-In / Prone): Shooter accuracy x{mult:F2} (Target size x{sizeMult:F2})");
             }
 
             return sb.Length > 0 ? sb.ToString().TrimEnd() : null;

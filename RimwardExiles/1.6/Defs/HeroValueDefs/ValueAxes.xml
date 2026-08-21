@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- ==================== 6 TRỤC XÃ HỘI ==================== -->
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_Loyalty</defName>
+    <label>trung thành</label>
+    <description>Coi trọng lời hứa, bảo vệ đồng đội, đứng về phía người của mình đến cùng.</description>
+    <positiveLabel>Giữ trọn lời hứa</positiveLabel>
+    <negativeLabel>Bội ước phản phúc</negativeLabel>
+    <displayPriority>100</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_Mercy</defName>
+    <label>nhân từ</label>
+    <description>Đối xử tử tế với kẻ yếu, tù binh và người ngoài; phản đối hành vi tàn độc.</description>
+    <positiveLabel>Bác ái khoan dung</positiveLabel>
+    <negativeLabel>Tàn nhẫn vô đạo</negativeLabel>
+    <displayPriority>90</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_Order</defName>
+    <label>trật tự</label>
+    <description>Luật lệ, tôn ti thứ bậc, tính kỷ luật và sự đoán định được trong thuộc địa.</description>
+    <positiveLabel>Kỷ cương nghiêm minh</positiveLabel>
+    <negativeLabel>Hỗn loạn vô pháp</negativeLabel>
+    <displayPriority>80</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_Ambition</defName>
+    <label>tham vọng</label>
+    <description>Khao khát vươn lên, mở rộng thế lực, nâng cấp công nghệ và chấp nhận rủi ro để lớn mạnh.</description>
+    <positiveLabel>Vươn lên hùng mạnh</positiveLabel>
+    <negativeLabel>Trì trệ an phận</negativeLabel>
+    <displayPriority>70</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_Kinship</defName>
+    <label>thân tộc</label>
+    <description>Sự gắn bó sâu sắc với chủng tộc, faction cũ hoặc người cùng nguồn gốc xuất thân.</description>
+    <positiveLabel>Bảo bọc đồng bào</positiveLabel>
+    <negativeLabel>Xâm phạm giống loài</negativeLabel>
+    <displayPriority>60</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_Splendor</defName>
+    <label>xa hoa</label>
+    <description>Tôn sùng cái đẹp, sự tiện nghi, phẩm chất trang phục tinh xảo và nghi lễ trang trọng.</description>
+    <positiveLabel>Tráng lệ tinh tươm</positiveLabel>
+    <negativeLabel>Bần hàn tồi tàn</negativeLabel>
+    <displayPriority>50</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+  <!-- ==================== 4 TRỤC THÂN THỂ (TỨ GIÁC LOẠI TRỪ) ==================== -->
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_SteelPath</defName>
+    <label>con đường thép</label>
+    <description>Siêu việt thông qua máy móc, cấy ghép bionic và archotech công nghiệp.</description>
+    <positiveLabel>Cơ khí siêu việt</positiveLabel>
+    <negativeLabel>Yếu đuối xương thịt</negativeLabel>
+    <displayPriority>40</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_FleshPath</defName>
+    <label>con đường thịt</label>
+    <description>Siêu việt qua sinh học, nội tạng nhân tạo, DNA đột biến và cải tạo thể xác sống.</description>
+    <positiveLabel>Sinh học tối thượng</positiveLabel>
+    <negativeLabel>Cơ thể chắp vá</negativeLabel>
+    <displayPriority>30</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_BloodPath</defName>
+    <label>con đường huyết thống</label>
+    <description>Siêu việt qua hệ gen di truyền, xenotype tùy biến và máy nuôi cấy phôi.</description>
+    <positiveLabel>Hệ gen tinh hoa</positiveLabel>
+    <negativeLabel>Huyết mạch suy đồi</negativeLabel>
+    <displayPriority>20</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+  <RimwardExiles.Core.HeroValueDef>
+    <defName>RWX_Purity</defName>
+    <label>thuần khiết</label>
+    <description>Thân thể nguyên bản không bị xâm phạm. Sức mạnh đích thực bắt nguồn từ tâm trí và năng lượng ngoại cảm.</description>
+    <positiveLabel>Thân thể vẹn nguyên</positiveLabel>
+    <negativeLabel>Thân thể bị xâm phạm</negativeLabel>
+    <displayPriority>10</displayPriority>
+  </RimwardExiles.Core.HeroValueDef>
+
+</Defs>

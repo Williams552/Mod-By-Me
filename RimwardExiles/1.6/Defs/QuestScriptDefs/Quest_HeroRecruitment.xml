@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <QuestScriptDef>
+    <defName>RWX_Quest_RecruitHero_Steel</defName>
+    <rootSelectionWeight>0.8</rootSelectionWeight>
+    <rootMinPoints>300</rootMinPoints>
+    <autoAccept>false</autoAccept>
+    <questNameRules>
+      <rulesStrings>
+        <li>questName->Tàn Tích Của Thống Chế [hero_name]</li>
+        <li>questName->Lời Kêu Cứu Của [hero_name]</li>
+      </rulesStrings>
+    </questNameRules>
+    <questDescriptionRules>
+      <rulesStrings>
+        <li>questDescription->[hero_name], một chiến binh được nâng cấp bionic tối tân của phái Thép, đang bị vây hãm bởi kẻ thù sau một cuộc phục kích. Nếu bạn cử người giải cứu, [hero_name] sẽ gia nhập thuộc địa của bạn nhưng sẽ đòi hỏi thuộc địa tôn trọng lý tưởng cơ khí và kỷ luật nghiêm ngặt.\n\nHãy chuẩn bị: chiêu mộ một Hero là bước đầu tiên, thử thách thực sự là duy trì sự gắn kết của họ!</li>
+      </rulesStrings>
+    </questDescriptionRules>
+    <root Class="QuestNode_Sequence">
+      <nodes>
+        <li Class="RimwardExiles.Core.QuestNode_LoadUniquePawn">
+          <presetFileName>hero_steel_kall</presetFileName>
+          <storeAs>heroPawn</storeAs>
+          <creed>RWX_Creed_SteelArchon</creed>
+        </li>
+      </nodes>
+    </root>
+  </QuestScriptDef>
+
+</Defs>

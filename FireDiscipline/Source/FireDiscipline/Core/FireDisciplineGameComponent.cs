@@ -10,6 +10,12 @@ namespace FireDiscipline.Core
     {
         private int lastCleanupTick = 0;
 
+        /// <summary>
+        /// True once the player has been told that a No-Fire Zone stopped a turret from firing. Saved
+        /// with the game so the explanation appears once per colony rather than once per load.
+        /// </summary>
+        public bool noFireZoneNoticeShown = false;
+
         public FireDisciplineGameComponent(Game game)
         {
         }
@@ -21,6 +27,7 @@ namespace FireDiscipline.Core
             Shock.Patch_Pawn_Kill_Down.ClearCache();
             Variance.HitVarianceState.ClearCache();
             CoverStackingUtility.ClearCache();
+            NoFireZone.NoFireZoneNotice.Reset(noFireZoneNoticeShown);
         }
 
         public override void StartedNewGame()
@@ -30,6 +37,13 @@ namespace FireDiscipline.Core
             Shock.Patch_Pawn_Kill_Down.ClearCache();
             Variance.HitVarianceState.ClearCache();
             CoverStackingUtility.ClearCache();
+            NoFireZone.NoFireZoneNotice.Reset(noFireZoneNoticeShown);
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref noFireZoneNoticeShown, "fdNoFireZoneNoticeShown", false);
         }
 
         public override void GameComponentTick()

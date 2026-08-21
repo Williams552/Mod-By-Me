@@ -1,4 +1,5 @@
 using FireDiscipline.Core;
+using RimWorld;
 using Verse;
 
 namespace FireDiscipline.Suppression
@@ -25,7 +26,9 @@ namespace FireDiscipline.Suppression
             if (TicksSinceApplied < delay) return;
 
             float perSecond = FireDisciplineMod.Settings?.suppressionDecayPerSecond ?? Props.severityPerSecond;
-            severityAdjustment -= perSecond / 60f;
+            StatDef recSpeedDef = SuppressionStatDefOf.SuppressionRecoverySpeed;
+            float recoverySpeed = (recSpeedDef != null && Pawn != null) ? Pawn.GetStatValue(recSpeedDef, true) : 1.0f;
+            severityAdjustment -= (perSecond / 60f) * recoverySpeed;
         }
     }
 }

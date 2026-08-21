@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <Gene_MatrilinealBirth.label>sinh sản mẫu hệ</Gene_MatrilinealBirth.label>
+  <Gene_MatrilinealBirth.labelShortAdj>mẫu hệ</Gene_MatrilinealBirth.labelShortAdj>
+  <Gene_MatrilinealBirth.description>Cá thể mang gene này (hoặc bạn đời của họ) chỉ có thể sinh ra con gái. Ngoài ra, mọi bé gái sinh ra từ dòng dõi mẫu hệ sẽ trực tiếp kế thừa trọn vẹn Xenotype, hệ gen bẩm sinh và danh tính chủng tộc của người mẹ mà không bị phân rã lai tạp ngẫu nhiên.</Gene_MatrilinealBirth.description>
+</LanguageData>

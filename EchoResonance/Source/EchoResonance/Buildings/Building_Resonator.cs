@@ -58,7 +58,7 @@ namespace EchoResonance.Buildings
             {
                 defaultLabel = $"Echo Pool: {currentEcho:F1}",
                 defaultDesc = $"Archotech Resonator Status:\n- Current Echo: {currentEcho:F1}\n- Current Pylon Multiplier: x{multiplier:F1}\n- Active Status: {(IsActive ? "ONLINE" : "OFFLINE (No Power)")}",
-                icon = ContentFinder<Texture2D>.Get("UI/Icons/Medical/HealthTab", false) ?? BaseContent.BadTex,
+                icon = ContentFinder<Texture2D>.Get("UI/Gizmos/ResonatorGizmo", false) ?? BaseContent.BadTex,
                 action = () => { }
             };
         }

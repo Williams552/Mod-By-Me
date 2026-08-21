@@ -8,11 +8,13 @@ using FireDiscipline.AimStance;
 using FireDiscipline.Graze;
 using FireDiscipline.Encumbrance;
 using FireDiscipline.Suppression;
+using FireDiscipline.Rescue;
 using HarmonyLib;
 using LudeonTK;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 namespace FireDiscipline.Core
 {
@@ -1086,6 +1088,161 @@ namespace FireDiscipline.Core
             }
 
             Messages.Message($"Cleared all suppression and reset stance to Standard for {selectedPawn.LabelShort}.", MessageTypeDefOf.PositiveEvent, false);
+        }
+
+        [DebugAction("Fire Discipline", "Print Suppression Stat Values", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintSuppressionStatValues()
+        {
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            StatDef resStat = SuppressionStatDefOf.SuppressionResistance;
+            StatDef recStat = SuppressionStatDefOf.SuppressionRecoverySpeed;
+
+            float resVal = resStat != null ? selectedPawn.GetStatValue(resStat, true) : 1.0f;
+            float recVal = recStat != null ? selectedPawn.GetStatValue(recStat, true) : 1.0f;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"[Fire Discipline Debug Harness] Suppression Stat Values for Pawn: {selectedPawn.LabelShort}");
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"FD_SuppressionResistance    : {resVal * 100f:F1}% (raw value: {resVal:F3})");
+            sb.AppendLine($"FD_SuppressionRecoverySpeed : {recVal * 100f:F1}% (raw value: {recVal:F3})");
+            sb.AppendLine("-----------------------------------------------------------------------------------------");
+            sb.AppendLine("Explanation:");
+            sb.AppendLine($"  Suppression Resistance (divides incoming amount): {resVal:F3}x");
+            sb.AppendLine($"  Suppression Recovery Speed (multiplies decay rate): {recVal:F3}x");
+            sb.AppendLine("=========================================================================================");
+
+            Log.Message(sb.ToString());
+            Messages.Message($"Suppression stats for {selectedPawn.LabelShort}: Resistance {resVal * 100f:F0}%, Recovery {recVal * 100f:F0}% (see dev console)", MessageTypeDefOf.PositiveEvent, false);
+        }
+
+        [DebugAction("Fire Discipline", "Print Derived Resistance Breakdown", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintDerivedResistanceBreakdown()
+        {
+            Pawn selectedPawn = Find.Selector.SingleSelectedThing as Pawn;
+            if (selectedPawn == null)
+            {
+                Messages.Message("Please select a Pawn first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            var b = SuppressionEngine.CalculateDerivedResistanceBreakdown(selectedPawn);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"[Fire Discipline Debug Harness] Derived Suppression Resistance Breakdown: {selectedPawn.LabelShort}");
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"Pain Factor (Threshold / Pawn)    : x{b.painFactor:F3}");
+            sb.AppendLine($"Mental Factor (Pawn / Threshold)  : x{b.mentalFactor:F3}");
+            sb.AppendLine($"Skill Factor (Combat Skill Lerp)  : x{b.skillFactor:F3}");
+            sb.AppendLine($"Stagger Factor (If Staggered)     : x{b.staggerFactor:F3}");
+            sb.AppendLine("-----------------------------------------------------------------------------------------");
+            sb.AppendLine($"Total Derived Resistance Product  : x{b.totalMultiplier:F3}");
+            sb.AppendLine("=========================================================================================");
+
+            Log.Message(sb.ToString());
+            Messages.Message($"Derived Resistance Breakdown for {selectedPawn.LabelShort}: Total x{b.totalMultiplier:F3} (see dev console)", MessageTypeDefOf.PositiveEvent, false);
+        }
+
+        [DebugAction("Fire Discipline", "Print Suppression Marker State", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintSuppressionMarkerState()
+        {
+            Map map = Find.CurrentMap;
+            if (map == null)
+            {
+                Messages.Message("No active map.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            FireDisciplineSettings settings = FireDisciplineMod.Settings;
+            bool moduleEnabled = PatchRegistry.IsModuleEnabled(SuppressionMarkerModule.Id);
+            bool settingEnabled = settings?.enableSuppressionMarker ?? false;
+            float minSev = settings?.suppressionMarkerMinSeverity ?? 1.0f;
+            float pinnedThreshold = settings?.pinnedSeverityThreshold ?? 7.0f;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine("[Fire Discipline Debug Harness] Suppression Marker State Audit");
+            sb.AppendLine($"Module Registered & Enabled: {moduleEnabled} | Setting enableSuppressionMarker: {settingEnabled}");
+            sb.AppendLine($"Min Severity Gate: {minSev:F1} | Pinned Threshold: {pinnedThreshold:F1}");
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"{"Pawn Name",-25}|{"Severity",10}|{"Stage",12}|{"Fogged",8}|{"Drawn?",8}|");
+            sb.AppendLine(new string('-', 68));
+
+            int drawnCount = 0;
+            foreach (Pawn pawn in map.mapPawns.AllPawnsSpawned)
+            {
+                if (pawn == null || pawn.Dead) continue;
+
+                float sev = SuppressionEngine.GetSeverity(pawn);
+                bool fogged = pawn.Position.Fogged(map);
+                var (stageLabel, _) = MapComponent_SuppressionMarker.GetStageInfo(sev, pinnedThreshold);
+
+                bool drawn = moduleEnabled && settingEnabled && !fogged && sev >= minSev;
+                if (drawn) drawnCount++;
+
+                sb.AppendLine($"{pawn.LabelShort,-25}|{sev,10:F2}|{stageLabel,12}|{fogged,8}|{drawn,8}|");
+            }
+
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"Total pawns with active markers drawn: {drawnCount}");
+
+            Log.Message(sb.ToString());
+            Messages.Message($"Suppression Marker Audit: {drawnCount} markers currently drawn (see dev console)", MessageTypeDefOf.PositiveEvent, false);
+        }
+
+        [DebugAction("Fire Discipline", "Print Evacuation Eligibility", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        public static void PrintEvacuationEligibility()
+        {
+            Pawn carrier = Find.Selector.SingleSelectedThing as Pawn;
+            if (carrier == null)
+            {
+                Messages.Message("Please select a Pawn (carrier) first.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            Map map = carrier.Map;
+            if (map == null) return;
+
+            bool moduleEnabled = PatchRegistry.IsModuleEnabled(EvacuationModule.Id);
+            bool settingEnabled = FireDisciplineMod.Settings?.enableEvacuation ?? false;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"[Fire Discipline Debug Harness] Evacuation Eligibility Audit for Carrier: {carrier.LabelShort}");
+            sb.AppendLine($"Module Enabled: {moduleEnabled} | Setting enableEvacuation: {settingEnabled}");
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine($"{"Target Name",-20}|{"Downed",8}|{"Hostile",9}|{"Carrying",10}|{"Manip",8}|{"Reach/Res",11}|{"StageGate",11}|{"Reason",35}|");
+            sb.AppendLine(new string('-', 117));
+
+            foreach (Pawn target in map.mapPawns.AllPawnsSpawned)
+            {
+                if (target == null || target == carrier || target.Dead) continue;
+
+                bool downed = target.Downed;
+                bool hostile = carrier.HostileTo(target);
+                bool carrying = carrier.carryTracker?.CarriedThing != null;
+                bool manip = carrier.health?.capacities != null && carrier.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation);
+                bool reachRes = carrier.CanReach(target, Verse.AI.PathEndMode.Touch, Danger.Deadly) && carrier.CanReserve(target);
+
+                int carrierStage = Patch_FloatMenuMakerMap.GetSuppressionStageIndex(carrier);
+                int targetStage = Patch_FloatMenuMakerMap.GetSuppressionStageIndex(target);
+                bool stageGate = carrierStage < targetStage;
+
+                string reason = Patch_FloatMenuMakerMap.GetEvacuationFailureReason(carrier, target) ?? "PASSED (Eligible)";
+
+                sb.AppendLine($"{target.LabelShort,-20}|{downed,8}|{hostile,9}|{carrying,10}|{manip,8}|{reachRes,11}|{stageGate,11}|{reason,35}|");
+            }
+
+            sb.AppendLine("=========================================================================================");
+            Log.Message(sb.ToString());
+            Messages.Message($"Evacuation Eligibility printed to dev console for {carrier.LabelShort}.", MessageTypeDefOf.PositiveEvent, false);
         }
 
         [DebugAction("Fire Discipline", "Test Graze Shot on Selected Pawn", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
@@ -2301,6 +2458,132 @@ namespace FireDiscipline.Core
 
 
 
+        /// <summary>
+        /// Catches the settings-persistence bug class that has now recurred three times:
+        /// a field whose Scribe_Values.Look line is missing entirely (the player's slider silently
+        /// resets on restart), or whose Scribe default disagrees with the field initialiser (a fresh
+        /// install and an upgrading save end up on different numbers).
+        ///
+        /// Method: build a probe instance, push every field to a value that cannot be its default,
+        /// round-trip it through Scribe, and see what came back. A field with no Scribe line reverts
+        /// to its initialiser; a field whose Scribe default differs shows up when the probe is loaded
+        /// from a document that omits the node.
+        ///
+        /// LIMIT - stated here because this action must not claim more than it checks: runtime
+        /// reflection cannot see the literal in a `Settings?.x ?? y` fallback, so mismatched
+        /// fallbacks are NOT covered. Those still need a source grep.
+        /// </summary>
+        [DebugAction("Fire Discipline", "Print Settings Default Audit", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Entry)]
+        public static void PrintSettingsDefaultAudit()
+        {
+            const string probeFileName = "FireDiscipline_SettingsAudit.tmp.xml";
+            string probePath = Path.Combine(GenFilePaths.ConfigFolderPath, probeFileName);
+
+            FieldInfo[] fields = typeof(FireDisciplineSettings)
+                .GetFields(BindingFlags.Public | BindingFlags.Instance)
+                .Where(f => f.FieldType == typeof(float) || f.FieldType == typeof(int) || f.FieldType == typeof(bool))
+                .OrderBy(f => f.Name)
+                .ToArray();
+
+            var pristine = new FireDisciplineSettings();
+            var probe = new FireDisciplineSettings();
+
+            // Push every field off its default so anything that survives the round-trip proves
+            // a Scribe line exists, and anything that snaps back proves one does not.
+            foreach (FieldInfo f in fields)
+            {
+                object baseline = f.GetValue(pristine);
+                if (f.FieldType == typeof(float)) f.SetValue(probe, (float)baseline + 7.77f);
+                else if (f.FieldType == typeof(int)) f.SetValue(probe, (int)baseline + 77);
+                else f.SetValue(probe, !(bool)baseline);
+            }
+
+            var notPersisted = new List<string>();
+            var defaultMismatch = new List<string>();
+            string failure = null;
+
+            try
+            {
+                Scribe.saver.InitSaving(probePath, "SettingsBlock");
+                probe.ExposeData();
+                Scribe.saver.FinalizeSaving();
+
+                var roundTripped = new FireDisciplineSettings();
+                Scribe.loader.InitLoading(probePath);
+                roundTripped.ExposeData();
+                Scribe.loader.FinalizeLoading();
+
+                // An empty document exercises every Scribe default in one pass.
+                var fromEmptyDoc = new FireDisciplineSettings();
+                string emptyPath = Path.Combine(GenFilePaths.ConfigFolderPath, "FireDiscipline_SettingsAuditEmpty.tmp.xml");
+                Scribe.saver.InitSaving(emptyPath, "SettingsBlock");
+                Scribe.saver.FinalizeSaving();
+                Scribe.loader.InitLoading(emptyPath);
+                fromEmptyDoc.ExposeData();
+                Scribe.loader.FinalizeLoading();
+
+                foreach (FieldInfo f in fields)
+                {
+                    if (!Equals(f.GetValue(roundTripped), f.GetValue(probe)))
+                    {
+                        notPersisted.Add(f.Name);
+                    }
+                    if (!Equals(f.GetValue(fromEmptyDoc), f.GetValue(pristine)))
+                    {
+                        defaultMismatch.Add($"{f.Name}: field={f.GetValue(pristine)} scribe={f.GetValue(fromEmptyDoc)}");
+                    }
+                }
+
+                if (File.Exists(probePath)) File.Delete(probePath);
+                if (File.Exists(emptyPath)) File.Delete(emptyPath);
+            }
+            catch (Exception e)
+            {
+                Scribe.ForceStop();
+                failure = e.ToString();
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================================================");
+            sb.AppendLine("[Fire Discipline Debug Harness] Settings Default Audit");
+            sb.AppendLine("=========================================================================================");
+
+            if (failure != null)
+            {
+                sb.AppendLine("AUDIT DID NOT RUN - the Scribe round-trip threw. Nothing below was verified.");
+                sb.AppendLine(failure);
+                Log.Error(sb.ToString());
+                Messages.Message("Settings audit FAILED to run. See dev console.", MessageTypeDefOf.NegativeEvent, false);
+                return;
+            }
+
+            sb.AppendLine($"Fields audited: {fields.Length}");
+            sb.AppendLine();
+
+            sb.AppendLine($"[1] NOT PERSISTED (no Scribe_Values.Look line - the player's setting is lost on restart): {notPersisted.Count}");
+            foreach (string name in notPersisted) sb.AppendLine($"    MISSING SCRIBE  {name}");
+            if (notPersisted.Count == 0) sb.AppendLine("    none");
+            sb.AppendLine();
+
+            sb.AppendLine($"[2] DEFAULT MISMATCH (field initialiser disagrees with Scribe default): {defaultMismatch.Count}");
+            foreach (string line in defaultMismatch) sb.AppendLine($"    MISMATCH  {line}");
+            if (defaultMismatch.Count == 0) sb.AppendLine("    none");
+            sb.AppendLine();
+
+            sb.AppendLine("NOT COVERED BY THIS ACTION: literals in `Settings?.x ?? y` fallbacks, and the");
+            sb.AppendLine("'(Default: N)' strings in the settings window. Both still need a source grep.");
+            sb.AppendLine("=========================================================================================");
+
+            int problems = notPersisted.Count + defaultMismatch.Count;
+            Log.Message(sb.ToString());
+            Messages.Message(
+                problems == 0
+                    ? $"Settings audit clean: {fields.Length} fields, 0 problems."
+                    : $"Settings audit found {problems} problem(s). See dev console.",
+                problems == 0 ? MessageTypeDefOf.PositiveEvent : MessageTypeDefOf.NegativeEvent,
+                false);
+        }
+
         [DebugAction("Fire Discipline", "Print Cover Values", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         public static void PrintCoverValues()
         {
@@ -2329,7 +2612,7 @@ namespace FireDiscipline.Core
                 float coverPercent = CoverUtility.BaseBlockChance(def);
 
                 FireDisciplineSettings settings = FireDisciplineMod.Settings;
-                float factor = settings?.coverSuppressionFactor ?? 0.85f;
+                float factor = settings?.coverSuppressionFactor ?? 1.00f;
                 float floor = settings?.coverSuppressionFloor ?? 0.25f;
                 float suppMult = Mathf.Clamp(1.0f - (coverPercent * factor), floor, 1.0f);
 

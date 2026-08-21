@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Disposition 1: Quan hệ giao dịch -->
+  <RimwardExiles.Core.HeroDispositionDef>
+    <defName>RWX_Disp_Transactional</defName>
+    <label>Quan hệ giao dịch</label>
+    <reason>Anh nhìn mọi sự cống hiến như một món hàng có thể ngã giá.</reason>
+    <gainMultiplier>0.55</gainMultiplier>
+    <lossMultiplier>1.20</lossMultiplier>
+    <gatedOptions>
+      <li>RWX_Opt_DeepTrust</li>
+    </gatedOptions>
+  </RimwardExiles.Core.HeroDispositionDef>
+
+  <!-- Disposition 2: Tình đồng đội son sắt -->
+  <RimwardExiles.Core.HeroDispositionDef>
+    <defName>RWX_Disp_DevotedBrother</defName>
+    <label>Tình đồng đội son sắt</label>
+    <reason>Anh đã không bỏ rơi chúng tôi trong khoảnh khắc sinh tử.</reason>
+    <gainMultiplier>1.40</gainMultiplier>
+    <lossMultiplier>0.65</lossMultiplier>
+    <bonusOptions>
+      <li>RWX_Opt_CallForReinforcements</li>
+    </bonusOptions>
+  </RimwardExiles.Core.HeroDispositionDef>
+
+  <!-- Disposition 3: Đề phòng đa nghi -->
+  <RimwardExiles.Core.HeroDispositionDef>
+    <defName>RWX_Disp_Suspicious</defName>
+    <label>Đề phòng đa nghi</label>
+    <reason>Những kẻ ngoại tộc luôn che giấu dã tâm sau những lời hoa mỹ.</reason>
+    <gainMultiplier>0.70</gainMultiplier>
+    <lossMultiplier>1.30</lossMultiplier>
+  </RimwardExiles.Core.HeroDispositionDef>
+
+</Defs>

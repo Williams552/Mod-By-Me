@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <JobDef>
+    <defName>FD_EvacuatePawn</defName>
+    <driverClass>FireDiscipline.Rescue.JobDriver_EvacuatePawn</driverClass>
+    <reportString>evacuating TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+
+</Defs>

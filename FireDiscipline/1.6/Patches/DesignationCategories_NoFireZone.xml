@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!--
+    Thêm hai công cụ vùng cấm bắn vào tab Zone.
+
+    PatchOperationAdd chứ không phải Replace: danh sách specialDesignatorClasses của category Zone
+    được các mod khác cùng ghi vào, và một số mục vanilla có MayRequire cho DLC. Ghi đè cả danh sách
+    sẽ xoá designator của mod khác và bật nhầm designator DLC cho người không có DLC.
+  -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>/Defs/DesignationCategoryDef[defName="Zone"]/specialDesignatorClasses</xpath>
+    <value>
+      <li>FireDiscipline.NoFireZone.Designator_NoFireZoneExpand</li>
+      <li>FireDiscipline.NoFireZone.Designator_NoFireZoneClear</li>
+    </value>
+  </Operation>
+
+</Patch>

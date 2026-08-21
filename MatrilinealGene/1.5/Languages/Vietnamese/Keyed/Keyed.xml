@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <Matrilineal_Settings_Category>Gene Mẫu Hệ</Matrilineal_Settings_Category>
+  <Matrilineal_Settings_ForceFemale_Label>Ép buộc 100% sinh con gái</Matrilineal_Settings_ForceFemale_Label>
+  <Matrilineal_Settings_ForceFemale_Desc>Khi bật, mọi đứa trẻ thụ thai từ cá thể mang gene này chắc chắn sẽ sinh ra là giống cái (nữ).</Matrilineal_Settings_ForceFemale_Desc>
+  <Matrilineal_Settings_InheritXenotype_Label>Kế thừa toàn bộ Xenotype &amp; Gen của mẹ</Matrilineal_Settings_InheritXenotype_Label>
+  <Matrilineal_Settings_InheritXenotype_Desc>Khi bật, con gái sẽ trực tiếp kế thừa Xenotype và bộ gen bẩm sinh của mẹ thay vì bị phân rã lai 50/50 thành chủng tộc lai (Hybrid).</Matrilineal_Settings_InheritXenotype_Desc>
+  <Matrilineal_Settings_Notification_Label>Thông báo khi sinh con gái mẫu hệ</Matrilineal_Settings_Notification_Label>
+  <Matrilineal_Settings_Notification_Desc>Hiển thị thông báo đặc biệt khi một bé gái dòng tộc mẫu hệ chào đời.</Matrilineal_Settings_Notification_Desc>
+  <Matrilineal_Settings_ResetDefaults>Đặt lại mặc định</Matrilineal_Settings_ResetDefaults>
+  <Matrilineal_Message_DaughterBorn>Một bé gái dòng tộc mẫu hệ ({BABY}) vừa được sinh ra từ mẹ {MOTHER}, bảo tồn trọn vẹn dòng giống nữ quyền!</Matrilineal_Message_DaughterBorn>
+</LanguageData>

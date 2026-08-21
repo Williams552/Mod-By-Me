@@ -3,8 +3,10 @@ using FireDiscipline.Encumbrance;
 using FireDiscipline.ShotgunAoE;
 using FireDiscipline.AimStance;
 using FireDiscipline.Suppression;
+using FireDiscipline.Rescue;
 using FireDiscipline.Graze;
 using FireDiscipline.Shock;
+using FireDiscipline.NoFireZone;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -24,7 +26,7 @@ namespace FireDiscipline
         public override void DoSettingsWindowContents(Rect inRect)
         {
             Rect outerRect = new Rect(inRect.x, inRect.y, inRect.width, inRect.height);
-            Rect viewRect = new Rect(0f, 0f, inRect.width - 30f, 2450f);
+            Rect viewRect = new Rect(0f, 0f, inRect.width - 30f, 2560f);
 
             Widgets.BeginScrollView(outerRect, ref scrollPosition, viewRect);
 
@@ -210,6 +212,59 @@ namespace FireDiscipline
             Settings.suppressionMoveSpeedFactorStage3 = listing.Slider(Settings.suppressionMoveSpeedFactorStage3, 0.10f, 1.00f);
             Settings.suppressionMoveSpeedFactorStage4 = listing.Slider(Settings.suppressionMoveSpeedFactorStage4, 0.05f, 1.00f);
 
+            listing.Gap(5f);
+            listing.CheckboxLabeled("Enable Derived Suppression Resistance", ref Settings.enableDerivedSuppressionResistance,
+                "Suppression resistance is derived from pawn pain threshold, mental break threshold, combat skills, and stagger state.");
+
+            if (Settings.enableDerivedSuppressionResistance)
+            {
+                listing.Label($"  Base Pain Shock Threshold: <b>{Settings.basePainShockThreshold:F2}</b> (Default: 0.80)");
+                Settings.basePainShockThreshold = listing.Slider(Settings.basePainShockThreshold, 0.40f, 1.00f);
+
+                listing.Label($"  Pain Factor Clamp Range: <b>[{Settings.minPainSuppressionFactor:F2}, {Settings.maxPainSuppressionFactor:F2}]</b> (Default: [0.25, 2.00])");
+                Settings.minPainSuppressionFactor = listing.Slider(Settings.minPainSuppressionFactor, 0.10f, 0.50f);
+                Settings.maxPainSuppressionFactor = listing.Slider(Settings.maxPainSuppressionFactor, 1.00f, 3.00f);
+
+                listing.Label($"  Base Mental Break Threshold: <b>{Settings.baseMentalBreakThreshold:F2}</b> (Default: 0.35)");
+                Settings.baseMentalBreakThreshold = listing.Slider(Settings.baseMentalBreakThreshold, 0.10f, 0.60f);
+
+                listing.Label($"  Mental Factor Clamp Range: <b>[{Settings.minMentalSuppressionFactor:F2}, {Settings.maxMentalSuppressionFactor:F2}]</b> (Default: [0.50, 1.50])");
+                Settings.minMentalSuppressionFactor = listing.Slider(Settings.minMentalSuppressionFactor, 0.20f, 0.80f);
+                Settings.maxMentalSuppressionFactor = listing.Slider(Settings.maxMentalSuppressionFactor, 1.00f, 2.50f);
+
+                listing.Label($"  Skill Level for Max Resistance: <b>{Settings.skillLevelForMaxResistance}</b> (Default: 20)");
+                Settings.skillLevelForMaxResistance = Mathf.RoundToInt(listing.Slider(Settings.skillLevelForMaxResistance, 10f, 20f));
+
+                listing.Label($"  Max Skill Suppression Multiplier: <b>x{Settings.maxSkillSuppressionMultiplier:F2}</b> (Default: x0.75)");
+                Settings.maxSkillSuppressionMultiplier = listing.Slider(Settings.maxSkillSuppressionMultiplier, 0.30f, 1.00f);
+
+                listing.Label($"  Stagger Suppression Factor: <b>x{Settings.staggerSuppressionFactor:F2}</b> (Default: x1.50)");
+                Settings.staggerSuppressionFactor = listing.Slider(Settings.staggerSuppressionFactor, 1.00f, 3.00f);
+            }
+
+            listing.Gap(5f);
+            listing.CheckboxLabeled("Enable Suppression Stage Marker Overlay", ref Settings.enableSuppressionMarker,
+                "Renders a stage indicator (shaken, wavering, ducking, cowering, PINNED) above pawns on the map.");
+
+            if (Settings.enableSuppressionMarker)
+            {
+                listing.Label($"  Marker Min Severity Gate: <b>{Settings.suppressionMarkerMinSeverity:F1}</b> (Default: 1.0)");
+                Settings.suppressionMarkerMinSeverity = listing.Slider(Settings.suppressionMarkerMinSeverity, 0.0f, 5.0f);
+            }
+
+            listing.Gap(5f);
+            listing.CheckboxLabeled("Enable Evacuate Downed Ally Order", ref Settings.enableEvacuation,
+                "Allows ordering a pawn to carry a downed ally out of active fire to a specified position.");
+
+            if (Settings.enableEvacuation)
+            {
+                listing.CheckboxLabeled("  Carrier Must Be Lower Suppression Stage", ref Settings.evacuationRequiresLowerSuppression,
+                    "Carrier's suppression stage must be at least one stage lower than the downed ally's stage.");
+
+                listing.Label($"  Evacuation Max Distance: <b>{Settings.evacuationMaxDistance:F0} cells</b> (Default: 30)");
+                Settings.evacuationMaxDistance = listing.Slider(Settings.evacuationMaxDistance, 10f, 60f);
+            }
+
             listing.GapLine(15f);
 
             // =========================================================================
@@ -246,6 +301,14 @@ namespace FireDiscipline
             listing.Label($"  Shell Shock Radius Cap: <b>{Settings.shellShockRadiusCap:F0}c</b> (Default: 20c)");
             Settings.shellShockRadiusCap = listing.Slider(Settings.shellShockRadiusCap, 8f, 40f);
 
+            listing.Gap(10f);
+            listing.Label("  <b><color=#FF5555>[No-Fire Zone]</color></b> <i>(Draw the zone from the Zone tab in the architect menu)</i>");
+            listing.Label("  <i>Player turrets will not pick an automatic target whose blast could reach the zone. "
+                + "Force-targeting by hand always works, zone or no zone.</i>");
+            listing.CheckboxLabeled("  Apply to every turret, not just explosive ones", ref Settings.noFireZoneAllTurrets,
+                "Off (default): only mortars, artillery and turrets firing explosive rounds respect the zone - "
+                + "the check covers their forced miss radius plus the shell's blast radius. "
+                + "On: ordinary gun turrets refuse targets standing inside the zone too.");
 
             listing.GapLine(15f);
 
@@ -355,9 +418,12 @@ namespace FireDiscipline
             PatchRegistry.RegisterModule(new EncumbranceModule());
             PatchRegistry.RegisterModule(new AimStanceModule());
             PatchRegistry.RegisterModule(new SuppressionCoreModule());
+            PatchRegistry.RegisterModule(new SuppressionMarkerModule());
+            PatchRegistry.RegisterModule(new EvacuationModule());
             PatchRegistry.RegisterModule(new ShotgunAoEModule());
             PatchRegistry.RegisterModule(new GrazeModule());
             PatchRegistry.RegisterModule(new ShockModule());
+            PatchRegistry.RegisterModule(new NoFireZoneModule());
 
             PatchRegistry.InitializeAll();
         }

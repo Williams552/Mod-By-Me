@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Mẫu Creed A: Trưởng phái Thép & Kỷ luật -->
+  <RimwardExiles.Core.HeroCreedDef>
+    <defName>RWX_Creed_SteelArchon</defName>
+    <label>Tôn chỉ Thép &amp; Kỷ cương</label>
+    <description>Xem cơ khí là đỉnh cao của sự tiến hóa, đề cao trật tự nghiêm ngặt và sự trung thành tuyệt đối.</description>
+    <values>
+      <li><value>RWX_SteelPath</value><weight>0.9</weight></li>
+      <li><value>RWX_Order</value><weight>0.8</weight></li>
+      <li><value>RWX_Loyalty</value><weight>0.7</weight></li>
+      <li><value>RWX_Purity</value><weight>-0.6</weight></li>
+      <li><value>RWX_Mercy</value><weight>-0.3</weight></li>
+    </values>
+    <tensions>
+      <li>
+        <between>RWX_Loyalty</between>
+        <and>RWX_Mercy</and>
+        <note>Đồng đội chấp hành kỷ luật đã làm tổn hại kẻ yếu</note>
+      </li>
+    </tensions>
+  </RimwardExiles.Core.HeroCreedDef>
+
+  <!-- Mẫu Creed B: Bác sĩ Sinh học & Nhân từ -->
+  <RimwardExiles.Core.HeroCreedDef>
+    <defName>RWX_Creed_Biomancer</defName>
+    <label>Tôn chỉ Sinh thể &amp; Lòng trắc ẩn</label>
+    <description>Tin vào tiềm năng vô hạn của huyết thống và sinh học, cứu giúp kẻ hoạn nạn nhưng phản đối máy móc lạnh lùng.</description>
+    <values>
+      <li><value>RWX_BloodPath</value><weight>0.85</weight></li>
+      <li><value>RWX_FleshPath</value><weight>0.7</weight></li>
+      <li><value>RWX_Mercy</value><weight>0.8</weight></li>
+      <li><value>RWX_SteelPath</value><weight>-0.5</weight></li>
+    </values>
+    <tensions>
+      <li>
+        <between>RWX_BloodPath</between>
+        <and>RWX_Mercy</and>
+        <note>Nghiên cứu tinh hoa hệ gen đòi hỏi vật thí nghiệm đau đớn</note>
+      </li>
+    </tensions>
+  </RimwardExiles.Core.HeroCreedDef>
+
+  <!-- Mẫu Creed C: Tín đồ Thuần khiết & Quý phái -->
+  <RimwardExiles.Core.HeroCreedDef>
+    <defName>RWX_Creed_PureAristocrat</defName>
+    <label>Tôn chỉ Thuần khiết &amp; Xa hoa</label>
+    <description>Giữ gìn thân thể nguyên vẹn của thần thánh, say mê cái đẹp tráng lệ và năng lực tâm linh ngoại cảm.</description>
+    <values>
+      <li><value>RWX_Purity</value><weight>0.95</weight></li>
+      <li><value>RWX_Splendor</value><weight>0.75</weight></li>
+      <li><value>RWX_Kinship</value><weight>0.6</weight></li>
+      <li><value>RWX_SteelPath</value><weight>-0.8</weight></li>
+      <li><value>RWX_FleshPath</value><weight>-0.85</weight></li>
+      <li><value>RWX_BloodPath</value><weight>-0.9</weight></li>
+    </values>
+    <tensions>
+      <li>
+        <between>RWX_Purity</between>
+        <and>RWX_Splendor</and>
+        <note>Công nghệ ngoại lai xa hoa nhưng làm ô uế tính thuần khiết</note>
+      </li>
+    </tensions>
+  </RimwardExiles.Core.HeroCreedDef>
+
+</Defs>

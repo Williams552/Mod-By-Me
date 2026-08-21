@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Thought: Hero rời đi -->
+  <ThoughtDef>
+    <defName>RWX_Thought_HeroDeparted</defName>
+    <durationDays>10</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>Đồng minh kiệt xuất rời bỏ</label>
+        <description>Một nhân vật kiệt xuất đã dứt áo ra đi vì mất niềm tin vào tương lai của thuộc địa chúng ta.</description>
+        <baseMoodEffect>-4</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <!-- Social Thought: Thù hằn cá nhân khi bị xâm phạm lý tưởng -->
+  <ThoughtDef>
+    <defName>RWX_Thought_Resentment</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>30</durationDays>
+    <stackLimit>5</stackLimit>
+    <stages>
+      <li>
+        <label>oán hận hành vi</label>
+        <baseOpinionOffset>-20</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+</Defs>

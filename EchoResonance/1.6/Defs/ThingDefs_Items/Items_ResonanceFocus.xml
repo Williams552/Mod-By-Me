@@ -7,7 +7,7 @@
     <label>resonance focus crystal</label>
     <description>A highly tuned crystal lattice used as a physical catalyst to channel colony memories. Consumed when unlocking Tier 2 Pawn Perks at the Archotech Resonator.</description>
     <graphicData>
-      <texPath>Things/Item/Special/PsychicAmplifier</texPath>
+      <texPath>Things/Item/Special/ResonanceFocus</texPath>
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
     <resourceReadoutPriority>Middle</resourceReadoutPriority>

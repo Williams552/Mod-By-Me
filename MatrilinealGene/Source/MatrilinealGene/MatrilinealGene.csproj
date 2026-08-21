@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>MatrilinealGene</RootNamespace>
+    <AssemblyName>MatrilinealGene</AssemblyName>
+    <OutputPath>..\..\1.6\Assemblies\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*" PrivateAssets="all" />
+    <PackageReference Include="Lib.Harmony" Version="2.2.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="CopyTo15" AfterTargets="Build">
+    <MakeDir Directories="..\..\1.5\Assemblies\" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="..\..\1.5\Assemblies\" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

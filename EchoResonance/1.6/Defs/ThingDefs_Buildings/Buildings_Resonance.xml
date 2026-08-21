@@ -9,7 +9,7 @@
     <thingClass>EchoResonance.Buildings.Building_Resonator</thingClass>
     <category>Building</category>
     <graphicData>
-      <texPath>Things/Building/Misc/MultiAnalyzer</texPath>
+      <texPath>Things/Building/Misc/ArchotechResonator</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(3,3)</drawSize>
       <shadowData>
@@ -58,9 +58,9 @@
     <thingClass>EchoResonance.Buildings.Building_AttunementPylon</thingClass>
     <category>Building</category>
     <graphicData>
-      <texPath>Things/Building/Misc/Column</texPath>
+      <texPath>Things/Building/Misc/AttunementPylon</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <drawSize>(1,2)</drawSize>
+      <drawSize>(1,1)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>

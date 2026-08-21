@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <GeneDef>
+    <defName>Gene_MatrilinealBirth</defName>
+    <label>matrilineal birth</label>
+    <labelShortAdj>matrilineal</labelShortAdj>
+    <description>Carriers of this gene (or partners of carriers) will only produce female offspring. In addition, all female children born from a matrilineal lineage directly inherit their genetic mother's xenotype, endogenes, and lineage identity without dissolving into random hybrids.</description>
+    <iconPath>UI/Icons/Genes/Gene_MatrilinealBirth</iconPath>
+    <displayCategory>Reproduction</displayCategory>
+    <displayOrderInCategory>15</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <biostatArc>0</biostatArc>
+    <selectionWeight>1.0</selectionWeight>
+    <canGenerateInGeneSet>true</canGenerateInGeneSet>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>matri</symbol></li>
+        <li><symbol>gyno</symbol></li>
+        <li><symbol>fem</symbol></li>
+        <li><symbol>daught</symbol></li>
+        <li><symbol>eve</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>lina</symbol></li>
+        <li><symbol>gyn</symbol></li>
+        <li><symbol>dottir</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
+  </GeneDef>
+
+</Defs>

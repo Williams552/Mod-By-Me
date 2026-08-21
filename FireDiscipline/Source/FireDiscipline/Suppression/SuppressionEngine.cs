@@ -77,6 +77,17 @@ namespace FireDiscipline.Suppression
                     amount *= settings?.proneSuppressionResistance ?? 0.50f;
                 }
 
+                // A3: Derived suppression resistance
+                amount *= CalculateDerivedResistance(victim);
+
+                // A2: Apply StatDef FD_SuppressionResistance
+                StatDef resistanceStat = SuppressionStatDefOf.SuppressionResistance;
+                if (resistanceStat != null)
+                {
+                    float statRes = victim.GetStatValue(resistanceStat, true);
+                    amount /= Mathf.Max(0.01f, statRes);
+                }
+
                 if ((settings?.enableCoverSuppression ?? true) && shooter != null && victim.Map != null)
                 {
                     float vanillaBlock = CoverUtility.CalculateOverallBlockChance(victim, shooter.Position, victim.Map);
@@ -90,7 +101,7 @@ namespace FireDiscipline.Suppression
                             block = Mathf.Min(combined, settings.coverStackingCap);
                         }
                     }
-                    float factor = settings?.coverSuppressionFactor ?? 0.85f;
+                    float factor = settings?.coverSuppressionFactor ?? 1.00f;
                     float floor = settings?.coverSuppressionFloor ?? 0.25f;
                     amount *= Mathf.Clamp(1f - block * factor, floor, 1f);
                 }
@@ -222,6 +233,84 @@ namespace FireDiscipline.Suppression
         public static float MaxSeverity(HediffDef def)
         {
             return def?.maxSeverity ?? 1.0f;
+        }
+
+        public struct DerivedResistanceBreakdown
+        {
+            public float painFactor;
+            public float mentalFactor;
+            public float skillFactor;
+            public float staggerFactor;
+            public float totalMultiplier;
+        }
+
+        public static DerivedResistanceBreakdown CalculateDerivedResistanceBreakdown(Pawn victim)
+        {
+            DerivedResistanceBreakdown result = new DerivedResistanceBreakdown
+            {
+                painFactor = 1.0f,
+                mentalFactor = 1.0f,
+                skillFactor = 1.0f,
+                staggerFactor = 1.0f,
+                totalMultiplier = 1.0f
+            };
+
+            if (victim == null) return result;
+
+            FireDisciplineSettings settings = FireDisciplineMod.Settings;
+            if (!(settings?.enableDerivedSuppressionResistance ?? true))
+            {
+                return result;
+            }
+
+            // 1. Pain factor: basePainThreshold / pawnValue -> clamped [minPain, maxPain]
+            float basePain = settings?.basePainShockThreshold ?? 0.80f;
+            float pawnPain = victim.GetStatValue(StatDefOf.PainShockThreshold, true);
+            if (pawnPain > 0.001f)
+            {
+                float rawPainFactor = basePain / pawnPain;
+                float minPain = settings?.minPainSuppressionFactor ?? 0.25f;
+                float maxPain = settings?.maxPainSuppressionFactor ?? 2.00f;
+                result.painFactor = Mathf.Clamp(rawPainFactor, minPain, maxPain);
+            }
+
+            // 2. Mental factor: pawnValue / baseMentalThreshold -> clamped [minMental, maxMental]
+            float baseMental = settings?.baseMentalBreakThreshold ?? 0.35f;
+            if (baseMental > 0.001f)
+            {
+                float pawnMental = victim.GetStatValue(StatDefOf.MentalBreakThreshold, true);
+                float rawMentalFactor = pawnMental / baseMental;
+                float minMental = settings?.minMentalSuppressionFactor ?? 0.50f;
+                float maxMental = settings?.maxMentalSuppressionFactor ?? 1.50f;
+                result.mentalFactor = Mathf.Clamp(rawMentalFactor, minMental, maxMental);
+            }
+
+            // 3. Skill factor: Max(Shooting, Melee), linearly lerp 1.0 -> maxSkillMultiplier at maxSkillLevel
+            if (victim.skills != null)
+            {
+                int shootingLvl = victim.skills.GetSkill(SkillDefOf.Shooting)?.Level ?? 0;
+                int meleeLvl = victim.skills.GetSkill(SkillDefOf.Melee)?.Level ?? 0;
+                int maxSkillLvl = Mathf.Max(shootingLvl, meleeLvl);
+
+                int maxLvlGate = settings?.skillLevelForMaxResistance ?? 20;
+                float maxSkillMult = settings?.maxSkillSuppressionMultiplier ?? 0.75f;
+                float t = Mathf.Clamp01((float)maxSkillLvl / Mathf.Max(1, maxLvlGate));
+                result.skillFactor = Mathf.Lerp(1.00f, maxSkillMult, t);
+            }
+
+            // 4. Stagger factor: if staggered -> x staggerSuppressionFactor
+            if (victim.stances?.stagger?.Staggered ?? false)
+            {
+                result.staggerFactor = settings?.staggerSuppressionFactor ?? 1.50f;
+            }
+
+            result.totalMultiplier = result.painFactor * result.mentalFactor * result.skillFactor * result.staggerFactor;
+            return result;
+        }
+
+        public static float CalculateDerivedResistance(Pawn victim)
+        {
+            return CalculateDerivedResistanceBreakdown(victim).totalMultiplier;
         }
     }
 }
